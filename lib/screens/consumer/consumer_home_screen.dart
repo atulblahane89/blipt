@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../state/app_state.dart';
 import '../../models/store.dart';
+import '../../models/order.dart';
 import 'store_detail_screen.dart';
 import 'cart_screen.dart';
 import 'order_tracking_screen.dart';
@@ -60,18 +61,36 @@ class ConsumerHomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Active Orders shortcut
-          if (state.orders.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.receipt_long_outlined, color: Colors.black87),
-              tooltip: "My Orders",
-              onPressed: () {
+          // Active Orders shortcut button
+          Center(
+            child: InkWell(
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => OrderTrackingScreen(state: state)),
                 );
               },
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0F172A),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.moped, size: 15, color: Color(0xFF00B074)),
+                    const SizedBox(width: 5),
+                    Text(
+                      state.orders.isNotEmpty ? "Track Order (${state.orders.length})" : "Track Order",
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -79,6 +98,93 @@ class ConsumerHomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Active Order Live Tracker Card (Prominent when an order exists)
+            if (state.orders.isNotEmpty) ...[
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF00B074), width: 1.5),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE8F5E9),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.delivery_dining, color: Color(0xFF00B074), size: 22),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Track Your Order", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF0F172A))),
+                                Text("Order #${state.orders.first.id} • ${state.orders.first.storeName}", style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: state.orders.first.status == OrderStatus.delivered ? const Color(0xFFE8F5E9) : const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            state.orders.first.statusDisplay,
+                            style: TextStyle(
+                              color: state.orders.first.status == OrderStatus.delivered ? const Color(0xFF2E7D32) : const Color(0xFF92400E),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Delivery Code: ${state.orders.first.deliveryOtp}",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF00B074)),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF00B074),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => OrderTrackingScreen(state: state)),
+                            );
+                          },
+                          child: const Text("Open Live Tracking ➔", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
             // Banner: Transparent Zero-Surge Pledge
             Container(
               padding: const EdgeInsets.all(14),
