@@ -2,7 +2,7 @@
   "project_name": "Blipto",
   "root_dir": "D:\\blipto",
   "created_at": "2026-11-26T08:41:23.529377+00:00",
-  "current_phase": "Phase 2: Dual-User Scoping & Requirements",
+  "current_phase": "Phase 3: Technical Architecture & System Design",
   "current_sprint": 1,
   "requirements": {
     "REQ-CON-01": {
@@ -11,8 +11,11 @@
       "description": "Consumers discover open neighborhood retail stores within a 500m-2km radius based on real-time location.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -25,8 +28,11 @@
       "description": "Real-time synchronization ensures listed items are physically in stock, with buffer thresholds to prevent walk-in collisions.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -39,8 +45,11 @@
       "description": "Flat, transparent pricing with zero surge fees, zero dark convenience charges, and clear delivery fee breakdowns.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -53,8 +62,11 @@
       "description": "Live status updates through Placed, Packed, Out for Delivery, and Delivered stages with estimated turnaround time.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -67,8 +79,11 @@
       "description": "Consumers capture item defect photos at delivery to trigger immediate escrow-backed wallet refunds without human call-center queues.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -81,8 +96,11 @@
       "description": "Lightweight mobile camera scanner for instant SKU barcode ingestion, price adjustment, and active stock counts.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -95,8 +113,11 @@
       "description": "Real-time order receiver with audio alerts, order packing checklist, and countdown acceptance timer.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -109,8 +130,11 @@
       "description": "Store capacity monitor with manual or automatic Busy Mode toggle to prevent order backlogs during rush hours.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -123,8 +147,11 @@
       "description": "Replaces traditional credit (udhari) with instant digital settlements directly to merchant bank accounts upon delivery verification.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -137,8 +164,11 @@
       "description": "Automatically reroutes incoming orders to nearby partner stores within 1.2km when a store hits capacity or toggles Busy Mode.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -151,8 +181,11 @@
       "description": "Digital escrow withholding for disputed orders and automated strike penalty tracking for chronic defect offenders.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -165,8 +198,11 @@
       "description": "Mobile interface for in-store delivery staff showing customer address, navigation coordinates, and order item list.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],
@@ -179,8 +215,11 @@
       "description": "Secure doorstep delivery completion verified by customer 4-digit OTP or geotagged delivery proof photo.",
       "phase": "Phase 2",
       "documents": [
-        "docs/user_requirements_specification.md",
-        "docs/use_case_specifications.md"
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
       ],
       "code_files": [],
       "test_files": [],

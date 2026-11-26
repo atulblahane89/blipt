@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: Blipto Hyper-Local Quick-Commerce API
+  description: Core REST API for Blipto Consumer, Merchant Hub, and Dispatch Microservices.
+  version: 1.0.0
+servers:
+  - url: https://api.blipto.local/v1
+    description: Local / Edge Gateway
+paths:
+  /stores/nearby:
+    get:
+      summary: Discover nearby active retail stores within hyper-local radius
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: radius_meters
+          in: query
+          schema:
+            type: integer
+            default: 1500
+      responses:
+        '200':
+          description: List of nearby stores with live busy/open status
+  /stores/{storeId}/inventory:
+    get:
+      summary: Fetch real-time available inventory for a specific store
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Real-time stock list without phantom out-of-stock items
+    post:
+      summary: Ingest or update stock via barcode scan
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                barcode:
+                  type: string
+                title:
+                  type: string
+                price:
+                  type: number
+                stock_quantity:
+                  type: integer
+      responses:
+        '201':
+          description: Inventory item synced
+  /stores/{storeId}/busy-mode:
+    patch:
+      summary: Toggle store busy mode for dynamic peer spillover
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_busy:
+                  type: boolean
+      responses:
+        '200':
+          description: Busy mode status updated
+  /orders:
+    post:
+      summary: Place order with automatic capacity check and spillover routing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumer_id:
+                  type: string
+                store_id:
+                  type: string
+                consumer_lat:
+                  type: number
+                consumer_lng:
+                  type: number
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      item_id:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        '201':
+          description: Order created and assigned
+  /orders/{orderId}/verify-delivery:
+    post:
+      summary: In-store delivery boy handoff verification via OTP or Photo
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                photo_proof_base64:
+                  type: string
+      responses:
+        '200':
+          description: Handoff verified, escrow payout released
+  /orders/{orderId}/dispute:
+    post:
+      summary: File automated photo defect claim for instant escrow refund
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                item_id:
+                  type: string
+                reason:
+                  type: string
+                photo_base64:
+                  type: string
+      responses:
+        '200':
+          description: Refund processed and credited to consumer wallet
