@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blipto — Owner Command Center & Master Data Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0B0F17;
+      --bg-surface: #111827;
+      --bg-card: #1F2937;
+      --bg-card-hover: #283548;
+      --primary: #00B074;
+      --primary-hover: #009663;
+      --primary-glow: rgba(0, 176, 116, 0.2);
+      --accent-blue: #0284C7;
+      --accent-purple: #8B5CF6;
+      --accent-amber: #F59E0B;
+      --accent-red: #EF4444;
+      --text-main: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --text-dim: #6B7280;
+      --border: #374151;
+      --border-light: #4B5563;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 260px;
+      background-color: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00B074, #00897B);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .brand-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background-color: rgba(0, 176, 116, 0.15);
+      color: var(--primary);
+      font-weight: 700;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--bg-card);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(0, 176, 116, 0.15), transparent);
+      color: var(--primary);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .owner-profile {
+      padding: 16px;
+      margin: 12px;
+      background-color: rgba(31, 41, 55, 0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .owner-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .owner-info {
+      font-size: 12px;
+    }
+
+    .owner-name {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .owner-role {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    /* Main Content Area */
+    main {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    header {
+      padding: 18px 32px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-title h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .header-title p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-light);
+    }
+
+    .content-body {
+      padding: 32px;
+      flex: 1;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .metric-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--primary));
+    }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-icon {
+      font-size: 18px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Data Tables */
+    .table-container {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .table-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .table-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background-color: rgba(31, 41, 55, 0.4);
+      padding: 12px 20px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+      color: var(--text-main);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(31, 41, 55, 0.25);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-success {
+      background: rgba(0, 176, 116, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(0, 176, 116, 0.3);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-info {
+      background: rgba(2, 132, 199, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(2, 132, 199, 0.3);
+    }
+
+    .badge-purple {
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* JSON Data Saver Box */
+    .data-saver-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .data-saver-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    pre.code-viewer {
+      background-color: #080C14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #A5B4FC;
+      max-height: 350px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-title">Blipto</div>
+        <div style="font-size: 11px; color: var(--text-dim);">Platform Control Tower</div>
+      </div>
+      <span class="brand-badge">Owner</span>
+    </div>
+
+    <div class="nav-menu">
+      <div class="nav-item active" onclick="switchTab('overview')">
+        <span>📊</span> <span>Marketplace Overview</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('stores')">
+        <span>🏪</span> <span>Stores & Catchment</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('orders')">
+        <span>📦</span> <span>Live Orders Stream</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('inventory')">
+        <span>🏷️</span> <span>Master Inventory (SKUs)</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('escrow')">
+        <span>🔒</span> <span>Escrow & Treasury</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('disputes')">
+        <span>🛡️</span> <span>Quality & Disputes</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('datasaver')">
+        <span>💾</span> <span>Master Data Saver</span>
+      </div>
+    </div>
+
+    <div class="owner-profile">
+      <div class="owner-avatar">👑</div>
+      <div class="owner-info">
+        <div class="owner-name">App Founder</div>
+        <div class="owner-role">Super Administrator</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main>
+    <header>
+      <div class="header-title">
+        <h1 id="page-title">Marketplace Overview</h1>
+        <p id="page-desc">Real-time telemetry across all decentralized neighborhood fulfillment centers</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="refreshData()">
+          <span>🔄</span> <span>Sync Live Data</span>
+        </button>
+        <button class="btn btn-primary" onclick="exportFullJSON()">
+          <span>💾</span> <span>Save Master DB (JSON)</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- TAB 1: OVERVIEW -->
+      <div id="tab-overview" class="tab-panel active">
+        <!-- Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card" style="--card-accent: #00B074;">
+            <div class="metric-header">
+              <span class="metric-label">Gross Merchandise Value (GMV)</span>
+              <span class="metric-icon">💰</span>
+            </div>
+            <div class="metric-value" id="val-gmv">₹4,820</div>
+            <div class="metric-sub">Platform GMV across local catchment</div>
+          </div>
+
+          <div class="metric-card" style="--card-accent: #0284C7;">
+            <div class="metric-header">
+              <span class="metric-label">Blipto Software Fee (4.5%)</span>
+              <span class="metric-icon">📈</span>
+            </div>
+            <div class="metric-value" id="val-revenue">₹216.90</div>
+            <div class="metric-sub">Net software revenue (Zero dark store burn)</div>
+          </div>
+
+          <div class="metric-card" style="--card-accent: #F59E0B;">
+            <div class="metric-header">
+              <span class="metric-label">Digital Escrow Treasury</span>
+              <span class="metric-icon">🔒</span>
+            </div>
+            <div class="metric-value" id="val-escrow">₹580.00</div>
+            <div class="metric-sub">Held in escrow until doorstep OTP verify</div>
+          </div>
+
+          <div class="metric-card" style="--card-accent: #8B5CF6;">
+            <div class="metric-header">
+              <span class="metric-label">Active Partner Kiranas</span>
+              <span class="metric-icon">🏪</span>
+            </div>
+            <div class="metric-value" id="val-stores">3 Stores</div>
+            <div class="metric-sub">100% merchant-fulfilled logistics</div>
+          </div>
+        </div>
+
+        <!-- Recent In-Flight Runs -->
+        <div class="table-container">
+          <div class="table-header">
+            <span class="table-title">Recent Hyper-Local Orders</span>
+            <button class="btn btn-secondary" onclick="switchTab('orders')" style="font-size: 11.5px; padding: 4px 10px;">View All Orders ➔</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Origin Store</th>
+                <th>Fulfilling Store</th>
+                <th>Routing Type</th>
+                <th>Amount</th>
+                <th>Handoff OTP</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="overview-orders-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: STORES & CATCHMENT -->
+      <div id="tab-stores" class="tab-panel">
+        <div class="table-container">
+          <div class="table-header">
+            <span class="table-title">Partner Kirana Directory & Catchment Controls</span>
+            <button class="btn btn-primary" onclick="alert('Store KYC Approval Portal Ready')">+ Onboard New Kirana</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Store ID</th>
+                <th>Store Name & Address</th>
+                <th>Radius</th>
+                <th>Capacity</th>
+                <th>Rush / Busy Mode</th>
+                <th>Trust Rating</th>
+                <th>Strikes</th>
+                <th>UPI Payout Handle</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stores-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: LIVE ORDERS STREAM -->
+      <div id="tab-orders" class="tab-panel">
+        <div class="table-container">
+          <div class="table-header">
+            <span class="table-title">Global Master Order Stream</span>
+            <button class="btn btn-secondary" onclick="exportOrdersCSV()">📊 Export Orders CSV</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer ID</th>
+                <th>Store</th>
+                <th>Items Summary</th>
+                <th>Total Bill</th>
+                <th>OTP</th>
+                <th>Status</th>
+                <th>Delivery SLA</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 4: MASTER INVENTORY -->
+      <div id="tab-inventory" class="tab-panel">
+        <div class="table-container">
+          <div class="table-header">
+            <span class="table-title">Master Stock & SKU Explorer (Zero-Phantom Audit)</span>
+            <button class="btn btn-secondary" onclick="exportInventoryCSV()">📊 Export SKUs CSV</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Barcode (EAN-13)</th>
+                <th>Product Title</th>
+                <th>Store</th>
+                <th>Category</th>
+                <th>Shelf Price</th>
+                <th>Stock Count</th>
+                <th>Audit Status</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 5: ESCROW & TREASURY -->
+      <div id="tab-escrow" class="tab-panel">
+        <div class="data-saver-card">
+          <h2 style="font-size: 16px; margin-bottom: 8px;">Platform Escrow & Merchant Payout Settlement</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5;">
+            Blipto operates a zero-working-capital escrow treasury. Consumer payments are held in digital escrow upon checkout. 
+            Funds automatically release into the merchant's instant UPI ledger upon OTP handoff verification, eliminating retailer credit risk.
+          </p>
+          <div class="metrics-grid" style="margin-top: 20px; margin-bottom: 0;">
+            <div class="metric-card" style="--card-accent: #F59E0B;">
+              <div class="metric-label">Escrow Locked Funds</div>
+              <div class="metric-value">₹580.00</div>
+              <div class="metric-sub">Protected against non-delivery claims</div>
+            </div>
+            <div class="metric-card" style="--card-accent: #00B074;">
+              <div class="metric-label">Total Settled to Merchants</div>
+              <div class="metric-value">₹4,240.00</div>
+              <div class="metric-sub">Direct UPI instant payouts</div>
+            </div>
+            <div class="metric-card" style="--card-accent: #EF4444;">
+              <div class="metric-label">Refunded on Defect Disputes</div>
+              <div class="metric-value">₹87.00</div>
+              <div class="metric-sub">Automated 1-tap customer refunds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: DISPUTES & GOVERNANCE -->
+      <div id="tab-disputes" class="tab-panel">
+        <div class="table-container">
+          <div class="table-header">
+            <span class="table-title">Customer Defect Claims & 3-Strike Governance Desk</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Dispute ID</th>
+                <th>Order ID</th>
+                <th>Claimed Item</th>
+                <th>Reason</th>
+                <th>Refund Amount</th>
+                <th>Photo Evidence</th>
+                <th>Resolution Status</th>
+                <th>Merchant Strike</th>
+              </tr>
+            </thead>
+            <tbody id="disputes-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 7: MASTER DATA SAVER -->
+      <div id="tab-datasaver" class="tab-panel">
+        <div class="data-saver-card">
+          <h2 style="font-size: 16px; margin-bottom: 6px;">App Owner Database Snapshot & Data Persistence</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5;">
+            As the platform owner, you have full custody of all raw records. Save, backup, or export your complete marketplace database at any time.
+          </p>
+          <div class="data-saver-actions">
+            <button class="btn btn-primary" onclick="exportFullJSON()">
+              <span>💾</span> <span>Download Full DB (JSON)</span>
+            </button>
+            <button class="btn btn-secondary" onclick="exportOrdersCSV()">
+              <span>📊</span> <span>Export Orders (CSV)</span>
+            </button>
+            <button class="btn btn-secondary" onclick="exportStoresCSV()">
+              <span>🏪</span> <span>Export Stores (CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="data-saver-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 14px;">Live Database Inspector</h3>
+            <span class="mono" style="font-size: 11px; color: var(--text-dim);">Tables: stores, catalog_items, orders, disputes, escrow_ledger</span>
+          </div>
+          <pre class="code-viewer" id="db-json-viewer"></pre>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Master In-Memory Data Store (Synchronized with Backend API)
+    const masterData = {
+      stores: [
+        {
+          id: "store-001",
+          name: "Gupta Kirana & Provisions",
+          address: "Cross Road 4, Bellandur (450m away)",
+          latitude: 12.9352,
+          longitude: 77.6245,
+          radius_meters: 1500,
+          is_busy: false,
+          max_orders: 4,
+          active_orders: 2,
+          trust_rating: 4.9,
+          strikes: 0,
+          upi_id: "gupta.kirana@oksbi",
+          status: "ACTIVE"
+        },
+        {
+          id: "store-002",
+          name: "Mahadev Daily Supermarket",
+          address: "Main Market Road, Green Glen (850m away)",
+          latitude: 12.9380,
+          longitude: 77.6290,
+          radius_meters: 1800,
+          is_busy: false,
+          max_orders: 5,
+          active_orders: 1,
+          trust_rating: 4.8,
+          strikes: 0,
+          upi_id: "mahadev.retail@okaxis",
+          status: "ACTIVE"
+        },
+        {
+          id: "store-003",
+          name: "Sri Venkateshwara Fresh & Dairy",
+          address: "Temple Arch, Sector 2 (1100m away)",
+          latitude: 12.9310,
+          longitude: 77.6210,
+          radius_meters: 2000,
+          is_busy: true, // In Busy Mode
+          max_orders: 3,
+          active_orders: 3,
+          trust_rating: 4.7,
+          strikes: 1,
+          upi_id: "venkateshwara@icici",
+          status: "BUSY_REROUTING"
+        }
+      ],
+      orders: [
+        {
+          id: "ORD-9281",
+          consumer_id: "usr-881",
+          origin_store: "Gupta Kirana & Provisions",
+          fulfilling_store: "Gupta Kirana & Provisions",
+          is_spillover: false,
+          items: "Amul Milk (2x), Wheat Bread (1x)",
+          subtotal: 109.0,
+          delivery_fee: 10.0,
+          total: 119.0,
+          otp: "4192",
+          status: "OUT_FOR_DELIVERY",
+          created_at: "8 mins ago"
+        },
+        {
+          id: "ORD-9104",
+          consumer_id: "usr-881",
+          origin_store: "Gupta Kirana & Provisions",
+          fulfilling_store: "Gupta Kirana & Provisions",
+          is_spillover: false,
+          items: "Farm Brown Eggs (1x)",
+          subtotal: 55.0,
+          delivery_fee: 10.0,
+          total: 65.0,
+          otp: "8319",
+          status: "DELIVERED",
+          created_at: "35 mins ago"
+        },
+        {
+          id: "ORD-8742",
+          consumer_id: "usr-492",
+          origin_store: "Sri Venkateshwara Fresh & Dairy",
+          fulfilling_store: "Mahadev Daily Supermarket",
+          is_spillover: true,
+          items: "Sunflower Oil 1L (1x), Tata Salt 1kg (1x)",
+          subtotal: 163.0,
+          delivery_fee: 10.0,
+          total: 173.0,
+          otp: "5512",
+          status: "DELIVERED",
+          created_at: "1 hour ago"
+        }
+      ],
+      inventory: [
+        { barcode: "8901030383821", title: "Amul Taaza Homogenised Toned Milk 500ml", store: "Gupta Kirana", category: "Dairy & Eggs", price: 32.0, stock: 18 },
+        { barcode: "8901491101837", title: "Modern 100% Whole Wheat Bread 400g", store: "Gupta Kirana", category: "Bakery", price: 45.0, stock: 2 },
+        { barcode: "8901725181222", title: "Farm Fresh Farm Brown Eggs (Pack of 6)", store: "Gupta Kirana", category: "Dairy & Eggs", price: 55.0, stock: 14 },
+        { barcode: "8901058852219", title: "Fortune Sunlite Refined Sunflower Oil 1L", store: "Gupta Kirana", category: "Oils & Staples", price: 135.0, stock: 9 },
+        { barcode: "8901262010017", title: "Tata Salt Vacuum Evaporated Iodized 1kg", store: "Gupta Kirana", category: "Oils & Staples", price: 28.0, stock: 30 },
+        { barcode: "8901030383821", title: "Amul Taaza Homogenised Toned Milk 500ml", store: "Mahadev Supermarket", category: "Dairy & Eggs", price: 32.0, stock: 25 },
+        { barcode: "8901491101837", title: "Modern 100% Whole Wheat Bread 400g", store: "Mahadev Supermarket", category: "Bakery", price: 45.0, stock: 12 },
+      ],
+      disputes: [
+        {
+          id: "DSP-3190",
+          order_id: "ORD-9104",
+          item: "Farm Fresh Brown Eggs",
+          reason: "Broken / Cracked Shells",
+          refund: 55.0,
+          photo: "proof_eggs_broken.jpg",
+          status: "AUTO_REFUNDED",
+          store: "Gupta Kirana & Provisions",
+          strike_logged: true
+        }
+      ]
+    };
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
+
+      const titles = {
+        'overview': ['Marketplace Overview', 'Real-time telemetry across all decentralized neighborhood fulfillment centers'],
+        'stores': ['Stores & Catchment Controls', 'Manage partner kiranas, delivery radius, and KYC approvals'],
+        'orders': ['Live Orders Stream', 'Real-time order dispatch, dynamic spillovers, and delivery status'],
+        'inventory': ['Master Inventory & SKUs', 'Zero-phantom stockout shelf synchronization and price auditing'],
+        'escrow': ['Escrow & Treasury Ledger', 'Track customer funds in escrow vs settled merchant balances'],
+        'disputes': ['Dispute Desk & Governance', 'Automated photo refund audits and 3-strike merchant enforcement'],
+        'datasaver': ['Master Data Saver & DB Explorer', 'One-click persistence, full JSON snapshot, and CSV exports']
+      };
+
+      if (titles[tabId]) {
+        document.getElementById('page-title').textContent = titles[tabId][0];
+        document.getElementById('page-desc').textContent = titles[tabId][1];
+      }
+
+      event.currentTarget.classList.add('active');
+    }
+
+    function renderAll() {
+      // 1. Overview Table
+      const ovTbody = document.getElementById('overview-orders-tbody');
+      ovTbody.innerHTML = masterData.orders.map(o => `
+        <tr>
+          <td class="mono"><strong>#${o.id}</strong></td>
+          <td>${o.origin_store}</td>
+          <td>${o.fulfilling_store}</td>
+          <td>
+            ${o.is_spillover 
+              ? `<span class="badge badge-purple">⚡ Partner Spillover</span>` 
+              : `<span class="badge badge-success">Direct Store</span>`}
+          </td>
+          <td><strong>₹${o.total.toFixed(0)}</strong></td>
+          <td class="mono">${o.otp}</td>
+          <td>
+            <span class="badge ${o.status === 'DELIVERED' ? 'badge-success' : 'badge-info'}">
+              ${o.status}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      // 2. Stores Table
+      const stTbody = document.getElementById('stores-tbody');
+      stTbody.innerHTML = masterData.stores.map(s => `
+        <tr>
+          <td class="mono">${s.id}</td>
+          <td>
+            <strong>${s.name}</strong><br>
+            <span style="font-size: 11px; color: var(--text-dim);">${s.address}</span>
+          </td>
+          <td>${s.radius_meters}m</td>
+          <td>${s.active_orders} / ${s.max_orders} Runs</td>
+          <td>
+            ${s.is_busy 
+              ? `<span class="badge badge-warning">Busy (Spillover Active)</span>` 
+              : `<span class="badge badge-success">Fulfilling Live</span>`}
+          </td>
+          <td>⭐ ${s.trust_rating}</td>
+          <td>
+            ${s.strikes > 0 
+              ? `<span class="badge badge-danger">${s.strikes}/3 Strikes</span>` 
+              : `<span class="badge badge-success">0 Strikes</span>`}
+          </td>
+          <td class="mono">${s.upi_id}</td>
+          <td>
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleStoreBusy('${s.id}')">
+              ${s.is_busy ? 'Set Live' : 'Set Busy'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // 3. Orders Table
+      const ordTbody = document.getElementById('orders-tbody');
+      ordTbody.innerHTML = masterData.orders.map(o => `
+        <tr>
+          <td class="mono"><strong>#${o.id}</strong></td>
+          <td class="mono">${o.consumer_id}</td>
+          <td>${o.fulfilling_store}</td>
+          <td>${o.items}</td>
+          <td><strong>₹${o.total.toFixed(2)}</strong></td>
+          <td class="mono">${o.otp}</td>
+          <td><span class="badge ${o.status === 'DELIVERED' ? 'badge-success' : 'badge-info'}">${o.status}</span></td>
+          <td>${o.created_at}</td>
+        </tr>
+      `).join('');
+
+      // 4. Inventory Table
+      const invTbody = document.getElementById('inventory-tbody');
+      invTbody.innerHTML = masterData.inventory.map(i => `
+        <tr>
+          <td class="mono">${i.barcode}</td>
+          <td><strong>${i.title}</strong></td>
+          <td>${i.store}</td>
+          <td>${i.category}</td>
+          <td><strong>₹${i.price.toFixed(0)}</strong></td>
+          <td>
+            <span class="badge ${i.stock <= 2 ? 'badge-warning' : 'badge-success'}">
+              ${i.stock} units
+            </span>
+          </td>
+          <td><span class="badge badge-success">Live on Shelf</span></td>
+        </tr>
+      `).join('');
+
+      // 5. Disputes Table
+      const disTbody = document.getElementById('disputes-tbody');
+      disTbody.innerHTML = masterData.disputes.map(d => `
+        <tr>
+          <td class="mono"><strong>#${d.id}</strong></td>
+          <td class="mono">#${d.order_id}</td>
+          <td><strong>${d.item}</strong></td>
+          <td>${d.reason}</td>
+          <td><strong style="color: var(--accent-red);">₹${d.refund.toFixed(0)}</strong></td>
+          <td class="mono">${d.photo}</td>
+          <td><span class="badge badge-success">Auto-Refunded</span></td>
+          <td><span class="badge badge-danger">+1 Strike Logged</span></td>
+        </tr>
+      `).join('');
+
+      // 6. JSON Viewer
+      document.getElementById('db-json-viewer').textContent = JSON.stringify(masterData, null, 2);
+    }
+
+    function toggleStoreBusy(storeId) {
+      const s = masterData.stores.find(x => x.id === storeId);
+      if (s) {
+        s.is_busy = !s.is_busy;
+        renderAll();
+      }
+    }
+
+    function exportFullJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(masterData, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `blipto_master_database_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function exportOrdersCSV() {
+      const headers = ["Order_ID", "Consumer_ID", "Fulfilling_Store", "Subtotal", "Delivery_Fee", "Total", "OTP", "Status"];
+      const rows = masterData.orders.map(o => [o.id, o.consumer_id, `"${o.fulfilling_store}"`, o.subtotal, o.delivery_fee, o.total, o.otp, o.status]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const a = document.createElement('a');
+      a.setAttribute("href", encodeURI(csvContent));
+      a.setAttribute("download", "blipto_orders.csv");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function exportStoresCSV() {
+      const headers = ["Store_ID", "Store_Name", "Address", "Radius_Meters", "Is_Busy", "Max_Orders", "UPI_ID"];
+      const rows = masterData.stores.map(s => [s.id, `"${s.name}"`, `"${s.address}"`, s.radius_meters, s.is_busy, s.max_orders, s.upi_id]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const a = document.createElement('a');
+      a.setAttribute("href", encodeURI(csvContent));
+      a.setAttribute("download", "blipto_stores.csv");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function exportInventoryCSV() {
+      const headers = ["Barcode", "Title", "Store", "Category", "Price", "Stock"];
+      const rows = masterData.inventory.map(i => [i.barcode, `"${i.title}"`, `"${i.store}"`, i.category, i.price, i.stock]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const a = document.createElement('a');
+      a.setAttribute("href", encodeURI(csvContent));
+      a.setAttribute("download", "blipto_inventory.csv");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function refreshData() {
+      renderAll();
+      alert("✅ Master database synchronized with live platform telemetry!");
+    }
+
+    // Initial render
+    renderAll();
+  </script>
+</body>
+</html>

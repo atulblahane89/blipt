@@ -25,8 +25,8 @@
       "test_files": [
         "tests/test_dispatch_and_spillover.py"
       ],
-      "status": "Active",
-      "last_cr": null
+      "status": "Modified",
+      "last_cr": "CR-001"
     },
     "REQ-CON-02": {
       "req_id": "REQ-CON-02",
@@ -160,8 +160,8 @@
       "test_files": [
         "tests/test_inventory_and_orders.py"
       ],
-      "status": "Active",
-      "last_cr": null
+      "status": "Modified",
+      "last_cr": "CR-001"
     },
     "REQ-MER-03": {
       "req_id": "REQ-MER-03",
@@ -270,8 +270,8 @@
       "test_files": [
         "tests/test_inventory_and_orders.py"
       ],
-      "status": "Active",
-      "last_cr": null
+      "status": "Modified",
+      "last_cr": "CR-001"
     },
     "REQ-DLV-02": {
       "req_id": "REQ-DLV-02",
@@ -295,9 +295,102 @@
       ],
       "status": "Active",
       "last_cr": null
+    },
+    "REQ-ADM-01": {
+      "req_id": "REQ-ADM-01",
+      "title": "Owner Admin Command Tower & Master Data",
+      "description": "Private operational dashboard for the app owner to inspect global GMV, stores, in-flight orders, and export full database records (JSON/CSV).",
+      "phase": "Phase 5/CR-001",
+      "documents": [
+        "docs/system_design_document.md"
+      ],
+      "code_files": [
+        "admin/index.html",
+        "backend/app.py"
+      ],
+      "test_files": [
+        "tests/test_admin_and_data_persistence.py"
+      ],
+      "status": "Modified",
+      "last_cr": "CR-001"
+    },
+    "REQ-ADM-02": {
+      "req_id": "REQ-ADM-02",
+      "title": "Escrow Treasury Reconciliation & Settlement Control",
+      "description": "App owner control over platform escrow ledger, gross platform fee take-rate, and digital payouts to merchants.",
+      "phase": "Phase 5/CR-001",
+      "documents": [
+        "docs/system_design_document.md"
+      ],
+      "code_files": [
+        "admin/index.html",
+        "backend/escrow_ledger.py",
+        "backend/app.py"
+      ],
+      "test_files": [
+        "tests/test_admin_and_data_persistence.py"
+      ],
+      "status": "Modified",
+      "last_cr": "CR-001"
+    },
+    "REQ-ADM-03": {
+      "req_id": "REQ-ADM-03",
+      "title": "Store Approval & 3-Strike Governance Desk",
+      "description": "Private console for the app owner to review store onboarding applications, adjust catchment radii, and review customer photo disputes.",
+      "phase": "Phase 5/CR-001",
+      "documents": [
+        "docs/security_and_privacy_assessment.md"
+      ],
+      "code_files": [
+        "admin/index.html",
+        "backend/app.py"
+      ],
+      "test_files": [
+        "tests/test_admin_and_data_persistence.py"
+      ],
+      "status": "Modified",
+      "last_cr": "CR-001"
     }
   },
-  "change_requests": [],
+  "change_requests": [
+    {
+      "cr_id": "CR-001",
+      "timestamp": "2026-11-26T12:02:26.391298+00:00",
+      "prompt": "Integrate dedicated App Owner Admin Dashboard with Master Data Persistence & clean persona screen flows",
+      "impacted_reqs": [
+        "REQ-ADM-01",
+        "REQ-ADM-02",
+        "REQ-ADM-03",
+        "REQ-CON-01",
+        "REQ-MER-02",
+        "REQ-DLV-01"
+      ],
+      "impacted_documents": [
+        "docs/openapi_spec.yaml",
+        "docs/security_and_privacy_assessment.md",
+        "docs/system_design_document.md",
+        "docs/use_case_specifications.md",
+        "docs/user_requirements_specification.md"
+      ],
+      "impacted_code_files": [
+        "admin/index.html",
+        "backend/app.py",
+        "backend/escrow_ledger.py",
+        "lib/models/store.dart",
+        "lib/screens/consumer/consumer_home_screen.dart",
+        "lib/screens/delivery/delivery_task_screen.dart",
+        "lib/screens/merchant/merchant_hub_screen.dart"
+      ],
+      "impacted_tests": [
+        "tests/test_admin_and_data_persistence.py",
+        "tests/test_dispatch_and_spillover.py",
+        "tests/test_inventory_and_orders.py"
+      ],
+      "git_branch": "cr/cr-001-11261732",
+      "status": "Open",
+      "git_tag": null
+    }
+  ],
   "git_initialized": true,
   "git_remote": null,
   "latest_tag": "v1.0.0-mvp"

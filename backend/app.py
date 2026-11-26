@@ -4,6 +4,7 @@ Standard-library compliant REST server implementing OpenAPI 3.0 contract.
 """
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
+import os
 import re
 import urllib.parse
 from datetime import datetime, timezone
@@ -256,6 +257,102 @@ class BliptoBackendService:
             "merchant_strike_count": merchant.strikes if merchant else 1,
         }
 
+    # --- App Owner Super Admin Operations (REQ-ADM-01, REQ-ADM-02, REQ-ADM-03) ---
+    def get_admin_overview(self) -> dict:
+        total_gmv = sum(o.total_amount for o in self.orders.values())
+        platform_fee = round(total_gmv * 0.045, 2)
+        total_escrow_held = sum(self.escrow.escrow_balances.values())
+        total_settled = sum(self.escrow.settled_balances.values())
+        total_refunded = sum(d.refund_amount for d in self.disputes)
+
+        return {
+            "platform_gmv": round(total_gmv, 2),
+            "platform_revenue": platform_fee,
+            "escrow_locked_funds": round(total_escrow_held, 2),
+            "merchant_settled_total": round(total_settled, 2),
+            "total_refunds_processed": round(total_refunded, 2),
+            "active_stores_count": len([s for s in self.stores if s.strikes < 3]),
+            "total_orders_count": len(self.orders),
+            "total_disputes_count": len(self.disputes),
+        }
+
+    def export_all_data(self) -> dict:
+        return {
+            "export_timestamp": datetime.now(timezone.utc).isoformat(),
+            "stores": [
+                {
+                    "id": s.id,
+                    "name": s.name,
+                    "address": s.address,
+                    "latitude": s.latitude,
+                    "longitude": s.longitude,
+                    "delivery_radius_meters": s.delivery_radius_meters,
+                    "is_busy": s.is_busy,
+                    "max_active_orders": s.max_active_orders,
+                    "active_orders_count": s.active_orders_count,
+                    "trust_rating": s.trust_rating,
+                    "upi_id": s.upi_id,
+                    "strikes": s.strikes,
+                }
+                for s in self.stores
+            ],
+            "inventory": {
+                store_id: [
+                    {
+                        "id": it.id,
+                        "barcode": it.barcode,
+                        "title": it.title,
+                        "category": it.category,
+                        "price": it.price,
+                        "stock_quantity": it.stock_quantity,
+                    }
+                    for it in items
+                ]
+                for store_id, items in self.inventory.items()
+            },
+            "orders": [
+                {
+                    "id": o.id,
+                    "consumer_id": o.consumer_id,
+                    "store_id": o.store_id,
+                    "fulfilling_store_id": o.fulfilling_store_id,
+                    "is_spillover": o.is_spillover,
+                    "subtotal": o.subtotal,
+                    "delivery_fee": o.delivery_fee,
+                    "total_amount": o.total_amount,
+                    "delivery_otp": o.delivery_otp,
+                    "status": o.status.value,
+                    "referral_commission": o.referral_commission,
+                    "created_at": o.created_at,
+                }
+                for o in self.orders.values()
+            ],
+            "disputes": [
+                {
+                    "id": d.id,
+                    "order_id": d.order_id,
+                    "item_id": d.item_id,
+                    "reason": d.reason,
+                    "refund_amount": d.refund_amount,
+                    "status": d.status,
+                    "created_at": d.created_at,
+                }
+                for d in self.disputes
+            ],
+            "escrow_ledger": {
+                "escrow_balances": self.escrow.escrow_balances,
+                "settled_balances": self.escrow.settled_balances,
+                "consumer_wallets": self.escrow.consumer_wallets,
+            },
+        }
+
+    def adjust_store_radius(self, store_id: str, radius_meters: int) -> dict:
+        s = next((st for st in self.stores if st.id == store_id), None)
+        if not s:
+            raise KeyError("Store not found")
+        s.delivery_radius_meters = radius_meters
+        return {"store_id": s.id, "delivery_radius_meters": s.delivery_radius_meters}
+
 
 # Global Service Instance
 service = BliptoBackendService()
@@ -273,6 +370,15 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _send_html(self, status_code: int, html_content: str):
+        body = html_content.encode("utf-8")
+        self.send_response(status_code)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_OPTIONS(self):
         self._send_json(200, {"status": "OK"})
 
@@ -281,7 +387,35 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
         path = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
 
-        if path == "/v1/stores/nearby":
+        # App Owner Admin Dashboard HTML (REQ-ADM-01)
+        if path in ["/admin", "/admin/"]:
+            admin_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "admin", "index.html")
+            if os.path.exists(admin_file):
+                with open(admin_file, "r", encoding="utf-8") as f:
+                    self._send_html(200, f.read())
+                return
+            else:
+                self._send_html(404, "<h1>Admin Dashboard file not found</h1>")
+                return
+
+        # App Owner Admin APIs
+        elif path == "/v1/admin/overview":
+            self._send_json(200, service.get_admin_overview())
+
+        elif path == "/v1/admin/export-data":
+            self._send_json(200, service.export_all_data())
+
+        elif path == "/v1/admin/stores":
+            self._send_json(200, {"stores": service.export_all_data()["stores"]})
+
+        elif path == "/v1/admin/orders":
+            self._send_json(200, {"orders": service.export_all_data()["orders"]})
+
+        elif path == "/v1/admin/disputes":
+            self._send_json(200, {"disputes": service.export_all_data()["disputes"]})
+
+        # Consumer / Store Public APIs
+        elif path == "/v1/stores/nearby":
             lat = float(query.get("lat", [12.9352])[0])
             lng = float(query.get("lng", [77.6245])[0])
             radius = int(query.get("radius_meters", [1500])[0])
@@ -349,6 +483,10 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
         if re.match(r"^/v1/stores/[^/]+/busy-mode$", path):
             store_id = path.split("/")[3]
             res = service.set_busy_mode(store_id, is_busy=body.get("is_busy", False))
+            self._send_json(200, res)
+        elif re.match(r"^/v1/admin/stores/[^/]+/radius$", path):
+            store_id = path.split("/")[4]
+            res = service.adjust_store_radius(store_id, radius_meters=int(body.get("delivery_radius_meters", 1500)))
             self._send_json(200, res)
         else:
             self._send_json(404, {"error": "Not Found"})
