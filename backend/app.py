@@ -8,7 +8,7 @@ import re
 import urllib.parse
 from datetime import datetime, timezone
 import random
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .models import Store, InventoryItem, Order, OrderItem, OrderStatus, Dispute
 from .spillover_engine import SpilloverDispatcher, haversine_distance_meters
