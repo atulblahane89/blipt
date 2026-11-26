@@ -2,7 +2,7 @@
   "project_name": "Blipto",
   "root_dir": "D:\\blipto",
   "created_at": "2026-11-26T08:41:23.529377+00:00",
-  "current_phase": "Completed (v1.0.0-mvp Released)",
+  "current_phase": "Completed (v1.1.0-admin Released)",
   "current_sprint": 1,
   "requirements": {
     "REQ-CON-01": {
@@ -311,7 +311,7 @@
       "test_files": [
         "tests/test_admin_and_data_persistence.py"
       ],
-      "status": "Modified",
+      "status": "Verified",
       "last_cr": "CR-001"
     },
     "REQ-ADM-02": {
@@ -330,7 +330,7 @@
       "test_files": [
         "tests/test_admin_and_data_persistence.py"
       ],
-      "status": "Modified",
+      "status": "Verified",
       "last_cr": "CR-001"
     },
     "REQ-ADM-03": {
@@ -348,7 +348,7 @@
       "test_files": [
         "tests/test_admin_and_data_persistence.py"
       ],
-      "status": "Modified",
+      "status": "Verified",
       "last_cr": "CR-001"
     }
   },
@@ -387,11 +387,11 @@
         "tests/test_inventory_and_orders.py"
       ],
       "git_branch": "cr/cr-001-11261732",
-      "status": "Open",
-      "git_tag": null
+      "status": "Merged",
+      "git_tag": "v1.1.0-admin"
     }
   ],
   "git_initialized": true,
   "git_remote": null,
-  "latest_tag": "v1.0.0-mvp"
+  "latest_tag": "v1.1.0-admin"
 }

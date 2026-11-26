@@ -1,5 +1,5 @@
 # 📊 Requirements Traceability Matrix: Blipto
-*Generated: 2026-11-26T12:02:26.392298+00:00 | Current Phase: Completed (v1.0.0-mvp Released)*
+*Generated: 2026-11-26T12:07:22.111424+00:00 | Current Phase: Completed (v1.1.0-admin Released)*
 
 | Req ID | Requirement | Phase | Linked Documents | Linked Code | Linked Tests | Status | Last CR |
 |:---|:---|:---:|:---|:---|:---|:---:|:---:|
@@ -16,6 +16,6 @@
 | **REQ-OPS-02** | Quality Governance & 3-Strike Rule | Phase 2 | `docs/openapi_spec.yaml`<br>`docs/security_and_privacy_assessment.md`<br>`docs/system_design_document.md`<br>`docs/use_case_specifications.md`<br>`docs/user_requirements_specification.md` | `backend/app.py`<br>`backend/escrow_ledger.py` | `tests/test_escrow_and_disputes.py` | Active | - |
 | **REQ-DLV-01** | Store Staff Delivery Terminal | Phase 2 | `docs/openapi_spec.yaml`<br>`docs/security_and_privacy_assessment.md`<br>`docs/system_design_document.md`<br>`docs/use_case_specifications.md`<br>`docs/user_requirements_specification.md` | `lib/screens/delivery/delivery_task_screen.dart` | `tests/test_inventory_and_orders.py` | Modified | CR-001 |
 | **REQ-DLV-02** | Dual Handoff Verification (OTP/Photo) | Phase 2 | `docs/openapi_spec.yaml`<br>`docs/security_and_privacy_assessment.md`<br>`docs/system_design_document.md`<br>`docs/use_case_specifications.md`<br>`docs/user_requirements_specification.md` | `backend/app.py`<br>`backend/escrow_ledger.py`<br>`lib/screens/delivery/delivery_task_screen.dart` | `tests/test_escrow_and_disputes.py` | Active | - |
-| **REQ-ADM-01** | Owner Admin Command Tower & Master Data | Phase 5/CR-001 | `docs/system_design_document.md` | `admin/index.html`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Modified | CR-001 |
-| **REQ-ADM-02** | Escrow Treasury Reconciliation & Settlement Control | Phase 5/CR-001 | `docs/system_design_document.md` | `admin/index.html`<br>`backend/escrow_ledger.py`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Modified | CR-001 |
-| **REQ-ADM-03** | Store Approval & 3-Strike Governance Desk | Phase 5/CR-001 | `docs/security_and_privacy_assessment.md` | `admin/index.html`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Modified | CR-001 |
+| **REQ-ADM-01** | Owner Admin Command Tower & Master Data | Phase 5/CR-001 | `docs/system_design_document.md` | `admin/index.html`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Verified | CR-001 |
+| **REQ-ADM-02** | Escrow Treasury Reconciliation & Settlement Control | Phase 5/CR-001 | `docs/system_design_document.md` | `admin/index.html`<br>`backend/escrow_ledger.py`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Verified | CR-001 |
+| **REQ-ADM-03** | Store Approval & 3-Strike Governance Desk | Phase 5/CR-001 | `docs/security_and_privacy_assessment.md` | `admin/index.html`<br>`backend/app.py` | `tests/test_admin_and_data_persistence.py` | Verified | CR-001 |
