@@ -1043,13 +1043,72 @@
       a.remove();
     }
 
-    function refreshData() {
+    async function syncFromBackend() {
+      try {
+        const [overviewRes, exportRes] = await Promise.all([
+          fetch('/v1/admin/overview'),
+          fetch('/v1/admin/export-data')
+        ]);
+        if (overviewRes.ok && exportRes.ok) {
+          const overview = await overviewRes.json();
+          const exportData = await exportRes.json();
+
+          document.getElementById('val-gmv').textContent = `₹${overview.platform_gmv.toFixed(2)}`;
+          document.getElementById('val-revenue').textContent = `₹${overview.platform_revenue.toFixed(2)}`;
+          document.getElementById('val-escrow').textContent = `₹${overview.escrow_locked_funds.toFixed(2)}`;
+          document.getElementById('val-stores').textContent = `${overview.active_stores_count} Stores`;
+
+          if (exportData.stores && exportData.stores.length > 0) {
+            masterData.stores = exportData.stores.map(s => ({
+              id: s.id,
+              name: s.name,
+              address: s.address,
+              latitude: s.latitude,
+              longitude: s.longitude,
+              radius_meters: s.delivery_radius_meters,
+              is_busy: s.is_busy,
+              max_orders: s.max_active_orders,
+              active_orders: s.active_orders_count,
+              trust_rating: s.trust_rating,
+              strikes: s.strikes,
+              upi_id: s.upi_id,
+              status: s.is_busy ? "BUSY_REROUTING" : "ACTIVE"
+            }));
+          }
+
+          if (exportData.orders && exportData.orders.length > 0) {
+            masterData.orders = exportData.orders.map(o => ({
+              id: o.id,
+              consumer_id: o.consumer_id,
+              origin_store: o.store_id,
+              fulfilling_store: o.fulfilling_store_id,
+              is_spillover: o.is_spillover,
+              items: "Fulfillment Batch",
+              subtotal: o.subtotal,
+              delivery_fee: o.delivery_fee,
+              total: o.total_amount,
+              otp: o.delivery_otp,
+              status: o.status,
+              created_at: o.created_at || "Just now"
+            }));
+          }
+
+          renderAll();
+        }
+      } catch (err) {
+        console.log("Standalone mode with demo seed:", err);
+      }
+    }
+
+    async function refreshData() {
+      await syncFromBackend();
       renderAll();
       alert("✅ Master database synchronized with live platform telemetry!");
     }
 
-    // Initial render
+    // Initial render and live backend sync
     renderAll();
+    syncFromBackend();
   </script>
 </body>
 </html>
