@@ -56,3 +56,24 @@ Blipto unifies three primary user personas into a single, high-efficiency hyper-
 - **[REQ-DLV-02] Secure Dual Handoff Verification:**
   - Input and verify 4-digit customer OTP.
   - Fallback option: Geotagged camera photo proof of handoff at customer door.
+
+---
+
+### Persona D: The App Owner (Platform Super-Admin)
+- **[REQ-ADM-01] Real-Time Control Tower & Master Data Persistence:**
+  - Full platform telemetry: live GMV, active stores, order stream, inventory counts.
+  - Master data export: One-click export of platform state into structured JSON and tabular CSV.
+- **[REQ-ADM-02] Safe Escrow & Payout Control:**
+  - Audit locked funds, disbursed funds to kiranas, and customer wallet refunds.
+- **[REQ-ADM-03] Store Geofence & Governance:**
+  - Adjust delivery radius per store (0.5 km to 3.0 km) and manage seller de-platforming.
+
+---
+
+### Universal UX Standard
+- **[REQ-UX-01] Natural Everyday Language (Zero Academic/Technical Jargon):**
+  - Customer screens use plain, reassuring phrases ("Your Trusted Neighborhood Kiranas", "Clean & Honest Bill", "Instant Refund: Return Bad Items", "Delivery Code").
+  - Merchant screens speak the shopkeeper's language ("Kirana Shop Dashboard", "Shop Rush? (Busy Mode)", "My Earnings & Bank Payouts", "No More Udhari!").
+  - Delivery screens provide direct instructions ("Orders to Deliver", "Ask Customer for 4-Digit Code", "Customer not answering? Take photo of packet at door").
+- **[REQ-UX-02] Always-Visible Order Tracking & Responsive Feed:**
+  - An unmistakable "My Orders & Delivery Tracking" card remains anchored on the Customer feed at all times, accompanied by an AppBar shortcut button.

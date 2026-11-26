@@ -70,3 +70,17 @@
   6. Merchant terminal receives notification with photo evidence.
   7. If merchant incurs $\ge 3$ verified defect claims within a 30-day window, system triggers an automated Quality Audit Freeze (Three-Strike Rule).
 - **Postconditions:** Consumer is made whole instantly; merchant quality accountability maintained without call centers.
+
+---
+
+## Use Case UC-05: App Owner Command Center & Master Data Export
+- **Primary Actor:** App Owner (Super-Admin)
+- **Mapped Requirement:** `REQ-ADM-01`, `REQ-ADM-02`, `REQ-ADM-03`
+- **Preconditions:** Owner accesses the secure dashboard at `/admin`.
+- **Main Flow:**
+  1. Owner views real-time telemetry: Gross Merchandise Value (GMV), 4.5% commission revenue, escrow funds, and active delivery counts.
+  2. Owner inspects specific stores and adjusts delivery catchment radius (e.g., from 1.5 km to 2.0 km) via geofence controls.
+  3. Owner reviews the live customer orders stream and instant dispute refund log.
+  4. Owner taps **"Download Master JSON"** or **"Export Orders CSV"**.
+  5. System packages full database state into a downloadable master JSON or CSV file for local offline archival.
+- **Postconditions:** Owner retains absolute custody of all marketplace records, financial ledgers, and operational parameters.

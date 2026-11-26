@@ -119,3 +119,14 @@ Blipto employs a **Clean Architecture with Domain-Driven Design (DDD)** on the m
 - `refund_amount` (DECIMAL)
 - `status` (ENUM: `AUTO_RESOLVED`, `REJECTED`, `FLAGGED_AUDIT`)
 - `created_at` (TIMESTAMP)
+
+---
+
+## 4. Owner Command Center & Master Data Hub (`/admin`)
+
+The App Owner operates an exclusive desktop command center served directly by the backend at `/admin`:
+
+- **Master Telemetry:** Real-time Gross Merchandise Value (GMV), 4.5% platform revenue, locked escrow funds, settled merchant payouts, and automated dispute refunds.
+- **Geofence Radius Control:** Dynamically patch store delivery catchment radii (`PATCH /v1/admin/stores/{id}/radius`).
+- **Master Data Persistence:** Complete one-click database export (`GET /v1/admin/export-data`) supporting structured JSON backup and flattened tabular CSV for accounting and disaster recovery.
+- **Natural Language Governance:** All user-facing interfaces enforce everyday conversational vocabulary across Customer, Shopkeeper, Delivery Partner, and Owner views.
