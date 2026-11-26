@@ -49,7 +49,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "Peak-Load Spillover: Routed to partner ${order.fulfillingStoreName} to guarantee <20 min SLA!",
+                              "Shop Sharing: Original shop was busy, so partner ${order.fulfillingStoreName} is delivering your order on time!",
                               style: const TextStyle(fontSize: 12, color: Colors.deepPurple, fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -95,9 +95,9 @@ class OrderTrackingScreen extends StatelessWidget {
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Doorstep Handoff OTP", style: TextStyle(color: Colors.white70, fontSize: 11)),
+                                Text("Delivery Code", style: TextStyle(color: Colors.white70, fontSize: 11)),
                                 SizedBox(height: 2),
-                                Text("Share with store delivery boy", style: TextStyle(color: Colors.white54, fontSize: 10)),
+                                Text("Tell this 4-digit code to delivery person", style: TextStyle(color: Colors.white54, fontSize: 10)),
                               ],
                             ),
                             Container(
@@ -162,12 +162,12 @@ class OrderTrackingScreen extends StatelessWidget {
                             children: [
                               Icon(Icons.shield_outlined, color: Colors.deepOrange, size: 18),
                               SizedBox(width: 8),
-                              Text("1-Tap Quality & Dispute Guarantee", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                              Text("Problem with your items?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                             ],
                           ),
                           const SizedBox(height: 6),
                           const Text(
-                            "Received a damaged, expired, or missing item? Take a live photo for an instant automated escrow wallet refund.",
+                            "Got a damaged, spoiled, or missing item? Take a quick photo for an instant refund to your wallet — no customer care calls needed.",
                             style: TextStyle(fontSize: 11, color: Colors.black54),
                           ),
                           const SizedBox(height: 12),
@@ -179,7 +179,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                 children: [
                                   Icon(Icons.check_circle, color: Color(0xFF2E7D32), size: 16),
                                   SizedBox(width: 6),
-                                  Text("Automated Refund Credited to Wallet", style: TextStyle(color: Color(0xFF2E7D32), fontSize: 12, fontWeight: FontWeight.bold)),
+                                  Text("Money Refunded to Your Wallet", style: TextStyle(color: Color(0xFF2E7D32), fontSize: 12, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             )
@@ -191,7 +191,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                               ),
                               icon: const Icon(Icons.camera_alt_outlined, size: 16),
-                              label: const Text("Report Defective Item (Instant Refund)", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              label: const Text("Damaged Item? Get Instant Refund", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                               onPressed: () {
                                 Navigator.push(
                                   context,

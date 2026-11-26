@@ -65,20 +65,20 @@ class RoleSwitcherBar extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildRoleTab(
-                      label: "Consumer",
+                      label: "Customer",
                       icon: Icons.shopping_bag_outlined,
                       isSelected: state.currentRole == AppRole.consumer,
                       onTap: () => state.switchRole(AppRole.consumer),
                     ),
                     _buildRoleTab(
-                      label: "Merchant",
+                      label: "Shopkeeper",
                       icon: Icons.storefront_rounded,
                       isSelected: state.currentRole == AppRole.merchant,
                       onTap: () => state.switchRole(AppRole.merchant),
                       badgeCount: state.hasIncomingOrderAlert ? 1 : null,
                     ),
                     _buildRoleTab(
-                      label: "Delivery",
+                      label: "Delivery Boy",
                       icon: Icons.moped_rounded,
                       isSelected: state.currentRole == AppRole.deliveryStaff,
                       onTap: () => state.switchRole(AppRole.deliveryStaff),

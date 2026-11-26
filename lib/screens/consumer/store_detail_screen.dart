@@ -40,7 +40,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             Text(
-              "${widget.store.distanceMeters.toStringAsFixed(0)}m • Direct Shelf Ingestion",
+              "${widget.store.distanceMeters.toStringAsFixed(0)}m away • Fresh from local shelf",
               style: const TextStyle(fontSize: 11, color: Colors.grey),
             ),
           ],
@@ -60,7 +60,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      "Store floor is busy. Orders auto-route to verified neighborhood partner with matching price & zero delays.",
+                      "Shop is busy right now! A friendly partner shop nearby will pack and deliver your order with no extra fee.",
                       style: TextStyle(fontSize: 11, color: Colors.brown, fontWeight: FontWeight.w600),
                     ),
                   ),

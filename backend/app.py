@@ -2,7 +2,7 @@
 Blipto Core REST API & Dispatch Service
 Standard-library compliant REST server implementing OpenAPI 3.0 contract.
 """
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 import json
 import os
 import re
@@ -494,7 +494,7 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
 
 def run_server(port: int = 8080):
     server_address = ("", port)
-    httpd = HTTPServer(server_address, BliptoHTTPHandler)
+    httpd = ThreadingHTTPServer(server_address, BliptoHTTPHandler)
     print(f"Blipto Dispatch & Escrow Server running on port {port}...")
     httpd.serve_forever()
 

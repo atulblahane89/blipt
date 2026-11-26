@@ -45,10 +45,10 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
               children: [
                 Icon(Icons.moped_rounded, color: Color(0xFF00B074), size: 18),
                 SizedBox(width: 6),
-                Text("Store Delivery Partner", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
+                Text("Delivery Partner", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
               ],
             ),
-            Text("In-House Fulfillment Run • 500m-2km Radius", style: TextStyle(fontSize: 11, color: Colors.grey)),
+            Text("Neighborhood Deliveries • Nearby Kirana Stores", style: TextStyle(fontSize: 11, color: Colors.grey)),
           ],
         ),
       ),
@@ -68,14 +68,14 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Active Delivery Drops", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const Text("Orders to Deliver", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFE8F5E9),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text("${runs.length} Runs Pending", style: const TextStyle(color: Color(0xFF2E7D32), fontWeight: FontWeight.bold, fontSize: 12)),
+                    child: Text("${runs.length} Deliveries Waiting", style: const TextStyle(color: Color(0xFF2E7D32), fontWeight: FontWeight.bold, fontSize: 12)),
                   ),
                 ],
               ),
@@ -91,8 +91,8 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
                   children: [
                     Icon(Icons.check_circle_outline, color: Color(0xFF00B074), size: 40),
                     SizedBox(height: 10),
-                    Text("No pending runs right now", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                    Text("Orders packed by the merchant will appear here instantly", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    Text("No deliveries right now", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text("When a shop packs an order, it will show up here immediately", style: TextStyle(fontSize: 11, color: Colors.grey)),
                   ],
                 ),
               )
@@ -122,7 +122,7 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Drop #${order.id}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text("Order #${order.id}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 Text(order.storeName, style: const TextStyle(fontSize: 11, color: Color(0xFF00B074), fontWeight: FontWeight.bold)),
               ],
             ),
@@ -145,7 +145,7 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
             const SizedBox(height: 12),
 
             // OTP Input Field (REQ-DLV-02)
-            const Text("Doorstep Verification", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            const Text("Ask Customer for 4-Digit Delivery Code", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             const SizedBox(height: 6),
             Row(
               children: [
@@ -155,7 +155,7 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
                     keyboardType: TextInputType.number,
                     maxLength: 4,
                     decoration: const InputDecoration(
-                      hintText: "Enter 4-Digit Customer OTP",
+                      hintText: "Enter 4-digit code (e.g. 4192)",
                       counterText: "",
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -173,20 +173,20 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
                     if (success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("✅ OTP Verified! Order Completed & Escrow Released to Store."),
+                          content: Text("✅ Code Verified! Delivery completed and shopkeeper gets paid instantly."),
                           backgroundColor: Color(0xFF2E7D32),
                         ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("❌ Invalid OTP! Please verify with customer."),
+                          content: Text("❌ Incorrect code! Please ask the customer to check their screen."),
                           backgroundColor: Colors.redAccent,
                         ),
                       );
                     }
                   },
-                  child: const Text("Verify OTP", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text("Confirm Code", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -196,12 +196,12 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
             Center(
               child: TextButton.icon(
                 icon: const Icon(Icons.camera_alt, size: 14, color: Colors.grey),
-                label: const Text("Customer unavailable? Take Doorstep Photo Proof", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                label: const Text("Customer not answering? Take photo of packet at door", style: TextStyle(fontSize: 11, color: Colors.grey)),
                 onPressed: () {
                   widget.state.verifyDeliveryWithPhoto(order.id, "photo_proof_${order.id}.jpg");
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("📸 Photo proof verified! Order marked delivered."),
+                      content: Text("📸 Photo saved! Order marked as delivered safely."),
                       backgroundColor: Color(0xFF0284C7),
                     ),
                   );

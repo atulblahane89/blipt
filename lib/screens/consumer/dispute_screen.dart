@@ -19,10 +19,10 @@ class _DisputeScreenState extends State<DisputeScreen> {
   bool isSubmitting = false;
 
   final List<String> reasons = [
-    "Damaged / Broken packaging",
-    "Expired or Spoiled item",
-    "Missing item from sealed bag",
-    "Wrong item fulfilled",
+    "Damaged or torn packaging",
+    "Expired, stale, or rotten item",
+    "Item was missing from packet",
+    "Received the wrong item",
   ];
 
   @override
@@ -36,7 +36,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
         elevation: 0,
         leading: const BackButton(color: Colors.black87),
         title: const Text(
-          "Automated Dispute & Refund",
+          "Instant Refund: Return Bad Items",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
       ),
@@ -59,7 +59,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      "No call-center hold times. Instant escrow refund to your wallet upon automated photo proof verification.",
+                      "No waiting for customer care! Just snap a quick photo of the damaged or wrong item and get your money back in seconds.",
                       style: TextStyle(fontSize: 11, color: Colors.blue, fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -69,7 +69,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
             const SizedBox(height: 16),
 
             // Select Defective Item
-            const Text("1. Select Affected Item", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text("1. Which item had a problem?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
@@ -96,7 +96,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
             const SizedBox(height: 16),
 
             // Select Reason
-            const Text("2. Reason for Claim", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text("2. What went wrong?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -119,7 +119,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
             const SizedBox(height: 16),
 
             // Camera Photo Proof
-            const Text("3. Doorstep Defect Photo Proof", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text("3. Take a quick photo of the item", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () {
@@ -147,7 +147,7 @@ class _DisputeScreenState extends State<DisputeScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        isPhotoCaptured ? "Defect Photo Captured (Tap to Retake)" : "Tap to capture defective item photo",
+                        isPhotoCaptured ? "Photo captured! (Tap to retake)" : "Tap here to take photo with phone camera",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -185,14 +185,14 @@ class _DisputeScreenState extends State<DisputeScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: const Color(0xFF2E7D32),
-                            content: Text("₹${(chosen.item.price * chosen.quantity).toStringAsFixed(0)} automatically credited to your Blipto Wallet!"),
+                            content: Text("₹${(chosen.item.price * chosen.quantity).toStringAsFixed(0)} immediately refunded to your wallet!"),
                           ),
                         );
                         Navigator.pop(context);
                       }
                     : null,
                 child: Text(
-                  isSubmitting ? "Processing..." : "Submit Photo & Claim Instant Refund",
+                  isSubmitting ? "Processing Refund..." : "Send Photo & Get Instant Refund",
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
                 ),
               ),

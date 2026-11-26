@@ -457,33 +457,33 @@
 
     <div class="nav-menu">
       <div class="nav-item active" onclick="switchTab('overview')">
-        <span>📊</span> <span>Marketplace Overview</span>
+        <span>📊</span> <span>Overview & Sales</span>
       </div>
       <div class="nav-item" onclick="switchTab('stores')">
-        <span>🏪</span> <span>Stores & Catchment</span>
+        <span>🏪</span> <span>Local Stores & Areas</span>
       </div>
       <div class="nav-item" onclick="switchTab('orders')">
-        <span>📦</span> <span>Live Orders Stream</span>
+        <span>📦</span> <span>Customer Orders</span>
       </div>
       <div class="nav-item" onclick="switchTab('inventory')">
-        <span>🏷️</span> <span>Master Inventory (SKUs)</span>
+        <span>🏷️</span> <span>All Store Products</span>
       </div>
       <div class="nav-item" onclick="switchTab('escrow')">
-        <span>🔒</span> <span>Escrow & Treasury</span>
+        <span>🔒</span> <span>Store Payments & Safe Escrow</span>
       </div>
       <div class="nav-item" onclick="switchTab('disputes')">
-        <span>🛡️</span> <span>Quality & Disputes</span>
+        <span>🛡️</span> <span>Customer Complaints & Refunds</span>
       </div>
       <div class="nav-item" onclick="switchTab('datasaver')">
-        <span>💾</span> <span>Master Data Saver</span>
+        <span>💾</span> <span>Save & Download All Data</span>
       </div>
     </div>
 
     <div class="owner-profile">
       <div class="owner-avatar">👑</div>
       <div class="owner-info">
-        <div class="owner-name">App Founder</div>
-        <div class="owner-role">Super Administrator</div>
+        <div class="owner-name">App Owner</div>
+        <div class="owner-role">Full Data & Settings Access</div>
       </div>
     </div>
   </aside>
@@ -492,15 +492,18 @@
   <main>
     <header>
       <div class="header-title">
-        <h1 id="page-title">Marketplace Overview</h1>
-        <p id="page-desc">Real-time telemetry across all decentralized neighborhood fulfillment centers</p>
+        <h1 id="page-title">Overview & Sales</h1>
+        <p id="page-desc">Live status of all your local grocery stores, orders, and daily earnings</p>
       </div>
       <div class="header-actions">
+        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary" style="background: rgba(0, 176, 116, 0.2); border-color: var(--primary); color: #fff; text-decoration: none;">
+          <span>📱</span> <span>Open Mobile App (Web)</span>
+        </a>
         <button class="btn btn-secondary" onclick="refreshData()">
-          <span>🔄</span> <span>Sync Live Data</span>
+          <span>🔄</span> <span>Refresh Data</span>
         </button>
         <button class="btn btn-primary" onclick="exportFullJSON()">
-          <span>💾</span> <span>Save Master DB (JSON)</span>
+          <span>💾</span> <span>Download All Data (JSON)</span>
         </button>
       </div>
     </header>

@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/store.dart';
 import '../models/inventory_item.dart';
 import '../models/order.dart';
@@ -366,8 +368,35 @@ class AppState extends ChangeNotifier {
     cartItems.clear();
     activeCartStoreId = null;
 
+    // Asynchronously log to the App Owner's Backend & Admin Dashboard
+    _syncOrderToBackend(newOrder, targetStore.id);
+
     notifyListeners();
     return newOrder;
+  }
+
+  Future<void> _syncOrderToBackend(BliptoOrder order, String storeId) async {
+    try {
+      final itemsPayload = order.items.map((oi) => {
+        "item_id": oi.item.id,
+        "barcode": oi.item.barcode,
+        "quantity": oi.quantity,
+      }).toList();
+
+      await http.post(
+        Uri.parse("http://localhost:8080/v1/orders"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "consumer_id": order.consumerId,
+          "store_id": storeId,
+          "consumer_lat": 12.9352,
+          "consumer_lng": 77.6245,
+          "items": itemsPayload,
+        }),
+      );
+    } catch (e) {
+      debugPrint("Local/offline sync note: $e");
+    }
   }
 
   // --- Merchant Operations ---
@@ -450,6 +479,7 @@ class AppState extends ChangeNotifier {
         // Release from escrow to settled ledger
         merchantSettledBalance += orders[idx].totalAmount;
         merchantEscrowBalance = max(0.0, merchantEscrowBalance - orders[idx].totalAmount);
+        _syncHandoffToBackend(orderId, inputOtp.trim());
         notifyListeners();
         return true;
       }
@@ -509,6 +539,32 @@ class AppState extends ChangeNotifier {
       orders[ordIdx].status = OrderStatus.refunded;
     }
 
+    _syncDisputeToBackend(orderId, itemId, reason, photoProof);
+
     notifyListeners();
+  }
+
+  Future<void> _syncHandoffToBackend(String orderId, String otp) async {
+    try {
+      await http.post(
+        Uri.parse("http://localhost:8080/v1/orders/$orderId/verify-delivery"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"otp": otp}),
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _syncDisputeToBackend(String orderId, String itemId, String reason, String photo) async {
+    try {
+      await http.post(
+        Uri.parse("http://localhost:8080/v1/orders/$orderId/dispute"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "item_id": itemId,
+          "reason": reason,
+          "photo_base64": photo,
+        }),
+      );
+    } catch (_) {}
   }
 }

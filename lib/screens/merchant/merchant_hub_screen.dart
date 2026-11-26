@@ -33,7 +33,7 @@ class MerchantHubScreen extends StatelessWidget {
               ],
             ),
             const Text(
-              "Blipto Store Terminal • Mobile-First Kirana Ops",
+              "Kirana Shop Dashboard • Receive Orders & Money",
               style: TextStyle(fontSize: 11, color: Colors.grey),
             ),
           ],
@@ -41,7 +41,7 @@ class MerchantHubScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner, color: Color(0xFF00B074)),
-            tooltip: "Barcode Intake",
+            tooltip: "Scan Barcode",
             onPressed: () {
               Navigator.push(
                 context,
@@ -51,7 +51,7 @@ class MerchantHubScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.account_balance, color: Colors.black87),
-            tooltip: "Escrow Ledger",
+            tooltip: "My Earnings",
             onPressed: () {
               Navigator.push(
                 context,
@@ -86,19 +86,19 @@ class MerchantHubScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Store Rush & Busy Mode", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          const Text("Shop Rush? (Busy Mode)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                           const SizedBox(height: 2),
                           Text(
                             store.isBusy
-                                ? "Auto-rerouting new orders to partner kiranas"
-                                : "Currently accepting incoming hyper-local orders",
+                                ? "ON: Forward orders to partner shop (You still earn commission!)"
+                                : "OFF: Taking all nearby customer orders normally",
                             style: TextStyle(fontSize: 11, color: store.isBusy ? Colors.deepOrange : Colors.grey.shade600),
                           ),
                         ],
                       ),
                       Switch(
                         value: store.isBusy,
-                        activeColor: Colors.deepOrange,
+                        activeThumbColor: Colors.deepOrange,
                         onChanged: (val) {
                           state.toggleBusyMode(store.id);
                         },
@@ -109,10 +109,10 @@ class MerchantHubScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildMetricItem("Active Runs", "${store.activeOrdersCount}/${store.maxActiveOrders}"),
-                      _buildMetricItem("Escrow Held", "₹${state.merchantEscrowBalance.toStringAsFixed(0)}"),
-                      _buildMetricItem("Settled Today", "₹${state.merchantSettledBalance.toStringAsFixed(0)}"),
-                      _buildMetricItem("Quality Strikes", "${state.merchantStrikeCount}/3", isWarning: state.merchantStrikeCount > 0),
+                      _buildMetricItem("Out for Delivery", "${store.activeOrdersCount}/${store.maxActiveOrders}"),
+                      _buildMetricItem("Money in Delivery", "₹${state.merchantEscrowBalance.toStringAsFixed(0)}"),
+                      _buildMetricItem("Today's Earnings", "₹${state.merchantSettledBalance.toStringAsFixed(0)}"),
+                      _buildMetricItem("Complaints", "${state.merchantStrikeCount}/3", isWarning: state.merchantStrikeCount > 0),
                     ],
                   ),
                 ],
@@ -131,7 +131,7 @@ class MerchantHubScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     icon: const Icon(Icons.barcode_reader, color: Colors.white, size: 20),
-                    label: const Text("Barcode Stock Scan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: const Text("Scan Barcode", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -150,7 +150,7 @@ class MerchantHubScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     icon: const Icon(Icons.currency_rupee, size: 18),
-                    label: const Text("Instant UPI Payout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: const Text("Transfer to Bank", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                     onPressed: () {
                       Navigator.push(
                         context,

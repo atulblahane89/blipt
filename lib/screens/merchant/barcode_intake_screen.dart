@@ -84,7 +84,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
         elevation: 0,
         leading: const BackButton(color: Colors.black87),
         title: const Text(
-          "Mobile Barcode Intake",
+          "Add Items by Scanning Barcode",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
       ),
@@ -122,7 +122,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                   const Positioned(
                     bottom: 12,
                     child: Text(
-                      "Point Camera at Product EAN-13 Barcode",
+                      "Point phone camera at item barcode",
                       style: TextStyle(color: Colors.white70, fontSize: 11),
                     ),
                   ),
@@ -132,7 +132,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
             const SizedBox(height: 12),
 
             // Quick Scan Sample Buttons
-            const Text("Quick Scan Sample SKUs:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            const Text("Try scanning sample items:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             Wrap(
               spacing: 8,
@@ -157,12 +157,12 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                 children: [
                   TextField(
                     controller: _barcodeCtrl,
-                    decoration: const InputDecoration(labelText: "Barcode (EAN-13)", border: OutlineInputBorder()),
+                    decoration: const InputDecoration(labelText: "Barcode Number", border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: _titleCtrl,
-                    decoration: const InputDecoration(labelText: "Product Title", border: OutlineInputBorder()),
+                    decoration: const InputDecoration(labelText: "Item Name", border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -171,7 +171,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                         child: TextField(
                           controller: _priceCtrl,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: "Price (₹)", border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: "Selling Price (₹)", border: OutlineInputBorder()),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -179,7 +179,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                         child: TextField(
                           controller: _qtyCtrl,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: "Shelf Stock Intake", border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: "Quantity in Shop", border: OutlineInputBorder()),
                         ),
                       ),
                     ],
@@ -199,7 +199,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 icon: const Icon(Icons.cloud_upload_outlined, color: Colors.white),
-                label: const Text("Sync to Live Shelf (Broadcast to 2km)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                label: const Text("Put on Shelf (Sell to Nearby Customers)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   final code = _barcodeCtrl.text;
                   final match = globalSkuCatalog[code];
@@ -218,7 +218,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("✅ Shelf stock synchronized in real-time!"),
+                      content: Text("✅ Item added to your shop shelf!"),
                       backgroundColor: Color(0xFF00B074),
                     ),
                   );

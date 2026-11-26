@@ -15,7 +15,7 @@ class EscrowLedgerScreen extends StatelessWidget {
         elevation: 0,
         leading: const BackButton(color: Colors.black87),
         title: const Text(
-          "Digital Escrow & Payout Ledger",
+          "My Earnings & Bank Payouts",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
       ),
@@ -36,7 +36,7 @@ class EscrowLedgerScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Settled Available Balance", style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  const Text("Ready to Transfer to Bank", style: TextStyle(color: Colors.white70, fontSize: 12)),
                   const SizedBox(height: 4),
                   Text(
                     "₹${state.merchantSettledBalance.toStringAsFixed(2)}",
@@ -51,7 +51,7 @@ class EscrowLedgerScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Funds in Escrow Hold", style: TextStyle(color: Colors.white60, fontSize: 11)),
+                          const Text("Orders Being Delivered Now", style: TextStyle(color: Colors.white60, fontSize: 11)),
                           Text(
                             "₹${state.merchantEscrowBalance.toStringAsFixed(2)}",
                             style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 15),
@@ -61,7 +61,7 @@ class EscrowLedgerScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Registered UPI ID", style: TextStyle(color: Colors.white60, fontSize: 11)),
+                          const Text("Your Bank UPI ID", style: TextStyle(color: Colors.white60, fontSize: 11)),
                           Text(
                             state.activeMerchantStore.upiId,
                             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
@@ -85,12 +85,12 @@ class EscrowLedgerScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 icon: const Icon(Icons.flash_on, color: Colors.white),
-                label: const Text("Transfer to Bank Account via UPI", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                label: const Text("Transfer to My Bank Account Now", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   state.requestInstantSettlement();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("Payout initiated to ${state.activeMerchantStore.upiId}!"),
+                      content: Text("Money sent to your UPI: ${state.activeMerchantStore.upiId}!"),
                       backgroundColor: const Color(0xFF2E7D32),
                     ),
                   );
@@ -114,12 +114,12 @@ class EscrowLedgerScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.lock_clock, size: 18, color: Color(0xFF00B074)),
                       SizedBox(width: 8),
-                      Text("How Blipto Escrow Protects You", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text("No More Udhari (Pending Credit) — Guaranteed Payment", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                     ],
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "• 100% of customer payment is locked in digital escrow upon order placement.\n• Funds automatically unlock to your settled ledger the instant your delivery boy verifies the customer OTP or photo.\n• No delayed retailer credit cycles or uncollected cash.",
+                    "• Customer already paid online when ordering — zero risk of unpaid bills.\n• The second your delivery boy enters the customer's code, money is 100% yours.\n• Tap the green button anytime to transfer money straight into your bank account.",
                     style: TextStyle(fontSize: 12, color: Color(0xFF475569), height: 1.4),
                   ),
                 ],
@@ -128,14 +128,14 @@ class EscrowLedgerScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Disputes Log
-            const Text("Disputes & Quality Audits", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            const Text("Customer Complaints & Returns", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             const SizedBox(height: 8),
             if (state.disputes.isEmpty)
               Container(
                 padding: const EdgeInsets.all(16),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-                child: const Text("Zero active disputes. 100% Quality Score!", style: TextStyle(color: Color(0xFF2E7D32), fontWeight: FontWeight.bold, fontSize: 13)),
+                child: const Text("Zero complaints. You have a 100% Quality Score!", style: TextStyle(color: Color(0xFF2E7D32), fontWeight: FontWeight.bold, fontSize: 13)),
               )
             else
               ...state.disputes.map((d) {

@@ -32,7 +32,7 @@ class ConsumerHomeScreen extends StatelessWidget {
               ],
             ),
             const Text(
-              "Hyper-local radius (500m - 1.5km) • 0 Dark Stores",
+              "Shops within 5-10 mins from your home",
               style: TextStyle(fontSize: 11, color: Colors.grey),
             ),
           ],
@@ -104,12 +104,12 @@ class ConsumerHomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Decentralized Neighborhood Retail",
+                          "Your Trusted Neighborhood Kiranas",
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         SizedBox(height: 3),
                         Text(
-                          "Zero surge fees • Direct from trusted local kiranas • Real-time shelf sync",
+                          "Delivered in 15 mins • No surge pricing • What you see is what's in stock",
                           style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
                         ),
                       ],
@@ -248,7 +248,7 @@ class ConsumerHomeScreen extends StatelessWidget {
                       Icon(Icons.timer_outlined, size: 14, color: Colors.grey.shade700),
                       const SizedBox(width: 4),
                       Text(
-                        "${store.estimatedMinutes} mins SLA",
+                        "~${store.estimatedMinutes} mins",
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
                       ),
                       const SizedBox(width: 12),
@@ -270,7 +270,7 @@ class ConsumerHomeScreen extends StatelessWidget {
                         border: Border.all(color: Colors.orange.shade300),
                       ),
                       child: const Text(
-                        "High Rush (Spillover Active)",
+                        "Shop Busy • Partner Delivering",
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.deepOrange),
                       ),
                     )
@@ -282,7 +282,7 @@ class ConsumerHomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
-                        "Fulfilling Live",
+                        "Delivering Now",
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF2E7D32)),
                       ),
                     ),
