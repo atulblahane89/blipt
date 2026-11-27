@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blipto — Platform Command Tower</title>
+  <title>Blipto — Owner Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Warm Bento & Cream Palette */
+      /* Warm Bento & Cream Palette (Clean, spacious, easy to read) */
       --bg-cream: #F8F6F0;
       --card-white: #FFFFFF;
       --card-cream: #FAF9F5;
@@ -65,15 +65,15 @@
     }
 
     /* ========================================================
-       GLASSY SIDEBAR V10 (Exact Match to paulcodes spec)
+       GLASSY SIDEBAR V10 (Clean, Auto-expands on Hover, Single Toggle)
        ======================================================== */
     .glassy-sidebar {
       position: fixed;
       left: 16px;
       top: 16px;
       bottom: 16px;
-      width: 68px; /* Collapsed default */
-      background: rgba(18, 24, 38, 0.88);
+      width: 68px; /* Collapsed state */
+      background: rgba(18, 24, 38, 0.90);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -87,12 +87,13 @@
       user-select: none;
     }
 
-    .glassy-sidebar.expanded {
-      width: 284px;
+    /* Hover or Locked Expanded State */
+    .glassy-sidebar.expanded,
+    .glassy-sidebar:hover {
+      width: 270px;
       border-radius: 32px;
     }
 
-    /* Outer Wrapper for content & rail */
     .sidebar-inner-flex {
       display: flex;
       height: 100%;
@@ -112,54 +113,37 @@
       z-index: 2;
     }
 
-    /* Right Glassy Notch Rail (Visible in Expanded Mode) */
+    /* Right Signature White Notch Rail (Visible when Expanded or Hovered) */
     .sidebar-notch-rail {
-      width: 44px;
+      width: 36px;
       background: #FFFFFF;
       display: none;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      padding: 18px 0;
+      padding: 20px 0;
       position: relative;
       z-index: 3;
       border-left: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    .glassy-sidebar.expanded .sidebar-notch-rail {
+    .glassy-sidebar.expanded .sidebar-notch-rail,
+    .glassy-sidebar:hover .sidebar-notch-rail {
       display: flex;
-    }
-
-    .rail-top-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background: var(--charcoal-100);
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--charcoal-900);
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-    .rail-top-btn:hover {
-      background: var(--charcoal-200);
     }
 
     .rail-vertical-label {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 2px;
       color: var(--charcoal-400);
       text-transform: uppercase;
-      padding-bottom: 12px;
+      padding-bottom: 16px;
     }
 
-    /* Top Brand & Toggle Header */
+    /* Top Brand & Single Toggle Button */
     .sidebar-header-row {
       display: flex;
       align-items: center;
@@ -194,7 +178,8 @@
       overflow: hidden;
       white-space: nowrap;
     }
-    .glassy-sidebar.expanded .brand-expanded-info {
+    .glassy-sidebar.expanded .brand-expanded-info,
+    .glassy-sidebar:hover .brand-expanded-info {
       display: flex;
     }
 
@@ -235,7 +220,8 @@
       color: #FFFFFF;
       font-size: 12px;
     }
-    .glassy-sidebar.expanded .sidebar-search-box {
+    .glassy-sidebar.expanded .sidebar-search-box,
+    .glassy-sidebar:hover .sidebar-search-box {
       display: flex;
     }
     .sidebar-search-box input {
@@ -251,14 +237,6 @@
     .sidebar-search-box input::placeholder {
       color: rgba(255, 255, 255, 0.4);
     }
-    .kbd-shortcut {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.5);
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
 
     /* Navigation Items List */
     .sidebar-nav-list {
@@ -273,9 +251,9 @@
       align-items: center;
       height: 42px;
       border-radius: var(--radius-full);
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.70);
       text-decoration: none;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -311,14 +289,15 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .glassy-sidebar.expanded .nav-label {
+    .glassy-sidebar.expanded .nav-label,
+    .glassy-sidebar:hover .nav-label {
       display: block;
     }
 
     .nav-badge-pill {
       display: none;
       margin-left: auto;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 800;
       padding: 2px 7px;
       border-radius: var(--radius-full);
@@ -326,24 +305,26 @@
       color: #FBBF24;
       border: 1px solid rgba(217, 119, 6, 0.4);
     }
-    .glassy-sidebar.expanded .nav-badge-pill {
+    .glassy-sidebar.expanded .nav-badge-pill,
+    .glassy-sidebar:hover .nav-badge-pill {
       display: inline-block;
     }
 
-    /* ACTIVE ITEM: The Signature Solid White Bridge */
+    /* Active Item: Signature Solid White Bridge */
     .glass-nav-item.active {
       background: #FFFFFF;
       color: var(--charcoal-900);
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
     }
-    .glassy-sidebar.expanded .glass-nav-item.active {
+    .glassy-sidebar.expanded .glass-nav-item.active,
+    .glassy-sidebar:hover .glass-nav-item.active {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
       margin-right: -12px;
       padding-right: 18px;
     }
 
-    /* Tooltip in Collapsed Mode */
+    /* Tooltip in Pure Collapsed Mode */
     .glass-nav-item .tooltip {
       position: absolute;
       left: 54px;
@@ -362,85 +343,12 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 1001;
     }
-    .glassy-sidebar:not(.expanded) .glass-nav-item:hover .tooltip {
-      opacity: 1;
-      transform: translateX(0);
-    }
 
-    /* Sub-Section (Categories in Expanded Mode) */
-    .sidebar-section-title {
-      display: none;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.4);
-      text-transform: uppercase;
-      margin: 16px 0 8px 10px;
-    }
-    .glassy-sidebar.expanded .sidebar-section-title {
-      display: block;
-    }
-
-    .project-dot-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 10px;
-      border-radius: var(--radius-md);
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
-      cursor: pointer;
-      transition: all 0.16s ease;
-    }
-    .project-dot-row:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: #FFFFFF;
-    }
-    .color-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: var(--radius-full);
-      flex-shrink: 0;
-    }
-
-    .glassy-sidebar:not(.expanded) .project-dot-row {
-      justify-content: center;
-      padding: 6px 0;
-    }
-    .glassy-sidebar:not(.expanded) .project-dot-text {
-      display: none;
-    }
-
-    /* Bottom Profile & Pro Section */
+    /* Bottom Profile Row */
     .sidebar-footer-box {
       margin-top: auto;
       padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .pro-card-mini {
-      display: none;
-      background: linear-gradient(135deg, rgba(217, 119, 6, 0.2), rgba(217, 83, 56, 0.1));
-      border: 1px solid rgba(217, 119, 6, 0.3);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .glassy-sidebar.expanded .pro-card-mini {
-      display: flex;
-    }
-
-    .pro-badge-btn {
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      background: #FBBF24;
-      color: var(--charcoal-900);
-      border: none;
-      cursor: pointer;
     }
 
     .user-profile-row {
@@ -482,7 +390,8 @@
       overflow: hidden;
       white-space: nowrap;
     }
-    .glassy-sidebar.expanded .user-meta-expanded {
+    .glassy-sidebar.expanded .user-meta-expanded,
+    .glassy-sidebar:hover .user-meta-expanded {
       display: block;
     }
     .user-meta-expanded h5 {
@@ -496,7 +405,7 @@
     }
 
     /* ========================================================
-       MAIN APP WORKSPACE (Dynamic margin based on sidebar)
+       MAIN APP WORKSPACE
        ======================================================== */
     .app-main {
       margin-left: 96px;
@@ -508,7 +417,7 @@
     }
 
     body.sidebar-is-expanded .app-main {
-      margin-left: 312px;
+      margin-left: 298px;
     }
 
     /* Clean Top Navbar */
@@ -941,7 +850,7 @@
 <body>
 
   <!-- ========================================================
-       GLASSY SIDEBAR V10 (COLLAPSED & EXPANDED MODES)
+       GLASSY SIDEBAR V10 (CLEAN, AUTO-EXPANDS ON HOVER, SINGLE TOGGLE)
        ======================================================== -->
   <aside class="glassy-sidebar" id="glassy-sidebar">
     <div class="sidebar-inner-flex">
@@ -949,16 +858,16 @@
       <!-- Main Glassy Pane -->
       <div class="sidebar-main-pane">
         
-        <!-- Header with Expand/Collapse Toggle & Brand -->
+        <!-- Header with Single Toggle Button & Brand -->
         <div class="sidebar-header-row">
           <div class="brand-expanded-info">
             <div class="brand-logo-pill">⚡</div>
             <div class="brand-meta">
               <h4>Blipto</h4>
-              <p>Platform Tower</p>
+              <p>Store Network</p>
             </div>
           </div>
-          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebarLock()" title="Keep Sidebar Open">
             <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none;">
               <rect x="3" y="3" width="18" height="18" rx="4"/>
               <line x1="9" y1="3" x2="9" y2="21"/>
@@ -972,11 +881,10 @@
           <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; opacity: 0.6;">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input type="text" placeholder="Search tabs, orders...">
-          <span class="kbd-shortcut">⌘K</span>
+          <input type="text" placeholder="Search orders, stores...">
         </div>
 
-        <!-- Navigation Links -->
+        <!-- Navigation Links (Plain, User-Friendly English) -->
         <nav class="sidebar-nav-list">
           <div class="glass-nav-item active" id="glass-overview" onclick="switchTab('overview')">
             <span class="nav-icon">
@@ -990,8 +898,8 @@
             <span class="nav-icon">
               <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </span>
-            <span class="nav-label">Local Kiranas</span>
-            <span class="tooltip">Local Kirana Stores</span>
+            <span class="nav-label">Local Stores</span>
+            <span class="tooltip">Local Grocery Stores</span>
           </div>
 
           <div class="glass-nav-item" id="glass-orders" onclick="switchTab('orders')">
@@ -999,76 +907,45 @@
               <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
             </span>
             <span class="nav-label">Live Orders</span>
-            <span class="tooltip">Live Orders Stream</span>
+            <span class="tooltip">Customer Orders</span>
           </div>
 
           <div class="glass-nav-item" id="glass-inventory" onclick="switchTab('inventory')">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
             </span>
-            <span class="nav-label">Inventory & SKUs</span>
-            <span class="tooltip">Master Inventory</span>
+            <span class="nav-label">Store Products</span>
+            <span class="tooltip">Store Products & Stock</span>
           </div>
 
           <div class="glass-nav-item" id="glass-escrow" onclick="switchTab('escrow')">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <span class="nav-label">Escrow & Payouts</span>
-            <span class="tooltip">Escrow & Treasury</span>
+            <span class="nav-label">Payouts & Payments</span>
+            <span class="tooltip">Store Payouts & Safe Payments</span>
           </div>
 
           <div class="glass-nav-item" id="glass-disputes" onclick="switchTab('disputes')">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </span>
-            <span class="nav-label">Complaints & Appeals</span>
+            <span class="nav-label">Complaints & Refunds</span>
             <span class="nav-badge-pill">1</span>
-            <span class="tooltip">Customer Complaints & 3-Strikes</span>
+            <span class="tooltip">Complaints & Refunds</span>
           </div>
 
           <div class="glass-nav-item" id="glass-overflow" onclick="switchTab('overflow')">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             </span>
-            <span class="nav-label">Partner Sharing</span>
-            <span class="tooltip">Partner Store Sharing (1.5%)</span>
-          </div>
-
-          <div class="glass-nav-item" id="glass-datasaver" onclick="switchTab('datasaver')">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            </span>
-            <span class="nav-label">Data DB Explorer</span>
-            <span class="tooltip">Database Backup</span>
-          </div>
-
-          <!-- Section: Catchment Clusters -->
-          <div class="sidebar-section-title">CATCHMENT HUBS</div>
-          <div class="project-dot-row" onclick="switchTab('stores')">
-            <span class="color-dot" style="background: #F59E0B;"></span>
-            <span class="project-dot-text">Bellandur Cluster (450m)</span>
-          </div>
-          <div class="project-dot-row" onclick="switchTab('stores')">
-            <span class="color-dot" style="background: #10B981;"></span>
-            <span class="project-dot-text">Green Glen Super (850m)</span>
-          </div>
-          <div class="project-dot-row" onclick="switchTab('overflow')">
-            <span class="color-dot" style="background: #EC4899;"></span>
-            <span class="project-dot-text">Sector 2 Spillover Active</span>
+            <span class="nav-label">Store Sharing</span>
+            <span class="tooltip">Sharing Orders Between Stores</span>
           </div>
         </nav>
 
-        <!-- Bottom Pro & User Profile Section -->
+        <!-- Bottom User Profile Section (Clean, No clutter) -->
         <div class="sidebar-footer-box">
-          <div class="pro-card-mini">
-            <div>
-              <div style="font-size: 11px; font-weight: 700; color: #FBBF24;">👑 Owner Tower</div>
-              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.6);">Full Admin Access</div>
-            </div>
-            <button class="pro-badge-btn" onclick="exportFullJSON()">Backup</button>
-          </div>
-
           <div class="user-profile-row" onclick="switchTab('datasaver')">
             <div class="user-avatar-glass">
               👑
@@ -1076,7 +953,7 @@
             </div>
             <div class="user-meta-expanded">
               <h5>App Owner</h5>
-              <p>admin@blipto.in</p>
+              <p>Full Access</p>
             </div>
           </div>
         </div>
@@ -1085,9 +962,6 @@
 
       <!-- Right Signature White Notch Rail (paulcodes Glassy Sidebar V10) -->
       <div class="sidebar-notch-rail" id="sidebar-notch-rail">
-        <button class="rail-top-btn" onclick="toggleSidebar()" title="Collapse Sidebar">
-          ◫
-        </button>
         <div class="rail-vertical-label" id="rail-active-name">OVERVIEW</div>
       </div>
 
@@ -1104,30 +978,30 @@
       <div class="brand-section">
         <div class="brand-badge">⚡</div>
         <span class="brand-text">blipto</span>
-        <span class="brand-sub">Platform Tower</span>
+        <span class="brand-sub">Owner Portal</span>
       </div>
 
-      <!-- Horizontal Navigation Tabs -->
+      <!-- Horizontal Navigation Tabs (Plain English) -->
       <nav class="nav-tabs">
         <div class="tab-pill active" onclick="switchTab('overview')">Overview</div>
-        <div class="tab-pill" onclick="switchTab('stores')">Stores</div>
+        <div class="tab-pill" onclick="switchTab('stores')">Local Stores</div>
         <div class="tab-pill" onclick="switchTab('orders')">Orders</div>
-        <div class="tab-pill" onclick="switchTab('inventory')">Inventory</div>
-        <div class="tab-pill" onclick="switchTab('escrow')">Escrow & Payouts</div>
+        <div class="tab-pill" onclick="switchTab('inventory')">Products</div>
+        <div class="tab-pill" onclick="switchTab('escrow')">Payouts & Payments</div>
         <div class="tab-pill" onclick="switchTab('disputes')">Complaints</div>
-        <div class="tab-pill" onclick="switchTab('overflow')">Partner Sharing</div>
-        <div class="tab-pill" onclick="switchTab('datasaver')">Data DB</div>
+        <div class="tab-pill" onclick="switchTab('overflow')">Store Sharing</div>
+        <div class="tab-pill" onclick="switchTab('datasaver')">Backup Data</div>
       </nav>
 
       <div class="header-actions">
         <a href="http://localhost:3000" target="_blank" class="btn btn-outline">
-          <span>📱</span> <span>Mobile App</span>
+          <span>📱</span> <span>Customer App</span>
         </a>
         <button class="btn btn-outline" onclick="refreshData()">
-          <span>🔄</span> <span>Sync</span>
+          <span>🔄</span> <span>Refresh</span>
         </button>
         <button class="btn btn-dark" onclick="exportFullJSON()">
-          <span>💾</span> <span>Backup</span>
+          <span>💾</span> <span>Download Backup</span>
         </button>
       </div>
     </header>
@@ -1136,65 +1010,65 @@
     <div class="page-title-box">
       <div>
         <h1 id="page-title">Overview & Sales</h1>
-        <p id="page-desc">Real-time telemetry across all decentralized neighborhood fulfillment centers</p>
+        <p id="page-desc">Live status of your local stores, customer orders, and daily earnings</p>
       </div>
       <div class="pill-indicator">
         <span class="dot-online"></span>
-        <span>Hyperlocal Network Live</span>
+        <span>All Local Stores Active</span>
       </div>
     </div>
 
     <!-- ========================================================
-         TAB 1: OVERVIEW & SALES (CLEAN, AIRY, UNCLUTTERED)
+         TAB 1: OVERVIEW & SALES (PLAIN ENGLISH & AIRY)
          ======================================================== -->
     <div id="tab-overview" class="tab-panel active">
       
-      <!-- Top 3 Key Metrics (Clean & Spacious) -->
+      <!-- Top 3 Key Metrics (Clean & Plain English) -->
       <div class="metrics-row-clean">
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Total Sales (GMV)</span>
+            <span>Total Customer Sales</span>
             <span class="badge badge-success">+14.2%</span>
           </div>
           <div class="metric-hero-num" id="val-gmv">₹4,820</div>
-          <div class="metric-sub-note">Across active neighborhood cluster</div>
+          <div class="metric-sub-note">Total value of groceries ordered today</div>
         </div>
 
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Platform Software Fee (4.5%)</span>
-            <span class="badge badge-info">Zero Dark Store Burn</span>
+            <span>Blipto Daily Earnings</span>
+            <span class="badge badge-info">Zero Warehouse Costs</span>
           </div>
           <div class="metric-hero-num" id="val-revenue">₹216.90</div>
-          <div class="metric-sub-note">Net software revenue margin</div>
+          <div class="metric-sub-note">4.5% commission on delivered orders</div>
         </div>
 
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Active Partner Kiranas</span>
+            <span>Active Grocery Stores</span>
             <span class="badge badge-success">Live</span>
           </div>
           <div class="metric-hero-num" id="val-stores">3 Stores</div>
-          <div class="metric-sub-note">Merchant-fulfilled doorstep delivery</div>
+          <div class="metric-sub-note">Local shops fulfilling customer deliveries</div>
         </div>
       </div>
 
-      <!-- 2-Col Split: Revenue Wave + Recent In-Flight Orders -->
+      <!-- 2-Col Split: Sales Trend + Recent Live Orders -->
       <div class="overview-hero-split">
         
-        <!-- Left: Clean Revenue Wave Chart -->
+        <!-- Left: Clean Sales Trend Chart -->
         <div class="chart-card-clean">
           <div>
             <div class="chart-header-row">
               <div>
-                <h3 style="font-size: 16px; font-weight: 800;">Revenue & Sales Flow</h3>
+                <h3 style="font-size: 16px; font-weight: 800;">Daily Sales Trend</h3>
                 <div class="chart-big-number">
                   <span>₹1,014,640</span>
                   <span class="trend-pill">↑ +18.4%</span>
                 </div>
               </div>
               <div style="font-size: 12px; color: var(--charcoal-500); font-weight: 600;">
-                Avg Delivery: <strong>12.4 mins</strong>
+                Average Delivery: <strong>12 mins</strong>
               </div>
             </div>
 
@@ -1215,16 +1089,16 @@
           </div>
 
           <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--charcoal-500); border-top: 1px solid var(--border-subtle); padding-top: 12px; margin-top: 8px;">
-            <span>Avg Order Value: <strong style="color: var(--charcoal-900);">₹160.67</strong></span>
-            <span>Zero Phantom Stock: <strong style="color: var(--charcoal-900);">100% Verified</strong></span>
-            <span>Customer SLA: <strong style="color: var(--charcoal-900);">98.4% On-Time</strong></span>
+            <span>Average Order: <strong style="color: var(--charcoal-900);">₹160</strong></span>
+            <span>Real Shelf Stock: <strong style="color: var(--charcoal-900);">100% Verified</strong></span>
+            <span>On-Time Speed: <strong style="color: var(--charcoal-900);">98% Delivered Fast</strong></span>
           </div>
         </div>
 
-        <!-- Right: Recent Active Orders (3 Clean Cards) -->
+        <!-- Right: Recent Live Orders (3 Clean Cards) -->
         <div class="recent-orders-card">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 16px; font-weight: 800;">Recent In-Flight Orders</h3>
+            <h3 style="font-size: 16px; font-weight: 800;">Recent Live Orders</h3>
             <span class="badge badge-info">Live</span>
           </div>
 
@@ -1237,7 +1111,7 @@
               </div>
               <div style="text-align: right;">
                 <div style="font-size: 16px; font-weight: 800;">₹119</div>
-                <span class="chip">Out for Delivery (OTP 4192)</span>
+                <span class="chip">Out for Delivery (Code: 4192)</span>
               </div>
             </div>
 
@@ -1249,7 +1123,7 @@
               </div>
               <div style="text-align: right;">
                 <div style="font-size: 16px; font-weight: 800;">₹173</div>
-                <span class="chip">+₹10.50 Margin</span>
+                <span class="chip">+₹10.50 Store Bonus</span>
               </div>
             </div>
 
@@ -1272,7 +1146,7 @@
       <!-- Recent Orders Table -->
       <div class="table-container">
         <div class="table-header">
-          <h3>Recent Hyper-Local Orders</h3>
+          <h3>Recent Orders</h3>
           <button class="btn btn-outline" onclick="switchTab('orders')" style="font-size: 12px;">
             View All Orders ➔
           </button>
@@ -1281,13 +1155,13 @@
           <thead>
             <tr>
               <th>Order ID</th>
-              <th>Origin Store</th>
-              <th>Fulfilling Store</th>
-              <th>Payment Mode</th>
-              <th>Routing Type</th>
-              <th>Amount</th>
-              <th>Handoff OTP</th>
-              <th>Status</th>
+              <th>Customer Store</th>
+              <th>Delivering Store</th>
+              <th>Payment Type</th>
+              <th>Order Handled By</th>
+              <th>Total Bill</th>
+              <th>Delivery Code</th>
+              <th>Order Status</th>
             </tr>
           </thead>
           <tbody id="overview-orders-tbody">
@@ -1299,29 +1173,29 @@
     </div>
 
     <!-- ========================================================
-         TAB 2: STORES & CATCHMENT
+         TAB 2: LOCAL STORES & AREAS
          ======================================================== -->
     <div id="tab-stores" class="tab-panel">
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Partner Kirana Directory & Catchment Controls</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Manage partner kirana stores, delivery radius boundaries, and peak rush settings</p>
+            <h3>Partner Grocery Stores</h3>
+            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">View your neighborhood stores, delivery areas, and rush hours</p>
           </div>
-          <button class="btn btn-dark" onclick="alert('Store KYC Approval Portal Ready')">+ Onboard New Kirana</button>
+          <button class="btn btn-dark" onclick="alert('New Store Registration Form Ready')">+ Add New Grocery Store</button>
         </div>
         <table>
           <thead>
             <tr>
               <th>Store ID</th>
               <th>Store Name & Address</th>
-              <th>Radius</th>
-              <th>Capacity</th>
-              <th>Rush / Busy Mode</th>
-              <th>Trust Rating</th>
-              <th>Strikes</th>
-              <th>UPI Payout Handle</th>
-              <th>Actions</th>
+              <th>Delivery Area</th>
+              <th>Active Runs</th>
+              <th>Rush Status</th>
+              <th>Customer Rating</th>
+              <th>Warnings</th>
+              <th>Shop UPI ID</th>
+              <th>Quick Switch</th>
             </tr>
           </thead>
           <tbody id="stores-tbody">
@@ -1332,28 +1206,28 @@
     </div>
 
     <!-- ========================================================
-         TAB 3: LIVE ORDERS STREAM
+         TAB 3: CUSTOMER ORDERS STREAM
          ======================================================== -->
     <div id="tab-orders" class="tab-panel">
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Global Master Order Stream</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Real-time order dispatch, dynamic spillovers, and delivery status</p>
+            <h3>All Customer Orders</h3>
+            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Every grocery order placed across all your local neighborhood stores</p>
           </div>
-          <button class="btn btn-outline" onclick="exportOrdersCSV()">📊 Export Orders CSV</button>
+          <button class="btn btn-outline" onclick="exportOrdersCSV()">📊 Download Orders Spreadsheet</button>
         </div>
         <table>
           <thead>
             <tr>
               <th>Order ID</th>
-              <th>Customer ID</th>
+              <th>Customer</th>
               <th>Store</th>
-              <th>Items Summary</th>
+              <th>Items</th>
               <th>Total Bill</th>
-              <th>OTP</th>
+              <th>Delivery Code</th>
               <th>Status</th>
-              <th>Delivery SLA</th>
+              <th>Time Placed</th>
             </tr>
           </thead>
           <tbody id="orders-tbody">
@@ -1364,27 +1238,27 @@
     </div>
 
     <!-- ========================================================
-         TAB 4: MASTER INVENTORY & SKUs
+         TAB 4: ALL STORE PRODUCTS & STOCK
          ======================================================== -->
     <div id="tab-inventory" class="tab-panel">
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Master Stock & SKU Explorer (Zero-Phantom Audit)</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Real-time shelf inventory synchronized via Voice-to-Stock</p>
+            <h3>All Store Products & Shelf Stock</h3>
+            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Real-time grocery items verified directly on neighborhood store shelves</p>
           </div>
-          <button class="btn btn-outline" onclick="exportInventoryCSV()">📊 Export SKUs CSV</button>
+          <button class="btn btn-outline" onclick="exportInventoryCSV()">📊 Download Products Spreadsheet</button>
         </div>
         <table>
           <thead>
             <tr>
-              <th>Barcode (EAN-13)</th>
-              <th>Product Title</th>
+              <th>Barcode</th>
+              <th>Product Name</th>
               <th>Store</th>
               <th>Category</th>
-              <th>Shelf Price</th>
-              <th>Stock Count</th>
-              <th>Audit Status</th>
+              <th>Price</th>
+              <th>In Stock</th>
+              <th>Shelf Status</th>
             </tr>
           </thead>
           <tbody id="inventory-tbody">
@@ -1395,46 +1269,45 @@
     </div>
 
     <!-- ========================================================
-         TAB 5: ESCROW & PAYMENT BREAKDOWN
+         TAB 5: STORE PAYOUTS & PAYMENTS
          ======================================================== -->
     <div id="tab-escrow" class="tab-panel">
       <div class="bento-surface">
-        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Platform Escrow & Merchant Payout Settlement</h2>
+        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Store Payouts & Safe Payments</h2>
         <p style="color: var(--charcoal-500); font-size: 13.5px; line-height: 1.6; max-width: 800px;">
-          Blipto operates a zero-working-capital escrow treasury. Consumer payments are held in digital escrow upon checkout. 
-          Funds automatically release into the merchant's instant UPI ledger upon OTP handoff verification, eliminating retailer credit risk.
+          Customer payments are safely held until the order reaches their doorstep. Once the delivery code is entered, the shopkeeper receives their money instantly via UPI.
         </p>
 
-        <!-- Escrow Stats Cards -->
+        <!-- Stats Cards in Plain English -->
         <div class="metrics-row-clean" style="margin-top: 24px;">
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Escrow Locked Funds</div>
+            <div class="metric-top-label">Payments Held Safely</div>
             <div class="metric-hero-num" id="val-escrow" style="color: var(--accent-amber);">₹580.00</div>
-            <div class="metric-sub-note">Protected against non-delivery claims</div>
+            <div class="metric-sub-note">Released when delivery is complete</div>
           </div>
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Total Settled to Merchants</div>
+            <div class="metric-top-label">Paid to Shopkeepers</div>
             <div class="metric-hero-num" style="color: var(--accent-green);">₹4,240.00</div>
-            <div class="metric-sub-note">Direct UPI instant payouts</div>
+            <div class="metric-sub-note">Sent directly to shopkeeper bank/UPI</div>
           </div>
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Refunded on Defect Claims</div>
+            <div class="metric-top-label">Refunded for Damaged Items</div>
             <div class="metric-hero-num" style="color: var(--accent-coral);">₹87.00</div>
-            <div class="metric-sub-note">Automated 1-tap customer refunds</div>
+            <div class="metric-sub-note">Quick 1-tap customer refunds</div>
           </div>
         </div>
 
-        <!-- Payment Modes Breakdown (REQ-PAY-01) -->
+        <!-- Payment Modes Breakdown -->
         <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
-          <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">Customer Payment Modes (Live GMV Split)</h3>
+          <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">How Customers Paid Today</h3>
           <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">⚡ UPI (GPay, PhonePe)</div>
+              <div style="font-size: 11px; color: var(--charcoal-500);">⚡ UPI (GPay, PhonePe, Paytm)</div>
               <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-upi-val">₹0.00</div>
               <div style="font-size: 11px; color: var(--accent-coral); margin-top: 2px;" id="pay-upi-count">0 Orders</div>
             </div>
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">💳 Credit / Debit Cards</div>
+              <div style="font-size: 11px; color: var(--charcoal-500);">💳 Debit & Credit Cards</div>
               <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-card-val">₹0.00</div>
               <div style="font-size: 11px; color: var(--accent-blue); margin-top: 2px;" id="pay-card-count">0 Orders</div>
             </div>
@@ -1454,28 +1327,28 @@
     </div>
 
     <!-- ========================================================
-         TAB 6: DISPUTES & APPEALS
+         TAB 6: COMPLAINTS & REFUNDS
          ======================================================== -->
     <div id="tab-disputes" class="tab-panel">
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Customer Defect Claims & 3-Strike Governance Desk</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Automated computer vision photo auditing with 1-tap customer refunds</p>
+            <h3>Customer Complaints & Issue Refunds</h3>
+            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Customer photos checked for quick, fair refunds on broken or missing items</p>
           </div>
         </div>
         <table>
           <thead>
             <tr>
-              <th>Dispute ID</th>
+              <th>Complaint ID</th>
               <th>Order ID</th>
-              <th>Claimed Item</th>
+              <th>Damaged Item</th>
               <th>Reason</th>
               <th>Refund Amount</th>
-              <th>Photo Evidence</th>
-              <th>AI Visual Audit (REQ-V2-OPS-02)</th>
-              <th>Resolution Status</th>
-              <th>Merchant Strike</th>
+              <th>Customer Photo</th>
+              <th>Photo Check</th>
+              <th>Resolution</th>
+              <th>Store Warning</th>
             </tr>
           </thead>
           <tbody id="disputes-tbody">
@@ -1484,24 +1357,24 @@
         </table>
       </div>
 
-      <!-- Seller Strike Appeal Desk -->
+      <!-- Shopkeeper Explanations Review Desk -->
       <div class="table-container" style="margin-top: 24px;">
         <div class="table-header">
           <div>
-            <h3>⚖️ Merchant Strike Appeals (Counter-Proof Review)</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Kirana shopkeepers submit counter-proof notes or dispatch photos to appeal strikes</p>
+            <h3>⚖️ Shopkeeper Explanations & Counter-Proof</h3>
+            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Shopkeepers can explain or provide counter-proof if a complaint was not their fault</p>
           </div>
-          <span class="badge badge-warning" id="pending-appeals-badge">Review Desk</span>
+          <span class="badge badge-warning" id="pending-appeals-badge">Pending Review</span>
         </div>
         <table>
           <thead>
             <tr>
               <th>Appeal ID</th>
-              <th>Store ID</th>
-              <th>Complaint Reason</th>
-              <th>Merchant Counter-Proof Note</th>
+              <th>Store</th>
+              <th>Original Complaint</th>
+              <th>Shopkeeper Proof / Explanation</th>
               <th>Status</th>
-              <th>Owner Action</th>
+              <th>Your Decision</th>
             </tr>
           </thead>
           <tbody id="strike-appeals-tbody">
@@ -1512,16 +1385,15 @@
     </div>
 
     <!-- ========================================================
-         TAB 7: PARTNER SHARING (OVERFLOW)
+         TAB 7: STORE SHARING (RUSH HOUR LOAD BALANCING)
          ======================================================== -->
     <div id="tab-overflow" class="tab-panel">
       <div class="bento-surface">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
           <div>
-            <h2 style="font-size: 18px; font-weight: 800;">🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)</h2>
+            <h2 style="font-size: 18px; font-weight: 800;">🔄 Order Sharing Between Nearby Stores</h2>
             <p style="color: var(--charcoal-500); font-size: 13px; margin-top: 4px; max-width: 750px;">
-              Automatic order load balancing across neighborhood partner stores (500m–1.2km) with 1.5% referral commission. 
-              Eliminates customer cancellations when a local shop is at full rush capacity.
+              When one store is too busy during rush hours, a nearby partner store delivers the order instead. The original shop still earns a 1.5% sharing bonus, and the customer gets their groceries on time without cancellations.
             </p>
           </div>
           <span class="badge badge-success">Sharing Active</span>
@@ -1529,55 +1401,55 @@
 
         <div class="metrics-row-clean" style="margin-bottom: 20px;">
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Orders Handled by Partners</div>
+            <div class="metric-top-label">Orders Saved During Rush</div>
             <div class="metric-hero-num" style="color: var(--accent-green);">2 Orders</div>
-            <div class="metric-sub-note">100% saved from cancellation</div>
+            <div class="metric-sub-note">Zero customer cancellations</div>
           </div>
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Partner Referral Margins</div>
+            <div class="metric-top-label">Sharing Bonuses Paid</div>
             <div class="metric-hero-num" style="color: var(--accent-blue);">₹18.50</div>
-            <div class="metric-sub-note">1.5% credited to busy shops</div>
+            <div class="metric-sub-note">1.5% bonus to busy shops</div>
           </div>
           <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Partner Store Radius</div>
-            <div class="metric-hero-num">650m avg</div>
+            <div class="metric-top-label">Average Distance Between Shops</div>
+            <div class="metric-hero-num">650 meters</div>
             <div class="metric-sub-note">Delivered in ~14 mins</div>
           </div>
         </div>
 
         <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-subtle); margin-bottom: 0;">
           <div class="table-header">
-            <span style="font-weight: 700; font-size: 14px;">Live Partner Store Order Sharing Log</span>
-            <span class="badge badge-purple">Real-Time Telemetry</span>
+            <span style="font-weight: 700; font-size: 14px;">Recent Shared Orders Log</span>
+            <span class="badge badge-purple">Live Log</span>
           </div>
           <table>
             <thead>
               <tr>
                 <th>Order ID</th>
-                <th>Originating Store (Busy/Full)</th>
-                <th>Fulfilling Store (Partner Store)</th>
-                <th>Catchment Distance</th>
-                <th>Spillover Trigger</th>
-                <th>Referral Margin (1.5%)</th>
-                <th>Delivery SLA</th>
+                <th>Original Shop (Busy)</th>
+                <th>Delivering Shop (Partner)</th>
+                <th>Distance Between Shops</th>
+                <th>Why Order Was Shared</th>
+                <th>Sharing Bonus (1.5%)</th>
+                <th>Delivery Time</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="mono"><strong>#ORD-9350</strong></td>
-                <td><span style="color: #DC2626; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
+                <td><span style="color: #DC2626; font-weight: 600;">Sri Venkateshwara Fresh</span></td>
                 <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                <td>650m</td>
-                <td>Queue Full (3/3 Active Runs)</td>
-                <td><span style="color: #2563EB; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
+                <td>650 meters</td>
+                <td>Shop was full during evening rush</td>
+                <td><span style="color: #2563EB; font-weight: 700;">+₹10.50</span> to Venkateshwara</td>
                 <td><span class="badge badge-success">Delivered in 14 mins</span></td>
               </tr>
               <tr>
                 <td class="mono"><strong>#ORD-9412</strong></td>
-                <td><span style="color: #DC2626; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
+                <td><span style="color: #DC2626; font-weight: 600;">Gupta Kirana</span></td>
                 <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                <td>850m</td>
-                <td>Merchant Manually Toggled Busy Mode</td>
+                <td>850 meters</td>
+                <td>Shopkeeper turned on Busy Mode</td>
                 <td><span style="color: #2563EB; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
                 <td><span class="badge badge-success">Delivered in 16 mins</span></td>
               </tr>
@@ -1588,35 +1460,35 @@
     </div>
 
     <!-- ========================================================
-         TAB 8: MASTER DATA SAVER
+         TAB 8: BACKUP DATA (PLAIN ENGLISH)
          ======================================================== -->
     <div id="tab-datasaver" class="tab-panel">
       <div class="bento-surface">
-        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">App Owner Database Snapshot & Persistence</h2>
+        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Save & Download All Platform Data</h2>
         <p style="color: var(--charcoal-500); font-size: 13.5px; line-height: 1.6;">
-          As the platform owner, you have full custody of all raw records. Save, backup, or export your complete marketplace database at any time.
+          As the app owner, you have complete ownership of all records. Download and save copies of your orders, stores, and products at any time.
         </p>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
           <button class="btn btn-dark" onclick="exportFullJSON()">
-            <span>💾</span> <span>Download Full DB (JSON)</span>
+            <span>💾</span> <span>Download Full Database (JSON)</span>
           </button>
           <button class="btn btn-outline" onclick="exportOrdersCSV()">
-            <span>📊</span> <span>Export Orders (CSV)</span>
+            <span>📊</span> <span>Download Orders (Spreadsheet)</span>
           </button>
           <button class="btn btn-outline" onclick="exportStoresCSV()">
-            <span>🏪</span> <span>Export Stores (CSV)</span>
+            <span>🏪</span> <span>Download Stores (Spreadsheet)</span>
           </button>
           <button class="btn btn-outline" onclick="exportInventoryCSV()">
-            <span>🏷️</span> <span>Export Inventory (CSV)</span>
+            <span>🏷️</span> <span>Download Products (Spreadsheet)</span>
           </button>
         </div>
       </div>
 
       <div class="bento-surface">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="font-size: 15px; font-weight: 800;">Live Database Inspector</h3>
+          <h3 style="font-size: 15px; font-weight: 800;">View Raw Records</h3>
           <span class="mono" style="font-size: 11px; color: var(--charcoal-400);">
-            Tables: stores, catalog_items, orders, disputes, escrow_ledger
+            Stores, Products, Orders, Refunds
           </span>
         </div>
         <pre class="code-viewer" id="db-json-viewer"></pre>
@@ -1629,28 +1501,48 @@
        MASTER JAVASCRIPT LOGIC
        ======================================================== -->
   <script>
-    var isSidebarExpanded = false;
+    var isSidebarLocked = false;
+    var sidebar = document.getElementById('glassy-sidebar');
 
-    function toggleSidebar() {
-      isSidebarExpanded = !isSidebarExpanded;
-      var sidebar = document.getElementById('glassy-sidebar');
-      var chevron = document.getElementById('toggle-chevron');
-      if (isSidebarExpanded) {
+    function expandSidebar() {
+      if (sidebar) {
         sidebar.classList.add('expanded');
         document.body.classList.add('sidebar-is-expanded');
+        var chevron = document.getElementById('toggle-chevron');
         if (chevron) chevron.setAttribute('d', 'M16 15l-3-3 3-3');
-      } else {
+      }
+    }
+
+    function collapseSidebar() {
+      if (!isSidebarLocked && sidebar) {
         sidebar.classList.remove('expanded');
         document.body.classList.remove('sidebar-is-expanded');
+        var chevron = document.getElementById('toggle-chevron');
         if (chevron) chevron.setAttribute('d', 'M14 9l3 3-3 3');
       }
     }
 
-    // Keyboard shortcut (Ctrl+B / Cmd+B) to toggle sidebar
+    // Toggle button locks or unlocks expanded state
+    function toggleSidebarLock() {
+      isSidebarLocked = !isSidebarLocked;
+      if (isSidebarLocked) {
+        expandSidebar();
+      } else {
+        collapseSidebar();
+      }
+    }
+
+    // Auto-open on mouse hover
+    if (sidebar) {
+      sidebar.addEventListener('mouseenter', expandSidebar);
+      sidebar.addEventListener('mouseleave', collapseSidebar);
+    }
+
+    // Keyboard shortcut (Ctrl+B / Cmd+B) to toggle lock
     document.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
         e.preventDefault();
-        toggleSidebar();
+        toggleSidebarLock();
       }
     });
 
@@ -1791,14 +1683,14 @@
       }
 
       var titles = {
-        'overview': ['Overview & Sales', 'Real-time telemetry across all decentralized neighborhood fulfillment centers'],
-        'stores': ['Stores & Catchment Controls', 'Manage partner kiranas, delivery radius, and KYC approvals'],
-        'orders': ['Live Orders Stream', 'Real-time order dispatch, dynamic spillovers, and delivery status'],
-        'inventory': ['Master Inventory & SKUs', 'Zero-phantom stockout shelf synchronization and price auditing'],
-        'escrow': ['Escrow & Treasury Ledger', 'Track customer funds in escrow vs settled merchant balances'],
-        'disputes': ['Dispute Desk & Governance', 'Automated photo refund audits and 3-strike merchant enforcement'],
-        'overflow': ['Partner Store Order Sharing', 'Automatic order sharing between nearby neighborhood stores during rush hour with 1.5% commission'],
-        'datasaver': ['Master Data Saver & DB Explorer', 'One-click persistence, full JSON snapshot, and CSV exports']
+        'overview': ['Overview & Sales', 'Live status of your local stores, customer orders, and daily earnings'],
+        'stores': ['Partner Grocery Stores', 'View your neighborhood stores, delivery areas, and busy hours'],
+        'orders': ['All Customer Orders', 'Every grocery order placed across all your local neighborhood stores'],
+        'inventory': ['All Store Products & Shelf Stock', 'Real-time grocery items verified directly on neighborhood store shelves'],
+        'escrow': ['Store Payouts & Safe Payments', 'Track customer payments held safely and instant payouts sent to shopkeepers'],
+        'disputes': ['Customer Complaints & Issue Refunds', 'Review customer photos of damaged items and approve quick refunds'],
+        'overflow': ['Order Sharing Between Nearby Stores', 'Automatic order sharing between nearby stores during rush hours with a 1.5% bonus'],
+        'datasaver': ['Save & Download All Platform Data', 'Download and backup your orders, store records, and products at any time']
       };
 
       if (titles[tabId]) {
@@ -1810,7 +1702,17 @@
 
       var railActiveName = document.getElementById('rail-active-name');
       if (railActiveName) {
-        railActiveName.textContent = tabId.toUpperCase();
+        var friendlyNames = {
+          'overview': 'OVERVIEW',
+          'stores': 'STORES',
+          'orders': 'ORDERS',
+          'inventory': 'PRODUCTS',
+          'escrow': 'PAYOUTS',
+          'disputes': 'REFUNDS',
+          'overflow': 'SHARING',
+          'datasaver': 'BACKUP'
+        };
+        railActiveName.textContent = friendlyNames[tabId] || tabId.toUpperCase();
       }
     }
 
@@ -1821,7 +1723,7 @@
         ovTbody.innerHTML = masterData.orders.map(function(o) {
           var payBadge = o.payment_method === 'CARD' ? 'badge-purple' : (o.payment_method === 'WALLET' ? 'badge-success' : 'badge-info');
           var spilloverHtml = o.is_spillover 
-            ? '<span class="badge badge-purple">⚡ Partner Spillover</span>' 
+            ? '<span class="badge badge-purple">⚡ Shared with Partner</span>' 
             : '<span class="badge badge-success">Direct Store</span>';
           var statusHtml = '<span class="badge ' + (o.status === 'DELIVERED' ? 'badge-success' : 'badge-info') + '">' + o.status + '</span>';
           return '<tr>' +
@@ -1842,15 +1744,15 @@
       if (stTbody) {
         stTbody.innerHTML = masterData.stores.map(function(s) {
           var busyBadge = s.is_busy 
-            ? '<span class="badge badge-warning">Busy (Spillover Active)</span>' 
-            : '<span class="badge badge-success">Fulfilling Live</span>';
+            ? '<span class="badge badge-warning">Busy (Sharing Active)</span>' 
+            : '<span class="badge badge-success">Delivering Live</span>';
           var strikesBadge = s.strikes > 0 
-            ? '<span class="badge badge-danger">' + s.strikes + '/3 Strikes</span>' 
-            : '<span class="badge badge-success">0 Strikes</span>';
+            ? '<span class="badge badge-danger">' + s.strikes + '/3 Warnings</span>' 
+            : '<span class="badge badge-success">0 Warnings</span>';
           return '<tr>' +
             '<td class="mono"><strong>' + s.id + '</strong></td>' +
             '<td><strong style="color: var(--charcoal-900);">' + s.name + '</strong><br><span style="font-size: 11.5px; color: var(--charcoal-500);">' + s.address + '</span></td>' +
-            '<td><strong>' + s.radius_meters + 'm</strong></td>' +
+            '<td><strong>' + s.radius_meters + 'm radius</strong></td>' +
             '<td>' + s.active_orders + ' / ' + s.max_orders + ' Runs</td>' +
             '<td>' + busyBadge + '</td>' +
             '<td>⭐ <strong>' + s.trust_rating + '</strong></td>' +
@@ -1883,8 +1785,8 @@
       if (invTbody) {
         invTbody.innerHTML = masterData.inventory.map(function(i) {
           var stockBadge = i.stock <= 2 
-            ? '<span class="badge badge-warning">' + i.stock + ' units</span>' 
-            : '<span class="badge badge-success">' + i.stock + ' units</span>';
+            ? '<span class="badge badge-warning">' + i.stock + ' left</span>' 
+            : '<span class="badge badge-success">' + i.stock + ' in stock</span>';
           return '<tr>' +
             '<td class="mono">' + i.barcode + '</td>' +
             '<td><strong>' + i.title + '</strong></td>' +
@@ -1892,7 +1794,7 @@
             '<td>' + i.category + '</td>' +
             '<td><strong>₹' + i.price.toFixed(0) + '</strong></td>' +
             '<td>' + stockBadge + '</td>' +
-            '<td><span class="badge badge-success">Live on Shelf</span></td>' +
+            '<td><span class="badge badge-success">Available on Shelf</span></td>' +
           '</tr>';
         }).join('');
       }
@@ -1908,9 +1810,9 @@
             '<td>' + d.reason + '</td>' +
             '<td><strong style="color: var(--accent-coral);">₹' + d.refund.toFixed(0) + '</strong></td>' +
             '<td class="mono" style="font-size: 11px;">' + d.photo + '</td>' +
-            '<td><span class="badge badge-success">🤖 ' + (d.ai_audit || 'Shell Crack (94%)') + '</span></td>' +
-            '<td><span class="badge badge-success">Auto-Refunded</span></td>' +
-            '<td><span class="badge badge-danger">+1 Strike Logged</span></td>' +
+            '<td><span class="badge badge-success">🤖 ' + (d.ai_audit || 'Crack Detected (94%)') + '</span></td>' +
+            '<td><span class="badge badge-success">Refund Approved</span></td>' +
+            '<td><span class="badge badge-danger">+1 Warning Logged</span></td>' +
           '</tr>';
         }).join('');
       }
@@ -1930,7 +1832,7 @@
         id: "APL-301",
         store_id: "store-001",
         reason: "Customer claimed broken egg carton",
-        proof_note: "CCTV counter footage shows egg crate was packed in intact bubble-wrap",
+        proof_note: "Shop counter CCTV shows egg carton was securely packed with protective bubble wrap",
         status: "PENDING"
       }
     ];
@@ -1942,10 +1844,10 @@
         var statusBadge = a.status === 'APPROVED' ? 'badge-success' : (a.status === 'PENDING' ? 'badge-warning' : 'badge-danger');
         var actionHtml = a.status === 'PENDING' 
           ? '<div style="display: flex; gap: 6px;">' +
-              '<button class="btn btn-dark" onclick="reviewAppeal(\'' + a.id + '\', \'APPROVE\')" style="padding: 4px 10px; font-size: 11.5px;">✓ Approve & Remove Strike</button>' +
+              '<button class="btn btn-dark" onclick="reviewAppeal(\'' + a.id + '\', \'APPROVE\')" style="padding: 4px 10px; font-size: 11.5px;">✓ Accept Explanation (Remove Warning)</button>' +
               '<button class="btn btn-outline" onclick="reviewAppeal(\'' + a.id + '\', \'DISMISS\')" style="padding: 4px 10px; font-size: 11.5px;">✕ Dismiss</button>' +
             '</div>'
-          : '<span style="font-size: 11.5px; color: var(--charcoal-500);">' + (a.status === 'APPROVED' ? 'Strike Removed' : 'Appeal Dismissed') + '</span>';
+          : '<span style="font-size: 11.5px; color: var(--charcoal-500);">' + (a.status === 'APPROVED' ? 'Warning Removed' : 'Explanation Dismissed') + '</span>';
 
         return '<tr>' +
           '<td class="mono"><strong>#' + a.id + '</strong></td>' +
@@ -1969,7 +1871,7 @@
           var item = strikeAppealsList.find(function(x) { return x.id === appealId; });
           if (item) item.status = action === 'APPROVE' ? 'APPROVED' : 'DISMISSED';
           renderStrikeAppeals();
-          alert('✅ Appeal #' + appealId + ' has been ' + (action === 'APPROVE' ? 'Approved (Strike removed)' : 'Dismissed') + '!');
+          alert('✅ Appeal #' + appealId + ' has been ' + (action === 'APPROVE' ? 'Approved (Warning removed)' : 'Dismissed') + '!');
         }
       } catch (err) {
         var itemFallback = strikeAppealsList.find(function(x) { return x.id === appealId; });
@@ -1990,14 +1892,14 @@
       var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(masterData, null, 2));
       var a = document.createElement('a');
       a.setAttribute("href", dataStr);
-      a.setAttribute("download", "blipto_master_database_" + new Date().toISOString().slice(0,10) + ".json");
+      a.setAttribute("download", "blipto_all_data_" + new Date().toISOString().slice(0,10) + ".json");
       document.body.appendChild(a);
       a.click();
       a.remove();
     }
 
     function exportOrdersCSV() {
-      var headers = ["Order_ID", "Consumer_ID", "Fulfilling_Store", "Subtotal", "Delivery_Fee", "Total", "OTP", "Status"];
+      var headers = ["Order_ID", "Customer_ID", "Store", "Subtotal", "Delivery_Fee", "Total", "Delivery_Code", "Status"];
       var rows = masterData.orders.map(function(o) {
         return [o.id, o.consumer_id, '"' + o.fulfilling_store + '"', o.subtotal, o.delivery_fee, o.total, o.otp, o.status];
       });
@@ -2011,7 +1913,7 @@
     }
 
     function exportStoresCSV() {
-      var headers = ["Store_ID", "Store_Name", "Address", "Radius_Meters", "Is_Busy", "Max_Orders", "UPI_ID"];
+      var headers = ["Store_ID", "Store_Name", "Address", "Delivery_Radius_Meters", "Is_Busy", "Max_Orders", "UPI_ID"];
       var rows = masterData.stores.map(function(s) {
         return [s.id, '"' + s.name + '"', '"' + s.address + '"', s.radius_meters, s.is_busy, s.max_orders, s.upi_id];
       });
@@ -2025,14 +1927,14 @@
     }
 
     function exportInventoryCSV() {
-      var headers = ["Barcode", "Title", "Store", "Category", "Price", "Stock"];
+      var headers = ["Barcode", "Product_Name", "Store", "Category", "Price", "In_Stock"];
       var rows = masterData.inventory.map(function(i) {
         return [i.barcode, '"' + i.title + '"', '"' + i.store + '"', i.category, i.price, i.stock];
       });
       var csvContent = "data:text/csv;charset=utf-8," + headers.join(',') + "\n" + rows.map(function(e) { return e.join(','); }).join('\n');
       var a = document.createElement('a');
       a.setAttribute("href", encodeURI(csvContent));
-      a.setAttribute("download", "blipto_inventory.csv");
+      a.setAttribute("download", "blipto_products.csv");
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -2101,23 +2003,21 @@
           }
 
           if (exportData.orders && exportData.orders.length > 0) {
-            masterData.orders = exportData.orders.map(function(o) {
-              return {
-                id: o.id,
-                consumer_id: o.consumer_id,
-                origin_store: o.store_id,
-                fulfilling_store: o.fulfilling_store_id,
-                is_spillover: o.is_spillover,
-                items: "Fulfillment Batch",
-                subtotal: o.subtotal,
-                delivery_fee: o.delivery_fee,
-                total: o.total_amount,
-                otp: o.delivery_otp,
-                payment_method: o.payment_method || "UPI",
-                status: o.status,
-                created_at: o.created_at || "Just now"
-              };
-            });
+            masterData.orders = exportData.orders.map(o => ({
+              id: o.id,
+              consumer_id: o.consumer_id,
+              origin_store: o.store_id,
+              fulfilling_store: o.fulfilling_store_id,
+              is_spillover: o.is_spillover,
+              items: "Fulfillment Batch",
+              subtotal: o.subtotal,
+              delivery_fee: o.delivery_fee,
+              total: o.total_amount,
+              otp: o.delivery_otp,
+              payment_method: o.payment_method || "UPI",
+              status: o.status,
+              created_at: o.created_at || "Just now"
+            }));
           }
 
           renderAll();
@@ -2130,7 +2030,7 @@
     async function refreshData() {
       await syncFromBackend();
       renderAll();
-      alert("✅ Master database synchronized with live platform telemetry!");
+      alert("✅ Data refreshed from live stores!");
     }
 
     // Initial render and live backend sync
