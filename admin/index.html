@@ -315,78 +315,6 @@
       font-weight: 700 !important;
     }
 
-    /* Bottom Profile Row */
-    .sidebar-footer-box {
-      margin-top: auto;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-    .glassy-sidebar:hover .sidebar-footer-box,
-    body.sidebar-pinned .sidebar-footer-box {
-      justify-content: flex-start;
-    }
-
-    .user-profile-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 2px;
-      border-radius: 12px;
-      cursor: default;
-    }
-
-    .user-avatar-glass {
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      background: #F4ECE1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--charcoal-900);
-      position: relative;
-      flex-shrink: 0;
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-    }
-
-    .avatar-online-dot {
-      position: absolute;
-      bottom: -2px;
-      right: -2px;
-      width: 10px;
-      height: 10px;
-      border-radius: 9999px;
-      background: #00B074;
-      border: 2px solid #0F172A;
-    }
-
-    .user-meta-expanded {
-      display: none;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .glassy-sidebar:hover .user-meta-expanded,
-    body.sidebar-pinned .user-meta-expanded {
-      display: block;
-    }
-    .user-meta-expanded h5 {
-      font-size: 13px;
-      font-weight: 700;
-      color: #FFFFFF;
-      line-height: 1.2;
-    }
-    .user-meta-expanded p {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.5);
-      line-height: 1.2;
-      margin-top: 2px;
-    }
-
     /* ========================================================
        MAIN APP WORKSPACE (Zero Overlap, Generous Margin)
        ======================================================== */
@@ -882,21 +810,6 @@
         <span class="nav-label">Backup Data</span>
       </div>
     </nav>
-
-    <!-- Bottom User Profile Section (No accidental tab jump) -->
-    <div class="sidebar-footer-box">
-      <div class="user-profile-row">
-        <div class="user-avatar-glass">
-          👑
-          <span class="avatar-online-dot"></span>
-        </div>
-        <div class="user-meta-expanded">
-          <h5>App Owner</h5>
-          <p>Full Access</p>
-        </div>
-      </div>
-    </div>
-
   </aside>
 
   <!-- ========================================================
