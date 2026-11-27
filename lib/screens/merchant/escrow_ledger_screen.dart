@@ -200,8 +200,23 @@ class EscrowLedgerScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Disputes Log
-            const Text("Customer Complaints & Returns", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            // Disputes Log & Strike Appeal (REQ-V2-OPS-03)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Customer Complaints & Strikes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                if (state.merchantStrikeCount > 0)
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF1D4ED8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    ),
+                    icon: const Icon(Icons.shield_outlined, size: 16),
+                    label: const Text("Appeal Strike", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    onPressed: () => _openStrikeAppealDialog(context, state.disputes.isNotEmpty ? state.disputes.first.id : "DSP-DEMO"),
+                  ),
+              ],
+            ),
             const SizedBox(height: 8),
             if (state.disputes.isEmpty)
               Container(
@@ -233,6 +248,17 @@ class EscrowLedgerScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0F172A),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                        onPressed: () => _openStrikeAppealDialog(context, d.id),
+                        child: const Text("Appeal", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
                     ],
                   ),
                 );
@@ -253,6 +279,88 @@ class EscrowLedgerScreen extends StatelessWidget {
           Text(value, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
         ],
       ),
+    );
+  }
+
+  void _openStrikeAppealDialog(BuildContext context, String disputeId) {
+    final reasonCtrl = TextEditingController(text: "Customer received wrong item by accident; packed item was intact per CCTV footage");
+    final proofCtrl = TextEditingController(text: "Store CCTV Camera 2, timestamp 10:42 AM confirms sealed pouch handed to delivery boy");
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Text("⚖️", style: TextStyle(fontSize: 20)),
+              SizedBox(width: 8),
+              Text("Appeal Strike", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Submit counter-proof to App Owner Desk. If accepted, 1 strike will be removed from your store record.",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: reasonCtrl,
+                  decoration: const InputDecoration(
+                    labelText: "Reason for Appeal",
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: proofCtrl,
+                  decoration: const InputDecoration(
+                    labelText: "CCTV / Packing Note Proof",
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00B074),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                Navigator.pop(ctx);
+                await state.fileStrikeAppeal(
+                  storeId: state.activeMerchantStoreId,
+                  disputeId: disputeId,
+                  reason: reasonCtrl.text.trim(),
+                  proofNote: proofCtrl.text.trim(),
+                );
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("✅ Strike appeal submitted to App Owner Desk for review!"),
+                    backgroundColor: Color(0xFF00B074),
+                  ),
+                );
+              },
+              child: const Text("Submit Appeal", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

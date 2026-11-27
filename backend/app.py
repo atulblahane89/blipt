@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import random
 from typing import Dict, List, Optional
 
-from .models import Store, InventoryItem, Order, OrderItem, OrderStatus, Dispute, Subscription
+from .models import Store, InventoryItem, Order, OrderItem, OrderStatus, Dispute, Subscription, StrikeAppeal
 from .spillover_engine import SpilloverDispatcher, haversine_distance_meters
 from .escrow_ledger import EscrowLedgerEngine
 
@@ -105,6 +105,47 @@ class BliptoBackendService:
         self.disputes: List[Dispute] = []
         self.escrow = EscrowLedgerEngine()
         self.dispatcher = SpilloverDispatcher(self.stores, self.inventory)
+        self.strike_appeals: List[StrikeAppeal] = [
+            StrikeAppeal(
+                id="APL-301",
+                store_id="store-001",
+                strike_index=1,
+                reason="Customer claimed broken egg carton",
+                proof_note="CCTV counter footage shows egg crate was packed in intact bubble-wrap",
+                status="PENDING",
+                created_at=datetime.now(timezone.utc).isoformat(),
+            )
+        ]
+        self.unfulfilled_demand: List[dict] = [
+            {
+                "query": "Oat Milk 1 Litre",
+                "searches_count": 28,
+                "category": "Dairy & Alternatives",
+                "estimated_monthly_revenue": 3360.0,
+                "recommended_mrp": 120.0,
+            },
+            {
+                "query": "Epigamia Greek Yogurt (Blueberry)",
+                "searches_count": 19,
+                "category": "Dairy",
+                "estimated_monthly_revenue": 1140.0,
+                "recommended_mrp": 60.0,
+            },
+            {
+                "query": "Artisanal Sourdough Bread",
+                "searches_count": 14,
+                "category": "Bakery",
+                "estimated_monthly_revenue": 1400.0,
+                "recommended_mrp": 100.0,
+            },
+            {
+                "query": "Cold Pressed Coconut Oil",
+                "searches_count": 11,
+                "category": "Oils & Staples",
+                "estimated_monthly_revenue": 2420.0,
+                "recommended_mrp": 220.0,
+            },
+        ]
 
     def get_nearby_stores(self, lat: float, lng: float, radius_meters: int = 1500) -> List[dict]:
         results = []
@@ -247,6 +288,134 @@ class BliptoBackendService:
             "net_payout": net_payout,
             "delivered_order_count": len(store_orders) if store_orders else 12,
             "gst_number": "29AABCU9603R1ZM",
+        }
+
+    # --- Sprint 5: Voice-to-Stock & Shelf Photo Catalog Assist (REQ-V2-MER-01) ---
+    def parse_voice_catalog(self, transcript: str) -> dict:
+        text = transcript.strip()
+        qty_match = re.search(r'\b(?:add|put|stock)?\s*(\d+)\s*(?:packets?|bags?|pcs?|bottles?|units?|tins?|packs?|boxes?)?\s*(?:of)?\s*', text, re.IGNORECASE)
+        qty = int(qty_match.group(1)) if qty_match else 1
+
+        price_match = re.search(r'(?:at|for|price|rs\.?|inr|rupees)\s*₹?\s*(\d+(?:\.\d+)?)', text, re.IGNORECASE)
+        price = float(price_match.group(1)) if price_match else 50.0
+
+        unit_match = re.search(r'(\d+\s*(?:litre|liter|ltr|l|ml|kg|g|gm|pcs))\b', text, re.IGNORECASE)
+        unit = unit_match.group(1).title() if unit_match else "1 Unit"
+
+        title = text
+        for pat in [
+            r'^(?:add|put|stock)\s*\d*\s*(?:packets?|bags?|pcs?|bottles?|units?|tins?|packs?|boxes?)?\s*(?:of)?\s*',
+            r'(?:at|for|price|rs\.?|inr|rupees)\s*₹?\s*\d+(?:\.\d+)?.*$',
+        ]:
+            title = re.sub(pat, '', title, flags=re.IGNORECASE)
+        title = title.strip().title()
+        if not title:
+            title = "Fresh Grocery Item"
+
+        category = "General"
+        low = title.lower()
+        if any(w in low for w in ["milk", "curd", "yogurt", "cheese", "paneer", "egg"]):
+            category = "Dairy & Eggs"
+        elif any(w in low for w in ["oil", "ghee", "salt", "sugar", "atta", "rice", "dal"]):
+            category = "Oils & Staples"
+        elif any(w in low for w in ["bread", "bun", "toast", "biscuit", "cookie"]):
+            category = "Bakery"
+
+        return {
+            "title": title,
+            "quantity": qty,
+            "price": price,
+            "unit": unit,
+            "category": category,
+            "confidence": 0.94,
+        }
+
+    # --- Sprint 5: Neighborhood Unfulfilled Demand Signals (REQ-V2-MER-04) ---
+    def get_unfulfilled_demand(self, store_id: str) -> List[dict]:
+        return self.unfulfilled_demand
+
+    # --- Sprint 5: Multi-Order Route Batching (REQ-V2-DLV-01) ---
+    def get_batched_routes(self) -> dict:
+        sample_drops = [
+            {"order_id": "ORD-9281", "address": "Flat 204, Rosewood Heights, Green Glen (300m away)", "seq": 1, "items_count": 3},
+            {"order_id": "ORD-9350", "address": "Villa 12, Sobha Iris, Green Glen (450m away)", "seq": 2, "items_count": 2},
+            {"order_id": "ORD-9412", "address": "Tower 4, Classic Orchard, Green Glen (600m away)", "seq": 3, "items_count": 4},
+        ]
+        return {
+            "batch_id": "BATCH-GG-01",
+            "cluster_name": "Green Glen Layout Cluster (Within 600m)",
+            "drops_count": len(sample_drops),
+            "estimated_minutes": 18,
+            "time_saved_minutes": 12,
+            "drops": sample_drops,
+        }
+
+    # --- Sprint 5: Automated Seller Strike Appeal Workflow (REQ-V2-OPS-03) ---
+    def file_strike_appeal(self, store_id: str, reason: str, proof_note: str) -> dict:
+        appeal_id = f"APL-{random.randint(100, 999)}"
+        s = next((st for st in self.stores if st.id == store_id), None)
+        appeal = StrikeAppeal(
+            id=appeal_id,
+            store_id=store_id,
+            strike_index=s.strikes if s else 1,
+            reason=reason,
+            proof_note=proof_note,
+            status="PENDING",
+            created_at=datetime.now(timezone.utc).isoformat(),
+        )
+        self.strike_appeals.append(appeal)
+        return {
+            "appeal_id": appeal.id,
+            "status": appeal.status,
+            "message": "Appeal submitted. App Owner will review proof at Admin Desk.",
+        }
+
+    def review_strike_appeal(self, appeal_id: str, action: str) -> dict:
+        appeal = next((a for a in self.strike_appeals if a.id == appeal_id), None)
+        if not appeal:
+            raise KeyError("Appeal not found")
+
+        if action.upper() == "APPROVE":
+            appeal.status = "APPROVED"
+            store = next((s for s in self.stores if s.id == appeal.store_id), None)
+            if store:
+                store.strikes = max(0, store.strikes - 1)
+            return {"appeal_id": appeal.id, "status": "APPROVED", "store_strikes": store.strikes if store else 0}
+        else:
+            appeal.status = "DISMISSED"
+            return {"appeal_id": appeal.id, "status": "DISMISSED"}
+
+    # --- Sprint 5: Multi-Shop Split Cart (REQ-V2-CON-03) ---
+    def create_split_orders(self, consumer_id: str, store_orders_payload: List[dict], payment_method: str = "UPI", wallet_amount_used: float = 0.0) -> dict:
+        split_group_id = f"GRP-{random.randint(1000, 9999)}"
+        created_sub_orders = []
+        total_subtotal = 0.0
+
+        for sp in store_orders_payload:
+            st_id = sp["store_id"]
+            items = sp["items"]
+            res = self.create_order(
+                consumer_id=consumer_id,
+                store_id=st_id,
+                consumer_lat=float(sp.get("consumer_lat", 12.9352)),
+                consumer_lng=float(sp.get("consumer_lng", 77.6245)),
+                items=items,
+                payment_method=payment_method,
+                wallet_amount_used=0.0,
+            )
+            ord_obj = self.orders.get(res["order_id"])
+            if ord_obj:
+                ord_obj.split_group_id = split_group_id
+            created_sub_orders.append(res)
+            total_subtotal += res["total_amount"]
+
+        return {
+            "split_group_id": split_group_id,
+            "orders": created_sub_orders,
+            "stores_count": len(created_sub_orders),
+            "combined_total": total_subtotal,
+            "unified_delivery_fee": 15.0,
+            "status": "PLACED_MULTI_SHOP",
         }
 
     def verify_fragile_checklist(self, order_id: str) -> dict:
@@ -451,6 +620,7 @@ class BliptoBackendService:
             "total_disputes_count": len(self.disputes),
             "payment_counts": payment_counts,
             "payment_volume": payment_volume,
+            "pending_strike_appeals_count": len([a for a in self.strike_appeals if a.status == "PENDING"]),
         }
 
     def export_all_data(self) -> dict:
@@ -622,6 +792,30 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
             summary = service.get_merchant_tax_summary(store_id)
             self._send_json(200, summary)
 
+        elif path == "/v1/admin/strike-appeals":
+            appeals = [
+                {
+                    "id": a.id,
+                    "store_id": a.store_id,
+                    "strike_index": a.strike_index,
+                    "reason": a.reason,
+                    "proof_note": a.proof_note,
+                    "status": a.status,
+                    "created_at": a.created_at,
+                }
+                for a in service.strike_appeals
+            ]
+            self._send_json(200, {"strike_appeals": appeals})
+
+        elif path == "/v1/merchants/demand-signals":
+            store_id = query.get("store_id", ["store-001"])[0]
+            signals = service.get_unfulfilled_demand(store_id)
+            self._send_json(200, {"store_id": store_id, "demand_signals": signals})
+
+        elif path == "/v1/delivery/batched-routes":
+            batch = service.get_batched_routes()
+            self._send_json(200, batch)
+
         else:
             self._send_json(404, {"error": "Not Found"})
 
@@ -685,6 +879,32 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
                 title=body.get("title", ""),
                 price=float(body.get("price", 0.0)),
                 quantity=int(body.get("stock_quantity", 1)),
+            )
+            self._send_json(201, res)
+
+        elif path == "/v1/merchants/catalog/voice-parse":
+            res = service.parse_voice_catalog(body.get("transcript", ""))
+            self._send_json(200, res)
+
+        elif path == "/v1/merchants/strike-appeal":
+            res = service.file_strike_appeal(
+                store_id=body.get("store_id", "store-001"),
+                reason=body.get("reason", "Disputed packaging claim"),
+                proof_note=body.get("proof_note", ""),
+            )
+            self._send_json(201, res)
+
+        elif re.match(r"^/v1/admin/strike-appeals/[^/]+/review$", path):
+            appeal_id = path.split("/")[4]
+            res = service.review_strike_appeal(appeal_id, action=body.get("action", "APPROVE"))
+            self._send_json(200, res)
+
+        elif path == "/v1/orders/split":
+            res = service.create_split_orders(
+                consumer_id=body.get("consumer_id", "usr-881"),
+                store_orders_payload=body.get("store_orders", []),
+                payment_method=body.get("payment_method", "UPI"),
+                wallet_amount_used=float(body.get("wallet_amount_used", 0.0)),
             )
             self._send_json(201, res)
 

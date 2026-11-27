@@ -52,38 +52,69 @@ class _CartScreenState extends State<CartScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Store attribution banner
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5E9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        const Text("🏪", style: TextStyle(fontSize: 20)),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Fulfilling Store: ${store?.name ?? 'Local Store'}",
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B5E20)),
-                              ),
-                              Text(
-                                "Direct from shelf • Estimated ~${store?.estimatedMinutes ?? 15} mins",
-                                style: const TextStyle(fontSize: 11, color: Color(0xFF2E7D32)),
-                              ),
-                            ],
+                  // Store attribution banner (Single Store or Multi-Shop Split Cart REQ-V2-CON-03)
+                  if (state.isSplitCart)
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFF6FF),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFBFDBFE)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Text("🧺", style: TextStyle(fontSize: 22)),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Multi-Shop Split Cart (${state.cartStoreIds.length} Neighborhood Shops)",
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1D4ED8)),
+                                ),
+                                const Text(
+                                  "Combined neighborhood route • Bundled delivery for ₹15 (You saved ₹5!)",
+                                  style: TextStyle(fontSize: 11, color: Color(0xFF1E40AF)),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Text("🏪", style: TextStyle(fontSize: 20)),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Fulfilling Store: ${store?.name ?? 'Local Store'}",
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B5E20)),
+                                ),
+                                Text(
+                                  "Direct from shelf • Estimated ~${store?.estimatedMinutes ?? 15} mins",
+                                  style: const TextStyle(fontSize: 11, color: Color(0xFF2E7D32)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 16),
 
-                  // Item breakdown
+                  // Item breakdown (Grouped by Store if Multi-Shop)
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -94,26 +125,85 @@ class _CartScreenState extends State<CartScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Order Items", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                        const SizedBox(height: 10),
-                        ...state.cartItems.entries.map((entry) {
-                          final item = catalog.firstWhere((it) => it.id == entry.key, orElse: () => catalog.first);
-                          final qty = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              children: [
-                                Text(item.iconEmoji, style: const TextStyle(fontSize: 18)),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(item.title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Order Items", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            if (state.isSplitCart)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFDBEAFE),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
-                                Text("${qty}x  ₹${(item.price * qty).toStringAsFixed(0)}",
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                                child: const Text("Split Cart", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        if (state.isSplitCart)
+                          ...state.cartStoreIds.map((sId) {
+                            final sStore = state.stores.firstWhere((s) => s.id == sId, orElse: () => state.stores.first);
+                            final sCatalog = state.storeInventories[sId] ?? [];
+                            final sEntries = state.cartItems.entries
+                                .where((e) => (state.cartItemStoreMap[e.key] ?? state.activeCartStoreId) == sId)
+                                .toList();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.storefront, size: 14, color: Color(0xFF00B074)),
+                                      const SizedBox(width: 4),
+                                      Text(sStore.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
+                                      const SizedBox(width: 6),
+                                      Text("(${sStore.distanceMeters.toStringAsFixed(0)}m away)", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                                    ],
+                                  ),
+                                ),
+                                ...sEntries.map((entry) {
+                                  final item = sCatalog.firstWhere((it) => it.id == entry.key, orElse: () => sCatalog.first);
+                                  final qty = entry.value;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                    child: Row(
+                                      children: [
+                                        Text(item.iconEmoji, style: const TextStyle(fontSize: 16)),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(item.title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                                        ),
+                                        Text("${qty}x  ₹${(item.price * qty).toStringAsFixed(0)}",
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                                const Divider(height: 14),
                               ],
-                            ),
-                          );
-                        }).toList(),
+                            );
+                          })
+                        else
+                          ...state.cartItems.entries.map((entry) {
+                            final item = catalog.firstWhere((it) => it.id == entry.key, orElse: () => catalog.first);
+                            final qty = entry.value;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
+                                  Text(item.iconEmoji, style: const TextStyle(fontSize: 18)),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(item.title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                                  ),
+                                  Text("${qty}x  ₹${(item.price * qty).toStringAsFixed(0)}",
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                       ],
                     ),
                   ),
@@ -261,7 +351,12 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         const Divider(height: 20),
                         _buildBillRow("Items Total", "₹${state.cartSubtotal.toStringAsFixed(0)}"),
-                        _buildBillRow("Delivery Boy Fee", "₹${state.cartDeliveryFee.toStringAsFixed(0)}"),
+                        if (state.isSplitCart) ...[
+                          _buildBillRow("Multi-Shop Delivery Fee", "₹15 (Combined Route)"),
+                          _buildBillRow("Multi-Shop Route Bundle Discount", "-₹5", highlightGreen: true),
+                        ] else ...[
+                          _buildBillRow("Delivery Boy Fee", "₹${state.cartDeliveryFee.toStringAsFixed(0)}"),
+                        ],
                         _buildBillRow("Surge / Rain fee", "₹0 (We never charge surge)", highlightGreen: true),
                         _buildBillRow("Packing / Platform fee", "₹0 (Free)", highlightGreen: true),
                         if (useWallet && walletDeductible > 0)

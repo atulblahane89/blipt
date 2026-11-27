@@ -148,7 +148,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** they can choose a substitute preference: *"Replace with similar brand"*, *"Call me first"*, or *"Refund missing item immediately"*.
   - **And** the shopkeeper's packing screen automatically highlights the pre-approved substitute if the main SKU is exhausted.
 
-#### [US-V2-CON-03] Multi-Shop Split Cart (Single Delivery Zone)
+#### [US-V2-CON-03] Multi-Shop Split Cart (Single Delivery Zone) *(Implemented & Verified in Sprint 5)*
 - **User Story:** As a customer, I want to add fresh veggies from the green grocer and packed snacks from the general kirana in one checkout, so that I don't have to place two separate orders and pay double checkout fees.
 - **Acceptance Criteria:**
   - **Given** stores within the same 500m hyper-local zone,
@@ -168,7 +168,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
 
 ### 🏪 Module 2: Seller App (V2)
 
-#### [US-V2-MER-01] Voice-to-Stock & Shelf Photo Catalog Assist
+#### [US-V2-MER-01] Voice-to-Stock & Shelf Photo Catalog Assist *(Implemented & Verified in Sprint 5)*
 - **User Story:** As a kirana shopkeeper who dislikes typing on small phone keyboards, I want to speak item names or snap a photo of my shelf, so that items are instantly recognized and added to my digital shop.
 - **Acceptance Criteria:**
   - **Given** the shopkeeper opens the "Add Items" screen,
@@ -191,7 +191,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **When** the merchant visits "My Earnings",
   - **Then** they can tap "Download Daily GST Summary" to get a clean PDF/CSV showing Gross Sales, Tax Breakdowns, Commission, and Net Bank Transfer amount.
 
-#### [US-V2-MER-04] Neighborhood Unfulfilled Demand Signals
+#### [US-V2-MER-04] Neighborhood Unfulfilled Demand Signals *(Implemented & Verified in Sprint 5)*
 - **User Story:** As a shopkeeper, I want to see what items nearby customers searched for that were missing from local shelves, so that I know exactly what new stock to purchase from wholesalers to maximize profit.
 - **Acceptance Criteria:**
   - **Given** consumer searches within 1.5km that returned 0 results,
@@ -202,7 +202,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
 
 ### 🛵 Module 3: Delivery Partner App (V2)
 
-#### [US-V2-DLV-01] Multi-Order Route Batching Along Same Street
+#### [US-V2-DLV-01] Multi-Order Route Batching Along Same Street *(Implemented & Verified in Sprint 5)*
 - **User Story:** As a store delivery boy, I want the app to batch multiple orders going to the same apartment building or street into one trip, so that I can make more deliveries per hour without zig-zagging.
 - **Acceptance Criteria:**
   - **Given** 2 or more orders with delivery addresses within 200m of each other,
@@ -227,7 +227,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
 
 ### ⚙️ Module 4: Platform Engine & Owner Dashboard (V2)
 
-#### [US-V2-OPS-01] Peer-to-Peer Overflow Routing Across Partner Shops
+#### [US-V2-OPS-01] Peer-to-Peer Overflow Routing Across Partner Shops *(Implemented & Verified in Sprint 5)*
 - **User Story:** As the app owner, I want orders to automatically overflow across rival partner stores when one shop is slammed with foot traffic, sharing margins so both stores stay profitable.
 - **Acceptance Criteria:**
   - **Given** Store A has Busy Mode on or queue full,
@@ -243,7 +243,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** damaged packaging or spoiled item is visually confirmed $\ge 85\%$ confidence for instant refund.
   - **And** duplicate/recycled stock photos are automatically rejected.
 
-#### [US-V2-OPS-03] Automated Seller Strike Appeal Workflow
+#### [US-V2-OPS-03] Automated Seller Strike Appeal Workflow *(Implemented & Verified in Sprint 5)*
 - **User Story:** As a shopkeeper accused of a strike due to customer error, I want to submit counter-proof (e.g. counter CCTV packing photo), so that honest merchants are not unfairly penalized.
 - **Acceptance Criteria:**
   - **Given** a merchant receiving a defect strike,

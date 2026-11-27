@@ -87,3 +87,26 @@ This log captures formal Scrum Sprint Retrospectives, documenting what went well
 ### Process Improvements for Sprint 5:
 1. Use `D:\flutter\bin\dart.bat` consistently on Windows.
 2. Prepare Sprint 5 focus: Multi-Shop Split Cart, Voice-to-Stock, Route Batching, and P2P Overflow Routing.
+
+---
+
+## 🏃 Sprint 5 Retrospective (Dynamic Scale & Seller Efficiency)
+- **Sprint Duration:** CR-006
+- **Goal:** Implement multi-shop split cart bundled delivery, voice-to-stock NLP catalog intake, neighborhood unfulfilled demand signals, multi-order street-level route batching, peer-to-peer overflow routing telemetry, and automated seller strike appeal desk.
+- **Git Tag:** `v1.5.0-sprint5-scale`
+
+### What Went Well:
+1. **Multi-Shop Unified Cart (`REQ-V2-CON-03`):** Consumers can now combine goods from multiple neighborhood shops (e.g. dairy from Gupta Kirana and bakery from Mahadev Supermarket) with a single bundled ₹15 delivery fee (saving ₹5 over separate orders).
+2. **Kirana Voice Intake (`REQ-V2-MER-01`):** Non-tech-savvy merchants can speak everyday sentences like *"Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135"* and the platform extracts title, SKU quantity, price, unit, and category with >90% confidence for 1-tap shelf stocking.
+3. **Neighborhood Demand Intelligence (`REQ-V2-MER-04`):** Surfacing zero-result local searches (Oat Milk, Greek Yogurt, Artisanal Sourdough) with estimated missed revenue directly gives merchants the confidence to stock high-margin modern items.
+4. **Street-Level Route Clustering (`REQ-V2-DLV-01`):** Grouping drops within 200m on the same lane saves ~12 minutes per run, boosting drops per hour for local delivery partners.
+5. **Fair Seller Governance (`REQ-V2-OPS-03`):** Merchants can submit CCTV counter-proof to appeal erroneous strikes; App Owners can review and approve in 1 click from the Command Tower (`/admin`), restoring store rating.
+6. **Robust Quality Verification:** All 29 automated tests passed cleanly, and `dart analyze lib/` verified with 0 errors.
+
+### What Went Wrong / Friction Points:
+1. **Non-unique edit target:** During one state file edit, replacing `}` without surrounding context matched all closing braces. Identified immediately, restored via Git, and replaced using exact multi-line targets.
+2. **Context mounted check in async callbacks:** Flutter linter flagged `BuildContext` use across async network calls; resolved by adding `if (!context.mounted) return;` guards.
+
+### Process Improvements for Sprint 6:
+1. Always include 3+ lines of unique surrounding code when modifying closing delimiters in Dart or Python.
+2. Prepare Sprint 6 focus: Offline-resilient sync for weak signal zones (`REQ-V2-DLV-03`) and Automated AI/OCR photo-defect verification (`REQ-V2-OPS-02`).

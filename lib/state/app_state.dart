@@ -94,6 +94,7 @@ class AppState extends ChangeNotifier {
 
   // Shopping Cart: StoreId -> (ItemId -> Quantity)
   Map<String, int> cartItems = {};
+  Map<String, String> cartItemStoreMap = {};
   String? activeCartStoreId;
 
   // Orders Feed
@@ -301,13 +302,10 @@ class AppState extends ChangeNotifier {
     return stores.firstWhere((s) => s.id == activeMerchantStoreId, orElse: () => stores.first);
   }
 
-  // --- Cart Operations ---
+  // --- Cart Operations (REQ-V2-CON-03: Multi-Shop Split Cart) ---
   void addToCart(String storeId, InventoryItem item) {
-    if (activeCartStoreId != null && activeCartStoreId != storeId) {
-      // Switching store clears prior cart
-      cartItems.clear();
-    }
     activeCartStoreId = storeId;
+    cartItemStoreMap[item.id] = storeId;
     final currentQty = cartItems[item.id] ?? 0;
     if (currentQty < item.stockQuantity) {
       cartItems[item.id] = currentQty + 1;
@@ -321,6 +319,7 @@ class AppState extends ChangeNotifier {
         cartItems[itemId] = cartItems[itemId]! - 1;
       } else {
         cartItems.remove(itemId);
+        cartItemStoreMap.remove(itemId);
         if (cartItems.isEmpty) {
           activeCartStoreId = null;
         }
@@ -333,37 +332,142 @@ class AppState extends ChangeNotifier {
     return cartItems[itemId] ?? 0;
   }
 
+  List<String> get cartStoreIds {
+    final ids = <String>{};
+    for (var itemId in cartItems.keys) {
+      final sId = cartItemStoreMap[itemId] ?? activeCartStoreId;
+      if (sId != null) ids.add(sId);
+    }
+    return ids.toList();
+  }
+
+  bool get isSplitCart => cartStoreIds.length > 1;
+
   double get cartSubtotal {
-    if (activeCartStoreId == null) return 0.0;
-    final catalog = storeInventories[activeCartStoreId] ?? [];
+    if (cartItems.isEmpty) return 0.0;
     double sum = 0.0;
     cartItems.forEach((itemId, qty) {
-      final item = catalog.firstWhere((it) => it.id == itemId, orElse: () => catalog.first);
+      final sId = cartItemStoreMap[itemId] ?? activeCartStoreId;
+      final catalog = sId != null ? (storeInventories[sId] ?? []) : [];
+      final item = catalog.firstWhere(
+        (it) => it.id == itemId,
+        orElse: () => catalog.isNotEmpty
+            ? catalog.first
+            : InventoryItem(
+                id: itemId,
+                storeId: sId ?? '',
+                barcode: itemId,
+                title: 'Item',
+                category: 'General',
+                price: 0,
+                stockQuantity: 0,
+                iconEmoji: '📦',
+                unit: '1 unit',
+              ),
+      );
       sum += item.price * qty;
     });
     return sum;
   }
 
-  double get cartDeliveryFee => cartSubtotal > 0 ? 10.0 : 0.0;
+  // Single-store delivery fee: ₹10. Multi-shop bundled delivery fee: ₹15 (saves ₹5 compared to ₹10 * 2)
+  double get cartDeliveryFee {
+    if (cartSubtotal <= 0) return 0.0;
+    return isSplitCart ? 15.0 : 10.0;
+  }
+
   double get cartTotal => cartSubtotal + cartDeliveryFee;
 
-  // --- Dynamic Spillover & Order Placement ---
+  // --- Dynamic Spillover & Order Placement (with Multi-Shop Split Cart) ---
   BliptoOrder placeOrder({
     String paymentMethod = "UPI",
     double walletAmountUsed = 0.0,
     String substitutePreference = "REPLACE_SIMILAR",
   }) {
-    if (activeCartStoreId == null || cartItems.isEmpty) {
+    if (cartItems.isEmpty) {
       throw StateError("Cart is empty");
     }
 
-    final targetStore = stores.firstWhere((s) => s.id == activeCartStoreId);
+    if (isSplitCart) {
+      final sIds = cartStoreIds;
+      final splitGroupId = "GRP-${1000 + Random().nextInt(9000)}";
+      final List<BliptoOrder> createdSubOrders = [];
+
+      double remainingWalletToUse = min(walletAmountUsed, cartTotal);
+      if (remainingWalletToUse > 0) {
+        consumerWalletBalance = max(0.0, consumerWalletBalance - remainingWalletToUse);
+      }
+
+      for (int i = 0; i < sIds.length; i++) {
+        final sId = sIds[i];
+        final targetStore = stores.firstWhere((s) => s.id == sId, orElse: () => stores.first);
+        final catalog = storeInventories[sId] ?? [];
+        final List<OrderItem> subOrderItems = [];
+        double subtotalForStore = 0.0;
+
+        cartItems.forEach((itemId, qty) {
+          if ((cartItemStoreMap[itemId] ?? activeCartStoreId) == sId) {
+            final item = catalog.firstWhere((it) => it.id == itemId || it.barcode == itemId, orElse: () => catalog.first);
+            item.stockQuantity = max(0, item.stockQuantity - qty);
+            subOrderItems.add(OrderItem(item: item, quantity: qty));
+            subtotalForStore += item.price * qty;
+          }
+        });
+
+        // Split delivery fee: ₹10 for primary store, ₹5 for companion store (total ₹15)
+        final double subDeliveryFee = (i == 0) ? 10.0 : 5.0;
+        final double subTotal = subtotalForStore + subDeliveryFee;
+        final double subWalletUsed = min(remainingWalletToUse, subTotal);
+        remainingWalletToUse -= subWalletUsed;
+        final double subPaidAmount = max(0.0, subTotal - subWalletUsed);
+
+        final randomOtp = (1000 + Random().nextInt(9000)).toString();
+        final subOrder = BliptoOrder(
+          id: "ORD-${1000 + Random().nextInt(9000)}",
+          splitGroupId: splitGroupId,
+          consumerId: "usr-881",
+          storeId: targetStore.id,
+          storeName: targetStore.name,
+          items: subOrderItems,
+          subtotal: subtotalForStore,
+          deliveryFee: subDeliveryFee,
+          totalAmount: subTotal,
+          deliveryOtp: randomOtp,
+          createdAt: DateTime.now(),
+          status: OrderStatus.placed,
+          paymentMethod: paymentMethod,
+          walletAmountUsed: subWalletUsed,
+          paidAmount: subPaidAmount,
+          substitutePreference: substitutePreference,
+          hasFragileItems: subOrderItems.any((oi) => oi.item.isFragile),
+          fragileVerified: false,
+        );
+
+        targetStore.activeOrdersCount += 1;
+        orders.insert(0, subOrder);
+        merchantEscrowBalance += subOrder.totalAmount;
+        createdSubOrders.add(subOrder);
+
+        _syncOrderToBackend(subOrder, targetStore.id);
+      }
+
+      hasIncomingOrderAlert = true;
+      lastAlertOrderId = createdSubOrders.first.id;
+      cartItems.clear();
+      cartItemStoreMap.clear();
+      activeCartStoreId = null;
+
+      notifyListeners();
+      return createdSubOrders.first;
+    }
+
+    // Single-store checkout path
+    final targetStore = stores.firstWhere((s) => s.id == (activeCartStoreId ?? cartStoreIds.first));
     bool shouldSpillover = targetStore.isBusy || targetStore.isAtCapacity;
     Store fulfillingStore = targetStore;
     bool isSpillover = false;
 
     if (shouldSpillover) {
-      // Find partner store with available capacity within 1.2km
       final candidate = stores.firstWhere(
         (s) => s.id != targetStore.id && s.canAcceptOrders,
         orElse: () => targetStore,
@@ -374,7 +478,6 @@ class AppState extends ChangeNotifier {
       }
     }
 
-    // Build order items and decrement stock in fulfilling store
     final catalog = storeInventories[fulfillingStore.id] ?? storeInventories[targetStore.id]!;
     final List<OrderItem> orderItems = [];
 
@@ -390,7 +493,6 @@ class AppState extends ChangeNotifier {
     final bool hasFragile = orderItems.any((oi) => oi.item.isFragile);
     final randomOtp = (1000 + Random().nextInt(9000)).toString();
 
-    // Deduct wallet if used
     final effectiveWalletUsed = min(walletAmountUsed, cartTotal);
     if (effectiveWalletUsed > 0) {
       consumerWalletBalance = max(0.0, consumerWalletBalance - effectiveWalletUsed);
@@ -420,22 +522,16 @@ class AppState extends ChangeNotifier {
       fragileVerified: false,
     );
 
-    // Update store capacity
     fulfillingStore.activeOrdersCount += 1;
     orders.insert(0, newOrder);
-
-    // Lock funds in Escrow
     merchantEscrowBalance += newOrder.totalAmount;
-
-    // Trigger Merchant Alert chime
     hasIncomingOrderAlert = true;
     lastAlertOrderId = newOrder.id;
 
-    // Reset Cart
     cartItems.clear();
+    cartItemStoreMap.clear();
     activeCartStoreId = null;
 
-    // Asynchronously log to the App Owner's Backend & Admin Dashboard
     _syncOrderToBackend(newOrder, targetStore.id);
 
     notifyListeners();
@@ -713,5 +809,33 @@ class AppState extends ChangeNotifier {
         }),
       );
     } catch (_) {}
+  }
+
+  // --- Strike Appeal (REQ-V2-OPS-03) ---
+  Future<bool> fileStrikeAppeal({
+    required String storeId,
+    required String disputeId,
+    required String reason,
+    required String proofNote,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse("http://localhost:8080/v1/merchants/strike-appeal"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "store_id": storeId,
+          "dispute_id": disputeId,
+          "reason": reason,
+          "proof_note": proofNote,
+        }),
+      );
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("Strike appeal sync note: $e");
+    }
+    return false;
   }
 }

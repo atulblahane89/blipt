@@ -103,6 +103,7 @@ class Order:
     is_subscription_drop: bool = False
     has_fragile_items: bool = False
     fragile_verified: bool = False
+    split_group_id: Optional[str] = None
 
 
 @dataclass
@@ -129,4 +130,15 @@ class Dispute:
     photo_base64: str
     refund_amount: float
     status: str = "AUTO_RESOLVED"
+    created_at: str = ""
+
+
+@dataclass
+class StrikeAppeal:
+    id: str
+    store_id: str
+    strike_index: int
+    reason: str
+    proof_note: str
+    status: str = "PENDING"  # PENDING, APPROVED, DISMISSED
     created_at: str = ""

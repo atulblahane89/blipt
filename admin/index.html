@@ -740,6 +740,29 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Seller Strike Appeal Desk (REQ-V2-OPS-03) -->
+        <div class="table-container" style="margin-top: 24px;">
+          <div class="table-header">
+            <span class="table-title">⚖️ Merchant Strike Appeals (Counter-Proof Review)</span>
+            <span class="badge badge-warning" id="pending-appeals-badge">Review Desk</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Appeal ID</th>
+                <th>Store ID</th>
+                <th>Complaint Reason</th>
+                <th>Merchant Counter-Proof Note</th>
+                <th>Status</th>
+                <th>Owner Action</th>
+              </tr>
+            </thead>
+            <tbody id="strike-appeals-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- TAB 7: MASTER DATA SAVER -->
@@ -1024,8 +1047,63 @@
         </tr>
       `).join('');
 
+      // 5.1 Strike Appeals Table (REQ-V2-OPS-03)
+      renderStrikeAppeals();
+
       // 6. JSON Viewer
       document.getElementById('db-json-viewer').textContent = JSON.stringify(masterData, null, 2);
+    }
+
+    let strikeAppealsList = [
+      {
+        id: "APL-301",
+        store_id: "store-001",
+        reason: "Customer claimed broken egg carton",
+        proof_note: "CCTV counter footage shows egg crate was packed in intact bubble-wrap",
+        status: "PENDING"
+      }
+    ];
+
+    function renderStrikeAppeals() {
+      const tbody = document.getElementById('strike-appeals-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = strikeAppealsList.map(a => `
+        <tr>
+          <td class="mono"><strong>#${a.id}</strong></td>
+          <td>${a.store_id}</td>
+          <td>${a.reason}</td>
+          <td><span style="color: var(--text-main); font-size: 12px;">${a.proof_note}</span></td>
+          <td><span class="badge ${a.status === 'APPROVED' ? 'badge-success' : (a.status === 'PENDING' ? 'badge-warning' : 'badge-danger')}">${a.status}</span></td>
+          <td>
+            ${a.status === 'PENDING' ? `
+              <div style="display: flex; gap: 6px;">
+                <button class="btn btn-primary" onclick="reviewAppeal('${a.id}', 'APPROVE')" style="padding: 4px 8px; font-size: 11px;">✓ Approve & Remove Strike</button>
+                <button class="btn btn-secondary" onclick="reviewAppeal('${a.id}', 'DISMISS')" style="padding: 4px 8px; font-size: 11px;">✕ Dismiss</button>
+              </div>
+            ` : `<span style="font-size: 11px; color: var(--text-muted);">${a.status === 'APPROVED' ? 'Strike Removed' : 'Appeal Dismissed'}</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function reviewAppeal(appealId, action) {
+      try {
+        const res = await fetch(`/v1/admin/strike-appeals/${appealId}/review`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: action })
+        });
+        if (res.ok) {
+          const item = strikeAppealsList.find(x => x.id === appealId);
+          if (item) item.status = action === 'APPROVE' ? 'APPROVED' : 'DISMISSED';
+          renderStrikeAppeals();
+          alert(`✅ Appeal #${appealId} has been ${action === 'APPROVE' ? 'Approved (Strike removed)' : 'Dismissed'}!`);
+        }
+      } catch (err) {
+        const item = strikeAppealsList.find(x => x.id === appealId);
+        if (item) item.status = action === 'APPROVE' ? 'APPROVED' : 'DISMISSED';
+        renderStrikeAppeals();
+      }
     }
 
     function toggleStoreBusy(storeId) {

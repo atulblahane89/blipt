@@ -88,6 +88,29 @@ This document provides a human-readable audit trail of every **Change Request (C
 
 ---
 
+## Change Request: `CR-006`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 5 (Dynamic Scale & Seller Efficiency)
+- **Prompt:** *"Implement Multi-shop split cart, Voice-to-stock & shelf photo catalog intake, Neighborhood unfulfilled demand signals, Multi-order route batching along same street, Peer-to-peer overflow routing telemetry, and Automated seller strike appeal workflow"*
+- **Rationale:** Enable consumers to combine groceries across specialty shops in one drop, cut catalog intake friction for non-tech-savvy kiranas, and prevent unfair penalties through owner strike appeal desks.
+- **Impacted Requirements:** `REQ-V2-CON-03`, `REQ-V2-MER-01`, `REQ-V2-MER-04`, `REQ-V2-DLV-01`, `REQ-V2-OPS-01`, `REQ-V2-OPS-03`
+- **Files Impacted:**
+  - `backend/models.py`
+  - `backend/app.py`
+  - `admin/index.html`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `lib/screens/merchant/barcode_intake_screen.dart`
+  - `lib/screens/merchant/merchant_hub_screen.dart`
+  - `lib/screens/merchant/escrow_ledger_screen.dart`
+  - `lib/screens/delivery/delivery_task_screen.dart`
+- **Tests Planned:** `tests/test_sprint5_scale_and_efficiency.py` (5 automated tests, 100% pass)
+- **Release Tag:** `v1.5.0-sprint5-scale`
+- **Outcome:** **Verified & Merged**.
+
+---
+
 ## Change Request: `CR-003`
 - **Date:** 2026-11-26
 - **Prompt:** *"Add always-visible My Orders & Delivery Tracking card to customer feed and prominent Track Order button in AppBar"*
@@ -143,4 +166,27 @@ This document provides a human-readable audit trail of every **Change Request (C
   - `admin/index.html`
 - **Tests Added:** `tests/test_sprint4_habits_and_protection.py`
 - **Release Tag:** `v1.4.0-sprint4-habits`
+- **Outcome:** **Verified & Merged**.
+
+---
+
+## Change Request: `CR-006`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 5 (Dynamic Scale & Seller Efficiency)
+- **Prompt:** *"Implement Multi-shop split cart, Voice-to-stock & shelf photo catalog intake, Neighborhood unfulfilled demand signals, Multi-order route batching along same street, Peer-to-peer overflow routing telemetry, and Automated seller strike appeal workflow"*
+- **Rationale:** Enable consumers to combine groceries across specialty shops in one drop, cut catalog intake friction for non-tech-savvy kiranas, and prevent unfair penalties through owner strike appeal desks.
+- **Impacted Requirements:** `REQ-V2-CON-03`, `REQ-V2-MER-01`, `REQ-V2-MER-04`, `REQ-V2-DLV-01`, `REQ-V2-OPS-01`, `REQ-V2-OPS-03`
+- **Files Impacted:**
+  - `backend/models.py`
+  - `backend/app.py`
+  - `admin/index.html`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `lib/screens/merchant/barcode_intake_screen.dart`
+  - `lib/screens/merchant/merchant_hub_screen.dart`
+  - `lib/screens/merchant/escrow_ledger_screen.dart`
+  - `lib/screens/delivery/delivery_task_screen.dart`
+- **Tests Planned:** `tests/test_sprint5_scale_and_efficiency.py` (5 automated tests, 100% pass)
+- **Release Tag:** `v1.5.0-sprint5-scale`
 - **Outcome:** **Verified & Merged**.

@@ -82,6 +82,59 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
             ),
             const SizedBox(height: 16),
 
+            // Smart Street-Level Route Batching (REQ-V2-DLV-01)
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                ),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.alt_route_rounded, color: Color(0xFF00B074), size: 18),
+                          SizedBox(width: 8),
+                          Text("Batched Street Route", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00B074).withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFF00B074)),
+                        ),
+                        child: const Text("⚡ 12 mins saved", style: TextStyle(color: Color(0xFF00B074), fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Street: Green Glen Layout • 2 drops clustered along the same lane",
+                    style: TextStyle(color: Colors.white70, fontSize: 11),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      _buildBatchStep("Drop 1", "Flat 402, Green Glen (450m)", true),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward, color: Colors.white38, size: 14),
+                      const SizedBox(width: 6),
+                      _buildBatchStep("Drop 2", "Flat 101, Green Glen (520m)", false),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
             if (runs.isEmpty)
               Container(
                 padding: const EdgeInsets.all(32),
@@ -260,6 +313,26 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBatchStep(String tag, String address, bool isFirst) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: isFirst ? const Color(0xFF00B074).withOpacity(0.15) : const Color(0xFF334155),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: isFirst ? const Color(0xFF00B074) : Colors.transparent),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(tag, style: TextStyle(color: isFirst ? const Color(0xFF00B074) : Colors.white70, fontWeight: FontWeight.bold, fontSize: 10)),
+            Text(address, style: const TextStyle(color: Colors.white, fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
           ],
         ),
       ),

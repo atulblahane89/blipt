@@ -35,6 +35,7 @@ class BliptoOrder {
   OrderStatus status;
   String? deliveryProofPhoto;
   String? customerAddress;
+  final String? splitGroupId;
   final String paymentMethod;
   final double walletAmountUsed;
   final double paidAmount;
@@ -44,6 +45,7 @@ class BliptoOrder {
 
   BliptoOrder({
     required this.id,
+    this.splitGroupId,
     required this.consumerId,
     required this.storeId,
     required this.storeName,
