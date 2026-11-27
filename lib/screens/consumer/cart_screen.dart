@@ -15,6 +15,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   String selectedPaymentMethod = "UPI";
   bool useWallet = false;
+  String selectedSubstitutePreference = "REPLACE_SIMILAR";
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _CartScreenState extends State<CartScreen> {
         : null;
 
     final catalog = storeId != null ? (state.storeInventories[storeId] ?? []) : [];
+    final addOnSuggestions = catalog.where((it) => !state.cartItems.containsKey(it.id) && it.stockQuantity > 0).take(3).toList();
 
     final walletBal = state.consumerWalletBalance;
     final walletDeductible = min(walletBal, state.cartTotal);
@@ -112,6 +114,128 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           );
                         }).toList(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Same-shop Basket Add-on Nudges (REQ-V2-OPS-04)
+                  if (addOnSuggestions.isNotEmpty) ...[
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Text("✨", style: TextStyle(fontSize: 16)),
+                              SizedBox(width: 6),
+                              Text(
+                                "Frequently bought together from this shop",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF0F172A)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: addOnSuggestions.map((item) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.all(10),
+                                  width: 145,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF8FAFC),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: Colors.grey.shade200),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(item.iconEmoji, style: const TextStyle(fontSize: 22)),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        item.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        "₹${item.price.toStringAsFixed(0)}",
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF00B074)),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 28,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFF00B074),
+                                            padding: EdgeInsets.zero,
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                          ),
+                                          onPressed: () {
+                                            if (storeId != null) {
+                                              state.addToCart(storeId, item);
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: const Text("+ ADD", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Smart Substitute Approval Preference (REQ-V2-CON-02)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFCBD5E1)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.swap_horiz_rounded, size: 18, color: Color(0xFF00B074)),
+                            SizedBox(width: 6),
+                            Text("If an item goes out of stock in shop:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        _buildSubstituteOption(
+                          "REPLACE_SIMILAR",
+                          "Replace with similar brand (Recommended)",
+                          "Kirana shopkeeper picks matching fresh item with same price",
+                        ),
+                        _buildSubstituteOption(
+                          "CALL_ME",
+                          "Call me before packing",
+                          "Merchant will call you to discuss alternative",
+                        ),
+                        _buildSubstituteOption(
+                          "REFUND",
+                          "Refund missing item immediately",
+                          "Zero replacement; instant refund credited back to wallet",
+                        ),
                       ],
                     ),
                   ),
@@ -261,6 +385,7 @@ class _CartScreenState extends State<CartScreen> {
                         final order = widget.state.placeOrder(
                           paymentMethod: method,
                           walletAmountUsed: useWallet ? walletDeductible : 0.0,
+                          substitutePreference: selectedSubstitutePreference,
                         );
                         Navigator.pushReplacement(
                           context,
@@ -278,6 +403,45 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildSubstituteOption(String key, String title, String subtitle) {
+    final isSelected = selectedSubstitutePreference == key;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedSubstitutePreference = key;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: isSelected ? const Color(0xFF16A34A) : Colors.grey.shade300, width: isSelected ? 1.5 : 1),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: isSelected ? const Color(0xFF16A34A) : Colors.grey,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF0F172A))),
+                  Text(subtitle, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -48,6 +48,64 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
       ),
       body: Column(
         children: [
+          // Trust Badges Banner (REQ-V2-CON-04)
+          Container(
+            width: double.infinity,
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0FDF4),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFF86EFAC)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.verified, size: 12, color: Color(0xFF16A34A)),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.store.trustBadge,
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF15803D)),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFFBFDBFE)),
+                  ),
+                  child: Text(
+                    "⚡ ${widget.store.onTimeRate.toStringAsFixed(1)}% On-Time",
+                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1D4ED8)),
+                  ),
+                ),
+                if (widget.store.lightningPacker)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF3C7),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFFFDE68A)),
+                    ),
+                    child: const Text(
+                      "📦 Lightning Packer",
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFB45309)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+
           // If store is in busy mode, display peer spillover banner
           if (widget.store.isBusy)
             Container(
@@ -236,58 +294,177 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
               ],
             ),
           ),
-          // Add or Counter
+          // Add or Counter and Subscription Option (REQ-V2-CON-01)
           if (item.isOutOfStock)
             const Text("Unavailable", style: TextStyle(color: Colors.grey, fontSize: 12))
-          else if (inCart == 0)
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF00B074),
-                side: const BorderSide(color: Color(0xFF00B074)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-              onPressed: () {
-                widget.state.addToCart(widget.store.id, item);
-                setState(() {});
-              },
-              child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold)),
-            )
           else
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF00B074),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove, color: Colors.white, size: 16),
-                    onPressed: () {
-                      widget.state.removeFromCart(item.id);
-                      setState(() {});
-                    },
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                    padding: EdgeInsets.zero,
-                  ),
-                  Text(
-                    "$inCart",
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white, size: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (inCart == 0)
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF00B074),
+                      side: const BorderSide(color: Color(0xFF00B074)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    ),
                     onPressed: () {
                       widget.state.addToCart(widget.store.id, item);
                       setState(() {});
                     },
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                    padding: EdgeInsets.zero,
+                    child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold)),
+                  )
+                else
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00B074),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove, color: Colors.white, size: 16),
+                          onPressed: () {
+                            widget.state.removeFromCart(item.id);
+                            setState(() {});
+                          },
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          padding: EdgeInsets.zero,
+                        ),
+                        Text(
+                          "$inCart",
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add, color: Colors.white, size: 16),
+                          onPressed: () {
+                            widget.state.addToCart(widget.store.id, item);
+                            setState(() {});
+                          },
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          padding: EdgeInsets.zero,
+                        ),
+                      ],
+                    ),
+                  ),
+                if (item.category == 'Dairy & Eggs' || item.category == 'Bakery') ...[
+                  const SizedBox(height: 6),
+                  InkWell(
+                    onTap: () => _showSubscriptionSheet(item),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE0F2FE),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFF7DD3FC)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.repeat, size: 10, color: Color(0xFF0284C7)),
+                          SizedBox(width: 3),
+                          Text("Daily Drop", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF0284C7))),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
-              ),
+              ],
             ),
         ],
       ),
+    );
+  }
+
+  void _showSubscriptionSheet(InventoryItem item) {
+    String freq = "DAILY";
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(item.iconEmoji, style: const TextStyle(fontSize: 24)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Subscribe: ${item.title}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            const Text("Morning doorstep delivery by 7:00 AM • Cancel anytime", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text("Select Delivery Schedule:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      ChoiceChip(
+                        label: const Text("Every Day"),
+                        selected: freq == "DAILY",
+                        onSelected: (val) => setModalState(() => freq = "DAILY"),
+                        selectedColor: const Color(0xFFE8F5E9),
+                      ),
+                      ChoiceChip(
+                        label: const Text("Alternate Days"),
+                        selected: freq == "ALTERNATE_DAYS",
+                        onSelected: (val) => setModalState(() => freq = "ALTERNATE_DAYS"),
+                        selectedColor: const Color(0xFFE8F5E9),
+                      ),
+                      ChoiceChip(
+                        label: const Text("Weekdays Only"),
+                        selected: freq == "WEEKDAYS",
+                        onSelected: (val) => setModalState(() => freq = "WEEKDAYS"),
+                        selectedColor: const Color(0xFFE8F5E9),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00B074),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () {
+                        widget.state.createSubscription(
+                          storeId: widget.store.id,
+                          item: item,
+                          frequency: freq,
+                        );
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("✅ Subscribed to ${item.title}! First delivery tomorrow 7:00 AM."),
+                            backgroundColor: const Color(0xFF2E7D32),
+                          ),
+                        );
+                      },
+                      child: const Text("Confirm Subscription", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

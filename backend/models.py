@@ -38,6 +38,9 @@ class Store:
     upi_id: str = "merchant@upi"
     estimated_minutes: int = 15
     strikes: int = 0
+    trust_badge: str = "Trusted Neighborhood Partner"
+    on_time_rate: float = 99.2
+    lightning_packer: bool = True
 
     @property
     def is_at_capacity(self) -> bool:
@@ -60,6 +63,8 @@ class InventoryItem:
     low_stock_threshold: int = 1
     unit: str = "Unit"
     is_active: bool = True
+    expiry_hours_remaining: Optional[int] = None
+    is_fragile: bool = False
 
     @property
     def is_available(self) -> bool:
@@ -94,6 +99,25 @@ class Order:
     payment_method: str = "UPI"
     wallet_amount_used: float = 0.0
     paid_amount: float = 0.0
+    substitute_preference: str = "REPLACE_SIMILAR"
+    is_subscription_drop: bool = False
+    has_fragile_items: bool = False
+    fragile_verified: bool = False
+
+
+@dataclass
+class Subscription:
+    id: str
+    consumer_id: str
+    store_id: str
+    item_id: str
+    item_title: str
+    frequency: str = "DAILY"  # DAILY, ALTERNATE_DAYS, WEEKDAYS
+    time_slot: str = "6:30 AM - 7:30 AM"
+    quantity: int = 1
+    price: float = 32.0
+    status: str = "ACTIVE"
+    created_at: str = ""
 
 
 @dataclass

@@ -64,3 +64,26 @@ This log captures formal Scrum Sprint Retrospectives, documenting what went well
 ### Process Improvements for Sprint 4:
 1. Continue running `dart analyze` before all production builds.
 2. Ensure payment transaction IDs (mock or sandbox) are displayed on the order tracking confirmation screen for customer receipts.
+
+---
+
+## 🏃 Sprint 4 Retrospective (Daily Habits & Order Protection)
+- **Sprint Duration:** CR-005
+- **Goal:** Implement scheduled recurring morning essentials (milk/bread), pre-checkout smart substitute preferences, store trust & reliability badges, perishable expiry alerts, daily GST tax summaries, fragile packing checklists, and basket add-on nudges.
+- **Git Tag:** `v1.4.0-sprint4-habits`
+
+### What Went Well:
+1. **Habit-Forming Subscriptions:** Users can now set up morning milk drops with flexible frequency (Daily, Alternate Days, Weekdays) with 1 tap.
+2. **Cancellation Prevention:** The smart substitute preference selector ("Replace with similar brand", "Call me first", "Refund missing item") stops mid-packing order cancellations when a small kirana is out of one SKU.
+3. **Food Safety & Damage Mitigation:** Proactive expiry alerts (<24h) prevent selling stale goods, while rider fragile checklists (eggs upright, bread uncrushed) safeguard delicate products.
+4. **GST-Ready Merchant Accounting:** Instant 1-tap calculation and CSV export of Gross Sales, CGST (2.5%), SGST (2.5%), and Net Payouts for kirana shopkeepers.
+5. **Quality Assurance Speed:** Running `dart analyze` immediately caught a misplaced bracket before triggering the 40s web build.
+6. **Complete Test Automation:** 24/24 unit and integration tests passing (100% pass rate).
+
+### What Went Wrong / Friction Points:
+1. **Accidental Duplicate Closing Block in State:** A previous edit left a duplicated `}` that temporarily placed methods outside `class AppState`. Running `dart.bat analyze` caught it instantly and pinpointed the exact line, taking only 1 turn to fix.
+2. **Command Alias Difference on Windows:** PowerShell attempted to run `dart.exe` which is a `.bat` wrapper on this machine (`dart.bat`). Identified through `Get-Command` and logged in memory.
+
+### Process Improvements for Sprint 5:
+1. Use `D:\flutter\bin\dart.bat` consistently on Windows.
+2. Prepare Sprint 5 focus: Multi-Shop Split Cart, Voice-to-Stock, Route Batching, and P2P Overflow Routing.

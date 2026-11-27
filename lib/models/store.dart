@@ -12,6 +12,9 @@ class Store {
   final double trustRating;
   final String upiId;
   final int estimatedMinutes;
+  final String trustBadge;
+  final double onTimeRate;
+  final bool lightningPacker;
 
   Store({
     required this.id,
@@ -27,6 +30,9 @@ class Store {
     this.trustRating = 4.9,
     required this.upiId,
     this.estimatedMinutes = 15,
+    this.trustBadge = "Trusted Neighborhood Partner",
+    this.onTimeRate = 99.2,
+    this.lightningPacker = true,
   });
 
   bool get isAtCapacity => activeOrdersCount >= maxActiveOrders;
@@ -50,6 +56,9 @@ class Store {
       trustRating: trustRating,
       upiId: upiId,
       estimatedMinutes: estimatedMinutes,
+      trustBadge: trustBadge,
+      onTimeRate: onTimeRate,
+      lightningPacker: lightningPacker,
     );
   }
 }

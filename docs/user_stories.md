@@ -132,7 +132,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
 
 ### 🛒 Module 1: Customer App (V2)
 
-#### [US-V2-CON-01] Scheduled & Recurring Daily Essentials
+#### [US-V2-CON-01] Scheduled & Recurring Daily Essentials *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a busy household customer, I want to set up an automatic recurring morning delivery for daily essentials (like milk, bread, and eggs at 7:00 AM), so that I never have to wake up and place a manual order every morning.
 - **Acceptance Criteria:**
   - **Given** items in the store catalog (e.g. fresh milk packet),
@@ -140,12 +140,12 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** orders are auto-scheduled in the background with automatic wallet/card deduction.
   - **And** the customer can pause or cancel the subscription anytime with 1 tap before 10:00 PM the previous night.
 
-#### [US-V2-CON-02] Pre-Checkout Smart Substitute Approval
+#### [US-V2-CON-02] Pre-Checkout Smart Substitute Approval *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a customer, I want to pre-approve backup substitute items in case my preferred brand is physically missing from the shelf, so that my order isn't canceled or delayed by phone calls.
 - **Acceptance Criteria:**
   - **Given** an item in the cart (e.g. Amul Milk 500ml),
   - **When** the customer checks out,
-  - **Then** they can choose a substitute preference: *"Replace with Mother Dairy / Nandini"*, *"Call me first"*, or *"Refund item if missing"*.
+  - **Then** they can choose a substitute preference: *"Replace with similar brand"*, *"Call me first"*, or *"Refund missing item immediately"*.
   - **And** the shopkeeper's packing screen automatically highlights the pre-approved substitute if the main SKU is exhausted.
 
 #### [US-V2-CON-03] Multi-Shop Split Cart (Single Delivery Zone)
@@ -156,7 +156,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** the cart cleanly groups items by store and shows one unified bill with a combined hyper-local delivery fee.
   - **And** both store terminals receive their respective packing lists simultaneously.
 
-#### [US-V2-CON-04] Store Trust & Reliability Badges
+#### [US-V2-CON-04] Store Trust & Reliability Badges *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a customer, I want to see trust badges (like "Verified Neighborhood Partner", "99% On-Time Delivery", "Freshness Rated 4.9★"), so that I can buy with complete confidence from trusted local merchants.
 - **Acceptance Criteria:**
   - **Given** the store list on the home screen,
@@ -176,7 +176,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** the voice engine extracts Name, SKU, Quantity, and Price into the form automatically.
   - **And** taking a photo of shelf products auto-suggests barcode matches.
 
-#### [US-V2-MER-02] Low-Stock & Perishable Expiry Alerts
+#### [US-V2-MER-02] Low-Stock & Perishable Expiry Alerts *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a shopkeeper selling perishables (milk, bread, paneer), I want proactive expiry and low-stock alerts, so that I don't accidentally sell expired goods or run out of fast-moving staples.
 - **Acceptance Criteria:**
   - **Given** perishables in inventory,
@@ -184,7 +184,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** a high-priority yellow notification appears on the Kirana Dashboard.
   - **And** the item price can be marked down with 1 tap for quick clearance.
 
-#### [US-V2-MER-03] Daily Settlement & GST-Ready Tax Summary
+#### [US-V2-MER-03] Daily Settlement & GST-Ready Tax Summary *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a shopkeeper, I want a clean 1-page daily earnings and GST-ready tax summary, so that I can share it with my accountant and track my business income without bookkeeping hassles.
 - **Acceptance Criteria:**
   - **Given** completed orders for the day,
@@ -209,7 +209,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **When** the delivery feed loads,
   - **Then** the system groups them into a single "Batched Run" with an optimized sequential drop order.
 
-#### [US-V2-DLV-02] Fragile & Cold Packing Checklist
+#### [US-V2-DLV-02] Fragile & Cold Packing Checklist *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a delivery boy, I want a quick visual checklist before leaving the shop (e.g. *"Egg crate inside? Ice cream bag sealed?"*), so that goods don't get damaged on my bike.
 - **Acceptance Criteria:**
   - **Given** an order containing fragile items (eggs, bread) or cold dairy (ice cream, milk),
@@ -250,7 +250,7 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **When** they tap "Appeal Strike" in their dashboard and upload counter-proof,
   - **Then** the appeal appears in the Owner Dashboard at `/admin` under "Dispute Desk" with 1-click Approve/Dismiss buttons.
 
-#### [US-V2-OPS-04] Same-Shop Basket Add-On Nudges
+#### [US-V2-OPS-04] Same-Shop Basket Add-On Nudges *(Implemented & Verified in Sprint 4)*
 - **User Story:** As a customer adding tea powder to my cart, I want smart suggestions from the same shop (like sugar, milk, or biscuits), so that I don't forget essentials.
 - **Acceptance Criteria:**
   - **Given** items in the cart,

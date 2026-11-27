@@ -144,6 +144,58 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
             const Divider(height: 1),
             const SizedBox(height: 12),
 
+            // Fragile & Cold Packing Checklist (REQ-V2-DLV-02)
+            if (order.hasFragileItems) ...[
+              Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: order.fragileVerified ? const Color(0xFFF0FDF4) : const Color(0xFFFFFBEB),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: order.fragileVerified ? const Color(0xFF86EFAC) : const Color(0xFFFDE68A)),
+                ),
+                child: Row(
+                  children: [
+                    Text(order.fragileVerified ? "✅" : "⚠️", style: const TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Fragile & Cold Items in Bag", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                          Text(
+                            order.fragileVerified
+                                ? "Verified safe: Eggs intact & upright, Bread uncrushed"
+                                : "Check before departure: Ensure eggs & bread are not crushed",
+                            style: TextStyle(fontSize: 10.5, color: order.fragileVerified ? const Color(0xFF15803D) : const Color(0xFF92400E)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!order.fragileVerified)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFD97706),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          minimumSize: Size.zero,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                        onPressed: () {
+                          widget.state.verifyFragileOrder(order.id);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("✅ Fragile checklist verified! Safe for doorstep delivery."),
+                              backgroundColor: Color(0xFF2E7D32),
+                            ),
+                          );
+                        },
+                        child: const Text("Verify", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+
             // OTP Input Field (REQ-DLV-02)
             const Text("Ask Customer for 4-Digit Delivery Code", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             const SizedBox(height: 6),

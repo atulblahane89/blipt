@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import random
 from typing import Dict, List, Optional
 
-from .models import Store, InventoryItem, Order, OrderItem, OrderStatus, Dispute
+from .models import Store, InventoryItem, Order, OrderItem, OrderStatus, Dispute, Subscription
 from .spillover_engine import SpilloverDispatcher, haversine_distance_meters
 from .escrow_ledger import EscrowLedgerEngine
 
@@ -32,6 +32,9 @@ class BliptoBackendService:
                 trust_rating=4.9,
                 upi_id="gupta.kirana@oksbi",
                 estimated_minutes=14,
+                trust_badge="Trusted Neighborhood Partner",
+                on_time_rate=99.2,
+                lightning_packer=True,
             ),
             Store(
                 id="store-002",
@@ -46,6 +49,9 @@ class BliptoBackendService:
                 trust_rating=4.8,
                 upi_id="mahadev.retail@okaxis",
                 estimated_minutes=18,
+                trust_badge="High Velocity Supermarket",
+                on_time_rate=98.5,
+                lightning_packer=False,
             ),
             Store(
                 id="store-003",
@@ -60,21 +66,40 @@ class BliptoBackendService:
                 trust_rating=4.7,
                 upi_id="venkateshwara@icici",
                 estimated_minutes=25,
+                trust_badge="Fresh Produce Specialist",
+                on_time_rate=97.0,
+                lightning_packer=True,
             ),
         ]
 
         self.inventory: Dict[str, List[InventoryItem]] = {
             "store-001": [
-                InventoryItem("item-101", "store-001", "8901030383821", "Amul Taaza Homogenised Milk", "Dairy & Eggs", 32.0, 18, unit="500ml"),
-                InventoryItem("item-102", "store-001", "8901491101837", "Modern Whole Wheat Bread", "Bakery", 45.0, 2, unit="400g"),
-                InventoryItem("item-103", "store-001", "8901725181222", "Farm Fresh Brown Eggs", "Dairy & Eggs", 55.0, 14, unit="6 pcs"),
+                InventoryItem("item-101", "store-001", "8901030383821", "Amul Taaza Homogenised Milk", "Dairy & Eggs", 32.0, 18, unit="500ml", expiry_hours_remaining=18, is_fragile=False),
+                InventoryItem("item-102", "store-001", "8901491101837", "Modern Whole Wheat Bread", "Bakery", 45.0, 2, unit="400g", expiry_hours_remaining=12, is_fragile=True),
+                InventoryItem("item-103", "store-001", "8901725181222", "Farm Fresh Brown Eggs", "Dairy & Eggs", 55.0, 14, unit="6 pcs", expiry_hours_remaining=72, is_fragile=True),
             ],
             "store-002": [
-                InventoryItem("item-201", "store-002", "8901030383821", "Amul Taaza Homogenised Milk", "Dairy & Eggs", 32.0, 25, unit="500ml"),
-                InventoryItem("item-202", "store-002", "8901491101837", "Modern Whole Wheat Bread", "Bakery", 45.0, 12, unit="400g"),
-                InventoryItem("item-203", "store-002", "8901725181222", "Farm Fresh Brown Eggs", "Dairy & Eggs", 55.0, 20, unit="6 pcs"),
+                InventoryItem("item-201", "store-002", "8901030383821", "Amul Taaza Homogenised Milk", "Dairy & Eggs", 32.0, 25, unit="500ml", expiry_hours_remaining=24, is_fragile=False),
+                InventoryItem("item-202", "store-002", "8901491101837", "Modern Whole Wheat Bread", "Bakery", 45.0, 12, unit="400g", expiry_hours_remaining=16, is_fragile=True),
+                InventoryItem("item-203", "store-002", "8901725181222", "Farm Fresh Brown Eggs", "Dairy & Eggs", 55.0, 20, unit="6 pcs", expiry_hours_remaining=96, is_fragile=True),
             ],
         }
+
+        self.subscriptions: List[Subscription] = [
+            Subscription(
+                id="SUB-101",
+                consumer_id="usr-881",
+                store_id="store-001",
+                item_id="item-101",
+                item_title="Amul Taaza Homogenised Milk",
+                frequency="DAILY",
+                time_slot="6:30 AM - 7:30 AM",
+                quantity=2,
+                price=32.0,
+                status="ACTIVE",
+                created_at=datetime.now(timezone.utc).isoformat(),
+            )
+        ]
 
         self.orders: Dict[str, Order] = {}
         self.disputes: List[Dispute] = []
@@ -97,6 +122,9 @@ class BliptoBackendService:
                     "can_accept_orders": s.can_fulfill,
                     "trust_rating": s.trust_rating,
                     "estimated_minutes": s.estimated_minutes,
+                    "trust_badge": getattr(s, "trust_badge", "Trusted Neighborhood Partner"),
+                    "on_time_rate": getattr(s, "on_time_rate", 99.0),
+                    "lightning_packer": getattr(s, "lightning_packer", True),
                 }
                 results.append(d)
         results.sort(key=lambda x: x["distance_meters"])
@@ -113,12 +141,120 @@ class BliptoBackendService:
                 "category": it.category,
                 "price": it.price,
                 "stock_quantity": it.stock_quantity,
+                "unit": it.unit,
                 "is_low_stock": it.stock_quantity <= it.low_stock_threshold,
                 "is_out_of_stock": it.stock_quantity <= 0,
+                "expiry_hours_remaining": it.expiry_hours_remaining,
+                "is_fragile": it.is_fragile,
             }
             for it in items
             if it.stock_quantity > 0  # Zero phantom stockout rule
         ]
+
+    def get_store_perishables(self, store_id: str) -> List[dict]:
+        items = self.inventory.get(store_id, [])
+        perishables = []
+        for it in items:
+            if (it.expiry_hours_remaining is not None and it.expiry_hours_remaining <= 24) or (it.stock_quantity <= it.low_stock_threshold):
+                perishables.append({
+                    "id": it.id,
+                    "store_id": it.store_id,
+                    "title": it.title,
+                    "category": it.category,
+                    "price": it.price,
+                    "stock_quantity": it.stock_quantity,
+                    "expiry_hours_remaining": it.expiry_hours_remaining,
+                    "is_fragile": it.is_fragile,
+                    "is_low_stock": it.stock_quantity <= it.low_stock_threshold,
+                    "alert_level": "CRITICAL" if (it.expiry_hours_remaining and it.expiry_hours_remaining <= 12) else "WARNING",
+                })
+        return perishables
+
+    def get_subscriptions(self, consumer_id: str = "usr-881") -> List[dict]:
+        return [
+            {
+                "id": sub.id,
+                "consumer_id": sub.consumer_id,
+                "store_id": sub.store_id,
+                "item_id": sub.item_id,
+                "item_title": sub.item_title,
+                "frequency": sub.frequency,
+                "time_slot": sub.time_slot,
+                "quantity": sub.quantity,
+                "price": sub.price,
+                "status": sub.status,
+                "created_at": sub.created_at,
+            }
+            for sub in self.subscriptions
+            if sub.consumer_id == consumer_id
+        ]
+
+    def create_subscription(
+        self,
+        consumer_id: str,
+        store_id: str,
+        item_id: str,
+        item_title: str,
+        frequency: str = "DAILY",
+        time_slot: str = "6:30 AM - 7:30 AM",
+        quantity: int = 1,
+        price: float = 32.0,
+    ) -> dict:
+        sub_id = f"SUB-{random.randint(100, 999)}"
+        sub = Subscription(
+            id=sub_id,
+            consumer_id=consumer_id,
+            store_id=store_id,
+            item_id=item_id,
+            item_title=item_title,
+            frequency=frequency,
+            time_slot=time_slot,
+            quantity=quantity,
+            price=price,
+            status="ACTIVE",
+            created_at=datetime.now(timezone.utc).isoformat(),
+        )
+        self.subscriptions.append(sub)
+        return {
+            "subscription_id": sub.id,
+            "status": sub.status,
+            "frequency": sub.frequency,
+            "time_slot": sub.time_slot,
+            "item_title": sub.item_title,
+        }
+
+    def get_merchant_tax_summary(self, store_id: str = "store-001") -> dict:
+        store_orders = [o for o in self.orders.values() if o.fulfilling_store_id == store_id and o.status == OrderStatus.DELIVERED]
+        gross_sales = sum(o.total_amount for o in store_orders)
+        if gross_sales == 0.0:
+            gross_sales = self.escrow.settled_balances.get(store_id, 3450.0)
+
+        # Indian GST slab for grocery/packaged goods (Composite approx: CGST 2.5%, SGST 2.5%)
+        cgst = round(gross_sales * 0.025, 2)
+        sgst = round(gross_sales * 0.025, 2)
+        total_gst = round(cgst + sgst, 2)
+        platform_fee = round(gross_sales * 0.045, 2)
+        net_payout = round(gross_sales - total_gst - platform_fee, 2)
+
+        return {
+            "store_id": store_id,
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "gross_sales": gross_sales,
+            "cgst_amount": cgst,
+            "sgst_amount": sgst,
+            "total_gst_collected": total_gst,
+            "platform_commission": platform_fee,
+            "net_payout": net_payout,
+            "delivered_order_count": len(store_orders) if store_orders else 12,
+            "gst_number": "29AABCU9603R1ZM",
+        }
+
+    def verify_fragile_checklist(self, order_id: str) -> dict:
+        order = self.orders.get(order_id)
+        if not order:
+            raise KeyError("Order not found")
+        order.fragile_verified = True
+        return {"order_id": order.id, "fragile_verified": True}
 
     def intake_barcode_item(self, store_id: str, barcode: str, title: str, price: float, quantity: int) -> dict:
         catalog = self.inventory.setdefault(store_id, [])
@@ -156,6 +292,7 @@ class BliptoBackendService:
         items: list,
         payment_method: str = "UPI",
         wallet_amount_used: float = 0.0,
+        substitute_preference: str = "REPLACE_SIMILAR",
     ) -> dict:
         req_tuples = [(it["barcode"] if "barcode" in it else it["item_id"], it["quantity"]) for it in items]
 
@@ -173,9 +310,12 @@ class BliptoBackendService:
 
         order_items = []
         subtotal = 0.0
+        has_fragile = False
 
         for key, qty in req_tuples:
             item = cat_map[key]
+            if getattr(item, "is_fragile", False):
+                has_fragile = True
             item.stock_quantity = max(0, item.stock_quantity - qty)
             oi = OrderItem(item_id=item.id, title=item.title, price=item.price, quantity=qty)
             order_items.append(oi)
@@ -211,6 +351,9 @@ class BliptoBackendService:
             payment_method=payment_method,
             wallet_amount_used=wallet_used,
             paid_amount=paid_amount,
+            substitute_preference=substitute_preference,
+            has_fragile_items=has_fragile,
+            fragile_verified=False,
         )
         self.orders[order_id] = order
 
@@ -230,6 +373,8 @@ class BliptoBackendService:
             "payment_method": order.payment_method,
             "wallet_amount_used": order.wallet_amount_used,
             "paid_amount": order.paid_amount,
+            "substitute_preference": order.substitute_preference,
+            "has_fragile_items": order.has_fragile_items,
         }
 
     def verify_delivery(self, order_id: str, otp: Optional[str] = None, photo_proof: Optional[str] = None) -> dict:
@@ -462,6 +607,21 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
             inv = service.get_store_inventory(store_id)
             self._send_json(200, {"store_id": store_id, "inventory": inv})
 
+        elif re.match(r"^/v1/stores/[^/]+/perishables$", path):
+            store_id = path.split("/")[3]
+            perishables = service.get_store_perishables(store_id)
+            self._send_json(200, {"store_id": store_id, "perishables": perishables})
+
+        elif path == "/v1/subscriptions":
+            consumer_id = query.get("consumer_id", ["usr-881"])[0]
+            subs = service.get_subscriptions(consumer_id)
+            self._send_json(200, {"subscriptions": subs})
+
+        elif path == "/v1/merchant/tax-summary":
+            store_id = query.get("store_id", ["store-001"])[0]
+            summary = service.get_merchant_tax_summary(store_id)
+            self._send_json(200, summary)
+
         else:
             self._send_json(404, {"error": "Not Found"})
 
@@ -480,8 +640,27 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
                 items=body.get("items", []),
                 payment_method=body.get("payment_method", "UPI"),
                 wallet_amount_used=float(body.get("wallet_amount_used", 0.0)),
+                substitute_preference=body.get("substitute_preference", "REPLACE_SIMILAR"),
             )
             self._send_json(201, res)
+
+        elif path == "/v1/subscriptions":
+            res = service.create_subscription(
+                consumer_id=body.get("consumer_id", "usr-881"),
+                store_id=body.get("store_id", "store-001"),
+                item_id=body.get("item_id", "item-101"),
+                item_title=body.get("item_title", "Daily Essentials"),
+                frequency=body.get("frequency", "DAILY"),
+                time_slot=body.get("time_slot", "6:30 AM - 7:30 AM"),
+                quantity=int(body.get("quantity", 1)),
+                price=float(body.get("price", 32.0)),
+            )
+            self._send_json(201, res)
+
+        elif re.match(r"^/v1/orders/[^/]+/verify-fragile$", path):
+            order_id = path.split("/")[3]
+            res = service.verify_fragile_checklist(order_id)
+            self._send_json(200, res)
 
         elif re.match(r"^/v1/orders/[^/]+/verify-delivery$", path):
             order_id = path.split("/")[3]

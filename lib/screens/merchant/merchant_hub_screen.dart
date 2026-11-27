@@ -163,6 +163,97 @@ class MerchantHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
+            // Perishables & Short-Shelf-Life Expiry Alerts (REQ-V2-MER-02)
+            Builder(
+              builder: (context) {
+                final perishables = state.getStorePerishables(store.id);
+                if (perishables.isEmpty) return const SizedBox.shrink();
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFFDE68A)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Row(
+                            children: [
+                              Text("⚠️", style: TextStyle(fontSize: 16)),
+                              SizedBox(width: 6),
+                              Text("Short Shelf Life & Low Stock Alerts", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF92400E))),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(color: const Color(0xFFFEF3C7), borderRadius: BorderRadius.circular(6)),
+                            child: Text("${perishables.length} Action Needed", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFB45309))),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ...perishables.map((item) {
+                        final isCritical = item.expiryHoursRemaining != null && item.expiryHoursRemaining! <= 12;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: isCritical ? Colors.red.shade200 : const Color(0xFFFDE68A)),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(item.iconEmoji, style: const TextStyle(fontSize: 18)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                    Text(
+                                      item.expiryHoursRemaining != null
+                                          ? "Expires in ${item.expiryHoursRemaining} hrs • Stock: ${item.stockQuantity} ${item.unit}"
+                                          : "Low Stock: only ${item.stockQuantity} units left!",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: isCritical ? Colors.red.shade700 : const Color(0xFFB45309),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: isCritical ? Colors.red.shade50 : const Color(0xFFFEF3C7),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  isCritical ? "CRITICAL EXPIRY" : "SELL FIRST",
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: isCritical ? Colors.red.shade700 : const Color(0xFF92400E),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                );
+              },
+            ),
+
             // Active In-Flight Orders List (REQ-MER-02)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

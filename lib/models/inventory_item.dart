@@ -10,6 +10,8 @@ class InventoryItem {
   final String iconEmoji;
   final String unit;
   final bool isActive;
+  final int? expiryHoursRemaining;
+  final bool isFragile;
 
   InventoryItem({
     required this.id,
@@ -23,15 +25,20 @@ class InventoryItem {
     required this.iconEmoji,
     required this.unit,
     this.isActive = true,
+    this.expiryHoursRemaining,
+    this.isFragile = false,
   });
 
   bool get isOutOfStock => stockQuantity <= 0;
   bool get isLowStock => stockQuantity > 0 && stockQuantity <= lowStockThreshold;
+  bool get isExpiringSoon => expiryHoursRemaining != null && expiryHoursRemaining! <= 24;
 
   InventoryItem copyWith({
     int? stockQuantity,
     double? price,
     bool? isActive,
+    int? expiryHoursRemaining,
+    bool? isFragile,
   }) {
     return InventoryItem(
       id: id,
@@ -45,6 +52,8 @@ class InventoryItem {
       iconEmoji: iconEmoji,
       unit: unit,
       isActive: isActive ?? this.isActive,
+      expiryHoursRemaining: expiryHoursRemaining ?? this.expiryHoursRemaining,
+      isFragile: isFragile ?? this.isFragile,
     );
   }
 }

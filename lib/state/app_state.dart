@@ -6,6 +6,7 @@ import '../models/store.dart';
 import '../models/inventory_item.dart';
 import '../models/order.dart';
 import '../models/dispute.dart';
+import '../models/subscription.dart';
 
 enum AppRole {
   consumer,
@@ -40,6 +41,9 @@ class AppState extends ChangeNotifier {
       trustRating: 4.9,
       upiId: "gupta.kirana@oksbi",
       estimatedMinutes: 14,
+      trustBadge: "Trusted Partner",
+      onTimeRate: 99.2,
+      lightningPacker: true,
     ),
     Store(
       id: "store-002",
@@ -55,6 +59,9 @@ class AppState extends ChangeNotifier {
       trustRating: 4.8,
       upiId: "mahadev.retail@okaxis",
       estimatedMinutes: 18,
+      trustBadge: "Supermarket",
+      onTimeRate: 98.5,
+      lightningPacker: false,
     ),
     Store(
       id: "store-003",
@@ -70,6 +77,9 @@ class AppState extends ChangeNotifier {
       trustRating: 4.7,
       upiId: "venkateshwara@icici",
       estimatedMinutes: 25,
+      trustBadge: "Fresh Specialist",
+      onTimeRate: 97.0,
+      lightningPacker: true,
     ),
   ];
 
@@ -78,6 +88,9 @@ class AppState extends ChangeNotifier {
 
   // Catalog items keyed by storeId
   Map<String, List<InventoryItem>> storeInventories = {};
+
+  // Active recurring morning essential subscriptions
+  List<Subscription> subscriptions = [];
 
   // Shopping Cart: StoreId -> (ItemId -> Quantity)
   Map<String, int> cartItems = {};
@@ -115,6 +128,8 @@ class AppState extends ChangeNotifier {
         stockQuantity: 18,
         iconEmoji: "🥛",
         unit: "500 ml pouch",
+        expiryHoursRemaining: 18,
+        isFragile: false,
       ),
       InventoryItem(
         id: "item-102",
@@ -126,6 +141,8 @@ class AppState extends ChangeNotifier {
         stockQuantity: 2, // Low stock demo!
         iconEmoji: "🍞",
         unit: "400g pack",
+        expiryHoursRemaining: 12,
+        isFragile: true,
       ),
       InventoryItem(
         id: "item-103",
@@ -137,6 +154,8 @@ class AppState extends ChangeNotifier {
         stockQuantity: 14,
         iconEmoji: "🥚",
         unit: "6 pcs",
+        expiryHoursRemaining: 72,
+        isFragile: true,
       ),
       InventoryItem(
         id: "item-104",
@@ -148,6 +167,7 @@ class AppState extends ChangeNotifier {
         stockQuantity: 9,
         iconEmoji: "🌻",
         unit: "1 Litre pouch",
+        isFragile: false,
       ),
       InventoryItem(
         id: "item-105",
@@ -159,6 +179,7 @@ class AppState extends ChangeNotifier {
         stockQuantity: 30,
         iconEmoji: "🧂",
         unit: "1 kg",
+        isFragile: false,
       ),
       InventoryItem(
         id: "item-106",
@@ -170,6 +191,7 @@ class AppState extends ChangeNotifier {
         stockQuantity: 6,
         iconEmoji: "🌾",
         unit: "5 kg bag",
+        isFragile: false,
       ),
     ];
 
@@ -185,6 +207,8 @@ class AppState extends ChangeNotifier {
         stockQuantity: 25,
         iconEmoji: "🥛",
         unit: "500 ml pouch",
+        expiryHoursRemaining: 24,
+        isFragile: false,
       ),
       InventoryItem(
         id: "item-202",
@@ -196,6 +220,8 @@ class AppState extends ChangeNotifier {
         stockQuantity: 12,
         iconEmoji: "🍞",
         unit: "400g pack",
+        expiryHoursRemaining: 16,
+        isFragile: true,
       ),
       InventoryItem(
         id: "item-203",
@@ -207,12 +233,29 @@ class AppState extends ChangeNotifier {
         stockQuantity: 20,
         iconEmoji: "🥚",
         unit: "6 pcs",
+        expiryHoursRemaining: 96,
+        isFragile: true,
       ),
     ];
   }
 
   void _initSampleOrders() {
     final now = DateTime.now();
+    subscriptions = [
+      Subscription(
+        id: "SUB-101",
+        consumerId: "usr-881",
+        storeId: "store-001",
+        itemId: "item-101",
+        itemTitle: "Amul Taaza Homogenised Toned Milk",
+        frequency: "DAILY",
+        timeSlot: "6:30 AM - 7:30 AM",
+        quantity: 2,
+        price: 32.0,
+        status: "ACTIVE",
+      ),
+    ];
+
     orders = [
       BliptoOrder(
         id: "ORD-9281",
@@ -229,6 +272,8 @@ class AppState extends ChangeNotifier {
         deliveryOtp: "4192",
         createdAt: now.subtract(const Duration(minutes: 8)),
         status: OrderStatus.outForDelivery,
+        hasFragileItems: true,
+        substitutePreference: "REPLACE_SIMILAR",
       ),
       BliptoOrder(
         id: "ORD-9104",
@@ -244,6 +289,9 @@ class AppState extends ChangeNotifier {
         deliveryOtp: "8319",
         createdAt: now.subtract(const Duration(minutes: 35)),
         status: OrderStatus.delivered,
+        hasFragileItems: true,
+        fragileVerified: true,
+        substitutePreference: "REPLACE_SIMILAR",
       ),
     ];
     merchantEscrowBalance = 119.0;
@@ -300,7 +348,11 @@ class AppState extends ChangeNotifier {
   double get cartTotal => cartSubtotal + cartDeliveryFee;
 
   // --- Dynamic Spillover & Order Placement ---
-  BliptoOrder placeOrder({String paymentMethod = "UPI", double walletAmountUsed = 0.0}) {
+  BliptoOrder placeOrder({
+    String paymentMethod = "UPI",
+    double walletAmountUsed = 0.0,
+    String substitutePreference = "REPLACE_SIMILAR",
+  }) {
     if (activeCartStoreId == null || cartItems.isEmpty) {
       throw StateError("Cart is empty");
     }
@@ -335,6 +387,7 @@ class AppState extends ChangeNotifier {
       orderItems.add(OrderItem(item: item, quantity: qty));
     });
 
+    final bool hasFragile = orderItems.any((oi) => oi.item.isFragile);
     final randomOtp = (1000 + Random().nextInt(9000)).toString();
 
     // Deduct wallet if used
@@ -362,6 +415,9 @@ class AppState extends ChangeNotifier {
       paymentMethod: paymentMethod,
       walletAmountUsed: effectiveWalletUsed,
       paidAmount: effectivePaidAmount,
+      substitutePreference: substitutePreference,
+      hasFragileItems: hasFragile,
+      fragileVerified: false,
     );
 
     // Update store capacity
@@ -405,11 +461,89 @@ class AppState extends ChangeNotifier {
           "items": itemsPayload,
           "payment_method": order.paymentMethod,
           "wallet_amount_used": order.walletAmountUsed,
+          "substitute_preference": order.substitutePreference,
         }),
       );
     } catch (e) {
       debugPrint("Local/offline sync note: $e");
     }
+  }
+
+  // --- Subscriptions (REQ-V2-CON-01) ---
+  void createSubscription({
+    required String storeId,
+    required InventoryItem item,
+    String frequency = "DAILY",
+    String timeSlot = "6:30 AM - 7:30 AM",
+    int quantity = 1,
+  }) {
+    final sub = Subscription(
+      id: "SUB-${100 + Random().nextInt(900)}",
+      consumerId: "usr-881",
+      storeId: storeId,
+      itemId: item.id,
+      itemTitle: item.title,
+      frequency: frequency,
+      timeSlot: timeSlot,
+      quantity: quantity,
+      price: item.price,
+      status: "ACTIVE",
+    );
+    subscriptions.insert(0, sub);
+    _syncSubscriptionToBackend(sub);
+    notifyListeners();
+  }
+
+  void toggleSubscription(String subId) {
+    final idx = subscriptions.indexWhere((s) => s.id == subId);
+    if (idx != -1) {
+      subscriptions[idx].status = subscriptions[idx].status == "ACTIVE" ? "PAUSED" : "ACTIVE";
+      notifyListeners();
+    }
+  }
+
+  Future<void> _syncSubscriptionToBackend(Subscription sub) async {
+    try {
+      await http.post(
+        Uri.parse("http://localhost:8080/v1/subscriptions"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "consumer_id": sub.consumerId,
+          "store_id": sub.storeId,
+          "item_id": sub.itemId,
+          "item_title": sub.itemTitle,
+          "frequency": sub.frequency,
+          "time_slot": sub.timeSlot,
+          "quantity": sub.quantity,
+          "price": sub.price,
+        }),
+      );
+    } catch (_) {}
+  }
+
+  // --- Fragile Delivery Verification (REQ-V2-DLV-02) ---
+  void verifyFragileOrder(String orderId) {
+    final idx = orders.indexWhere((o) => o.id == orderId);
+    if (idx != -1) {
+      orders[idx].fragileVerified = true;
+      _syncFragileVerificationToBackend(orderId);
+      notifyListeners();
+    }
+  }
+
+  Future<void> _syncFragileVerificationToBackend(String orderId) async {
+    try {
+      await http.post(
+        Uri.parse("http://localhost:8080/v1/orders/$orderId/verify-fragile"),
+        headers: {"Content-Type": "application/json"},
+      );
+    } catch (_) {}
+  }
+
+  // --- Kirana Perishables & Expiry (REQ-V2-MER-02) ---
+  List<InventoryItem> getStorePerishables(String storeId) {
+    final catalog = storeInventories[storeId] ?? [];
+    return catalog.where((it) => (it.expiryHoursRemaining != null && it.expiryHoursRemaining! <= 24) || it.isLowStock).toList();
   }
 
   // --- Merchant Operations ---

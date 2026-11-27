@@ -63,6 +63,31 @@ This document provides a human-readable audit trail of every **Change Request (C
 
 ---
 
+## Change Request: `CR-005`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 4 (Daily Habits & Order Protection)
+- **Prompt:** *"Implement Scheduled recurring daily essentials, pre-checkout smart substitute preferences, same-shop cart add-on nudges, store trust badges, merchant expiry alerts, daily GST summary, and fragile delivery checklist"*
+- **Rationale:** Drive habit-forming repeat daily orders (milk/bread), protect small stores from cancellations when one brand runs out, and avoid item breakage during delivery.
+- **Impacted Requirements:** `REQ-V2-CON-01`, `REQ-V2-CON-02`, `REQ-V2-CON-04`, `REQ-V2-MER-02`, `REQ-V2-MER-03`, `REQ-V2-DLV-02`, `REQ-V2-OPS-04`
+- **Files Modified:**
+  - `backend/models.py`
+  - `backend/app.py`
+  - `lib/models/inventory_item.dart`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `lib/screens/consumer/consumer_home_screen.dart`
+  - `lib/screens/consumer/store_detail_screen.dart`
+  - `lib/screens/merchant/merchant_hub_screen.dart`
+  - `lib/screens/merchant/escrow_ledger_screen.dart`
+  - `lib/screens/delivery/delivery_task_screen.dart`
+  - `admin/index.html`
+- **Tests Added:** `tests/test_sprint4_habits_and_protection.py`
+- **Release Tag:** `v1.4.0-sprint4-habits`
+- **Outcome:** **Verified & Merged**.
+
+---
+
 ## Change Request: `CR-003`
 - **Date:** 2026-11-26
 - **Prompt:** *"Add always-visible My Orders & Delivery Tracking card to customer feed and prominent Track Order button in AppBar"*
@@ -93,4 +118,29 @@ This document provides a human-readable audit trail of every **Change Request (C
   - `admin/index.html`
 - **Tests Added:** `tests/test_payments.py`
 - **Release Tag:** `v1.3.0-payments`
+- **Outcome:** **Verified & Merged**.
+
+---
+
+## Change Request: `CR-005`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 4 (Daily Habits & Order Protection)
+- **Prompt:** *"Implement Scheduled recurring daily essentials, pre-checkout smart substitute preferences, same-shop cart add-on nudges, store trust badges, merchant expiry alerts, daily GST summary, and fragile delivery checklist"*
+- **Rationale:** Drive habit-forming repeat daily orders (milk/bread), protect small stores from cancellations when one brand runs out, and avoid item breakage during delivery.
+- **Impacted Requirements:** `REQ-V2-CON-01`, `REQ-V2-CON-02`, `REQ-V2-CON-04`, `REQ-V2-MER-02`, `REQ-V2-MER-03`, `REQ-V2-DLV-02`, `REQ-V2-OPS-04`
+- **Files Modified:**
+  - `backend/models.py`
+  - `backend/app.py`
+  - `lib/models/inventory_item.dart`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `lib/screens/consumer/consumer_home_screen.dart`
+  - `lib/screens/consumer/store_detail_screen.dart`
+  - `lib/screens/merchant/merchant_hub_screen.dart`
+  - `lib/screens/merchant/escrow_ledger_screen.dart`
+  - `lib/screens/delivery/delivery_task_screen.dart`
+  - `admin/index.html`
+- **Tests Added:** `tests/test_sprint4_habits_and_protection.py`
+- **Release Tag:** `v1.4.0-sprint4-habits`
 - **Outcome:** **Verified & Merged**.

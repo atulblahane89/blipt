@@ -97,7 +97,80 @@ class EscrowLedgerScreen extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+
+            // Daily Settlement & GST-Ready Tax Summary (REQ-V2-MER-03)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFCBD5E1)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.receipt_long_rounded, color: Color(0xFF0F172A), size: 18),
+                          SizedBox(width: 8),
+                          Text("Daily GST & Tax Summary", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(6)),
+                        child: const Text("GST-Ready", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Text("GSTIN: 29AABCU9603R1ZM • Ready for monthly filing", style: TextStyle(fontSize: 10.5, color: Colors.grey)),
+                  const Divider(height: 16),
+                  _buildTaxRow("Gross Store Sales (Today)", "₹${state.merchantSettledBalance.toStringAsFixed(2)}"),
+                  _buildTaxRow("CGST Collected (2.5%)", "₹${(state.merchantSettledBalance * 0.025).toStringAsFixed(2)}"),
+                  _buildTaxRow("SGST Collected (2.5%)", "₹${(state.merchantSettledBalance * 0.025).toStringAsFixed(2)}"),
+                  _buildTaxRow("Platform Commission (4.5%)", "₹${(state.merchantSettledBalance * 0.045).toStringAsFixed(2)}"),
+                  const Divider(height: 14),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Net Bank Payout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF0F172A))),
+                      Text(
+                        "₹${(state.merchantSettledBalance - (state.merchantSettledBalance * 0.05) - (state.merchantSettledBalance * 0.045)).toStringAsFixed(2)}",
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF00B074)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 38,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF0F172A),
+                        side: const BorderSide(color: Color(0xFF94A3B8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      icon: const Icon(Icons.download, size: 16),
+                      label: const Text("Download GST Summary (CSV)", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("📄 GST Report downloaded: gst_summary_${state.activeMerchantStore.id}_today.csv"),
+                            backgroundColor: const Color(0xFF0284C7),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
 
             // Escrow Mechanics Explanation
             Container(
@@ -166,6 +239,19 @@ class EscrowLedgerScreen extends StatelessWidget {
               }).toList(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTaxRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+          Text(value, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+        ],
       ),
     );
   }

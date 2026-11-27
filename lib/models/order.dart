@@ -38,6 +38,9 @@ class BliptoOrder {
   final String paymentMethod;
   final double walletAmountUsed;
   final double paidAmount;
+  final String substitutePreference;
+  final bool hasFragileItems;
+  bool fragileVerified;
 
   BliptoOrder({
     required this.id,
@@ -59,6 +62,9 @@ class BliptoOrder {
     this.paymentMethod = "UPI",
     this.walletAmountUsed = 0.0,
     double? paidAmount,
+    this.substitutePreference = "REPLACE_SIMILAR",
+    this.hasFragileItems = false,
+    this.fragileVerified = false,
   }) : paidAmount = paidAmount ?? (totalAmount - walletAmountUsed);
 
   String get statusDisplay {
