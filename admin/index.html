@@ -69,14 +69,14 @@
     }
 
     /* ========================================================
-       BLIPTO GLASSY SIDEBAR (Real-time Hover + True Collapse)
+       BLIPTO GLASSY SIDEBAR (Card Opens on Hover + Real-Time Page Connection)
        ======================================================== */
     .glassy-sidebar {
       position: fixed;
       left: 18px;
       top: 18px;
       bottom: 18px;
-      width: 250px; /* Full standard width by default */
+      width: 68px; /* Sleek compact capsule by default */
       background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -86,21 +86,22 @@
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      padding: 16px 14px;
+      padding: 16px 12px;
       overflow-y: auto;
       overflow-x: hidden;
-      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), padding 0.28s ease, box-shadow 0.28s ease;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease, box-shadow 0.3s ease;
       user-select: none;
     }
 
-    /* Collapsed State: When toggle button is pressed */
-    body.sidebar-collapsed .glassy-sidebar {
-      width: 72px;
-      padding: 16px 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    /* THE CARD OPENS UP ON HOVER (Or when pinned open) */
+    .glassy-sidebar:hover,
+    body.sidebar-pinned .glassy-sidebar {
+      width: 250px;
+      padding: 16px 14px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
     }
 
-    /* Header Row */
+    /* Header Row: Logo Button + Text + Aligned Toggle Button */
     .sidebar-header-row {
       display: flex;
       align-items: center;
@@ -119,6 +120,12 @@
       padding: 2px;
       min-width: 0;
       text-decoration: none;
+      margin: 0 auto;
+      transition: margin 0.3s ease;
+    }
+    .glassy-sidebar:hover .brand-clickable-area,
+    body.sidebar-pinned .brand-clickable-area {
+      margin: 0;
     }
     .brand-clickable-area:hover .brand-logo-pill {
       transform: scale(1.06);
@@ -144,10 +151,16 @@
     .brand-meta {
       overflow: hidden;
       white-space: nowrap;
-      transition: opacity 0.2s ease;
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, max-width 0.25s ease;
     }
-    body.sidebar-collapsed .brand-meta {
-      display: none;
+    .glassy-sidebar:hover .brand-meta,
+    body.sidebar-pinned .brand-meta {
+      opacity: 1;
+      max-width: 140px;
+      pointer-events: auto;
     }
 
     .brand-meta h4 {
@@ -177,7 +190,14 @@
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       flex-shrink: 0;
+      opacity: 0;
+      pointer-events: none;
       margin-left: auto;
+    }
+    .glassy-sidebar:hover .sidebar-toggle-btn,
+    body.sidebar-pinned .sidebar-toggle-btn {
+      opacity: 1;
+      pointer-events: auto;
     }
     .sidebar-toggle-btn:hover {
       background: rgba(0, 176, 116, 0.25);
@@ -185,11 +205,10 @@
       color: #00B074;
       transform: scale(1.05);
     }
-    body.sidebar-collapsed .sidebar-toggle-btn {
-      display: none;
-    }
-    body.sidebar-collapsed .brand-clickable-area {
-      margin: 0 auto;
+    body.sidebar-pinned .sidebar-toggle-btn {
+      background: rgba(0, 176, 116, 0.2);
+      border-color: rgba(0, 176, 116, 0.5);
+      color: #00B074;
     }
 
     /* Navigation Items List */
@@ -212,8 +231,14 @@
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      padding: 0 12px;
+      padding: 0;
+      justify-content: center;
       overflow: hidden;
+    }
+    .glassy-sidebar:hover .glass-nav-item,
+    body.sidebar-pinned .glass-nav-item {
+      padding: 0 12px;
+      justify-content: flex-start;
     }
 
     .nav-icon {
@@ -223,8 +248,12 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-right: 12px;
+      margin-right: 0;
       transition: margin-right 0.2s ease, transform 0.2s ease;
+    }
+    .glassy-sidebar:hover .nav-icon,
+    body.sidebar-pinned .nav-icon {
+      margin-right: 12px;
     }
     .nav-icon svg {
       width: 20px;
@@ -238,6 +267,16 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, max-width 0.22s ease;
+    }
+    .glassy-sidebar:hover .nav-label,
+    body.sidebar-pinned .nav-label {
+      opacity: 1;
+      max-width: 160px;
+      pointer-events: auto;
     }
 
     .nav-badge-pill {
@@ -249,12 +288,18 @@
       background: rgba(245, 158, 11, 0.25);
       color: #FBBF24;
       border: 1px solid rgba(245, 158, 11, 0.4);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .glassy-sidebar:hover .nav-badge-pill,
+    body.sidebar-pinned .nav-badge-pill {
+      opacity: 1;
     }
 
     .glass-nav-item:hover {
       background: rgba(255, 255, 255, 0.12);
       color: #FFFFFF;
-      transform: translateX(3px);
+      transform: translateX(2px);
     }
 
     /* Active Nav Item: Solid White Pill with Blipto Green Accent */
@@ -273,54 +318,6 @@
       color: var(--charcoal-900);
     }
 
-    /* Collapsed Sidebar overrides */
-    body.sidebar-collapsed .glass-nav-item {
-      padding: 0;
-      justify-content: center;
-    }
-    body.sidebar-collapsed .glass-nav-item:hover {
-      transform: scale(1.08);
-      background: rgba(255, 255, 255, 0.15);
-    }
-    body.sidebar-collapsed .glass-nav-item.active {
-      transform: scale(1.0);
-    }
-    body.sidebar-collapsed .nav-icon {
-      margin-right: 0;
-    }
-    body.sidebar-collapsed .nav-label {
-      display: none;
-    }
-    body.sidebar-collapsed .nav-badge-pill {
-      display: none;
-    }
-
-    /* Tooltip when Sidebar is Collapsed */
-    .glass-nav-item .tooltip {
-      position: fixed;
-      left: 82px;
-      background: #0F172A;
-      color: #FFFFFF;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 8px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateX(-6px);
-      transition: all 0.16s ease;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      z-index: 2000;
-      display: none;
-    }
-    body.sidebar-collapsed .glass-nav-item:hover .tooltip {
-      display: block;
-      opacity: 1;
-      transform: translateX(0);
-    }
-
     /* Bottom Profile Row */
     .sidebar-footer-box {
       margin-top: auto;
@@ -335,10 +332,12 @@
       padding: 4px;
       border-radius: 12px;
       cursor: default;
-    }
-    body.sidebar-collapsed .user-profile-row {
       justify-content: center;
-      padding: 2px 0;
+      transition: justify-content 0.2s ease;
+    }
+    .glassy-sidebar:hover .user-profile-row,
+    body.sidebar-pinned .user-profile-row {
+      justify-content: flex-start;
     }
 
     .user-avatar-glass {
@@ -371,9 +370,16 @@
     .user-meta-expanded {
       overflow: hidden;
       white-space: nowrap;
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, max-width 0.2s ease;
     }
-    body.sidebar-collapsed .user-meta-expanded {
-      display: none;
+    .glassy-sidebar:hover .user-meta-expanded,
+    body.sidebar-pinned .user-meta-expanded {
+      opacity: 1;
+      max-width: 140px;
+      pointer-events: auto;
     }
     .user-meta-expanded h5 {
       font-size: 13px;
@@ -389,19 +395,15 @@
     }
 
     /* ========================================================
-       MAIN APP WORKSPACE (Zero Overlap, Smooth Margins)
+       MAIN APP WORKSPACE (Zero Overlap, Generous Margin)
        ======================================================== */
     .app-main {
-      margin-left: 284px; /* Perfectly clears the 250px sidebar with 34px breathing room */
+      margin-left: 284px; /* Generous 284px ensures zero overlap when card opens */
       flex: 1;
       padding: 24px 36px 60px 24px;
       max-width: 1480px;
       min-width: 0;
       transition: margin-left 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    body.sidebar-collapsed .app-main {
-      margin-left: 104px; /* Perfectly clears the 72px compact sidebar */
     }
 
     /* Clean Top Header (No Duplicate Tabs!) */
@@ -819,7 +821,7 @@
           <p>Store Network</p>
         </div>
       </div>
-      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar(event)" title="Collapse Sidebar (Ctrl+B)">
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar(event)" title="Pin Sidebar Open (Ctrl+B)">
         <svg viewBox="0 0 24 24" style="width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none;">
           <rect x="3" y="3" width="18" height="18" rx="4"/>
           <line x1="9" y1="3" x2="9" y2="21"/>
@@ -1444,22 +1446,22 @@
 
     function toggleSidebar(e) {
       if (e) e.stopPropagation();
-      document.body.classList.toggle('sidebar-collapsed');
+      document.body.classList.toggle('sidebar-pinned');
       var chevron = document.getElementById('toggle-chevron');
       var btn = document.getElementById('sidebar-toggle-btn');
-      var isCollapsed = document.body.classList.contains('sidebar-collapsed');
+      var isPinned = document.body.classList.contains('sidebar-pinned');
       if (chevron) {
-        if (isCollapsed) {
-          chevron.setAttribute('d', 'M14 9l3 3-3 3');
-        } else {
+        if (isPinned) {
           chevron.setAttribute('d', 'M16 15l-3-3 3-3');
+        } else {
+          chevron.setAttribute('d', 'M14 9l3 3-3 3');
         }
       }
       if (btn) {
-        if (isCollapsed) {
-          btn.setAttribute('title', 'Expand Sidebar (Ctrl+B)');
+        if (isPinned) {
+          btn.setAttribute('title', 'Unpin Sidebar (Auto-collapse on mouse leave)');
         } else {
-          btn.setAttribute('title', 'Collapse Sidebar (Ctrl+B)');
+          btn.setAttribute('title', 'Pin Sidebar Open (Ctrl+B)');
         }
       }
     }
