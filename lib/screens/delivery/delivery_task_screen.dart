@@ -57,26 +57,100 @@ class _DeliveryTaskScreenState extends State<DeliveryTaskScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Status Header
+            // Status Header & Offline Weak Signal Simulator (REQ-V2-DLV-03)
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: widget.state.isDeliveryOffline ? Colors.orange.shade300 : Colors.grey.shade200),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  const Text("Orders to Deliver", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5E9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text("${runs.length} Deliveries Waiting", style: const TextStyle(color: Color(0xFF2E7D32), fontWeight: FontWeight.bold, fontSize: 12)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            widget.state.isDeliveryOffline ? Icons.signal_cellular_connected_no_internet_0_bar : Icons.signal_cellular_alt,
+                            color: widget.state.isDeliveryOffline ? Colors.deepOrange : const Color(0xFF00B074),
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            widget.state.isDeliveryOffline ? "Elevator / Basement (Offline)" : "Signal: Strong (Online)",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: widget.state.isDeliveryOffline ? Colors.deepOrange.shade800 : const Color(0xFF0F172A),
+                            ),
+                          ),
+                        ],
+                      ),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: widget.state.isDeliveryOffline ? Colors.deepOrange : const Color(0xFF0F172A),
+                          side: BorderSide(color: widget.state.isDeliveryOffline ? Colors.deepOrange : Colors.grey.shade300),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          minimumSize: Size.zero,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        icon: Icon(widget.state.isDeliveryOffline ? Icons.wifi : Icons.wifi_off, size: 14),
+                        label: Text(
+                          widget.state.isDeliveryOffline ? "Turn Online" : "Simulate Offline",
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () => widget.state.toggleDeliveryOffline(),
+                      ),
+                    ],
                   ),
+                  if (widget.state.offlineDeliveryQueue.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7ED),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.orange.shade200),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.sync, size: 16, color: Colors.deepOrange),
+                              const SizedBox(width: 6),
+                              Text(
+                                "${widget.state.offlineDeliveryQueue.length} offline deliveries waiting to sync",
+                                style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrange,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              minimumSize: Size.zero,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                            ),
+                            onPressed: () async {
+                              final count = await widget.state.syncOfflineDeliveries();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("✅ Synced $count offline deliveries with server! Shopkeeper paid."),
+                                    backgroundColor: const Color(0xFF00B074),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text("Sync Now", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

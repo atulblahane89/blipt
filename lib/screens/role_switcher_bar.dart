@@ -65,23 +65,53 @@ class RoleSwitcherBar extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildRoleTab(
-                      label: "Customer",
+                      label: state.t("Customer", "ग्राहक"),
                       icon: Icons.shopping_bag_outlined,
                       isSelected: state.currentRole == AppRole.consumer,
                       onTap: () => state.switchRole(AppRole.consumer),
                     ),
                     _buildRoleTab(
-                      label: "Shopkeeper",
+                      label: state.t("Shopkeeper", "दुकानदार"),
                       icon: Icons.storefront_rounded,
                       isSelected: state.currentRole == AppRole.merchant,
                       onTap: () => state.switchRole(AppRole.merchant),
                       badgeCount: state.hasIncomingOrderAlert ? 1 : null,
                     ),
                     _buildRoleTab(
-                      label: "Delivery Boy",
+                      label: state.t("Delivery Boy", "डिलीवरी"),
                       icon: Icons.moped_rounded,
                       isSelected: state.currentRole == AppRole.deliveryStaff,
                       onTap: () => state.switchRole(AppRole.deliveryStaff),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Language Selector Toggle (EN | हिंदी)
+            InkWell(
+              onTap: () => state.toggleLanguage(),
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: state.isHindi ? const Color(0xFFFFF7ED) : const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: state.isHindi ? Colors.orange.shade400 : Colors.grey.shade300,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.language_rounded, size: 16, color: Color(0xFF0F172A)),
+                    const SizedBox(width: 4),
+                    Text(
+                      state.isHindi ? "हि" : "EN",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: state.isHindi ? Colors.deepOrange.shade800 : const Color(0xFF0F172A),
+                      ),
                     ),
                   ],
                 ),

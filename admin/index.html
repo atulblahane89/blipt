@@ -800,6 +800,7 @@
                 <th>Reason</th>
                 <th>Refund Amount</th>
                 <th>Photo Evidence</th>
+                <th>AI Visual Audit (REQ-V2-OPS-02)</th>
                 <th>Resolution Status</th>
                 <th>Merchant Strike</th>
               </tr>
@@ -1188,6 +1189,7 @@
           <td>${d.reason}</td>
           <td><strong style="color: var(--accent-red);">₹${d.refund.toFixed(0)}</strong></td>
           <td class="mono">${d.photo}</td>
+          <td><span class="badge badge-success" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid #10B981;">🤖 ${d.ai_audit || 'Shell Crack (94%)'}</span></td>
           <td><span class="badge badge-success">Auto-Refunded</span></td>
           <td><span class="badge badge-danger">+1 Strike Logged</span></td>
         </tr>

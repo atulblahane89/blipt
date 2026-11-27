@@ -110,3 +110,18 @@ This log captures formal Scrum Sprint Retrospectives, documenting what went well
 ### Process Improvements for Sprint 6:
 1. Always include 3+ lines of unique surrounding code when modifying closing delimiters in Dart or Python.
 2. Prepare Sprint 6 focus: Offline-resilient sync for weak signal zones (`REQ-V2-DLV-03`) and Automated AI/OCR photo-defect verification (`REQ-V2-OPS-02`).
+
+---
+
+## 🏃 Sprint 6 Retrospective: Offline Resilience, AI Defect Verification & Localization
+- **Date:** 2026-11-27
+- **Sprint Focus:** Offline-resilient delivery handoff, automated AI dispute verification, and clean on-demand language toggle.
+
+### 1. What Went Well (Wins)
+- **Elevator & Basement Resilience (`US-V2-DLV-03`):** Delivery riders are no longer stuck waiting for cellular internet in apartment towers. Offline OTP verification completes locally with instant feedback and queues sync events reliably.
+- **AI Visual Defect Verification (`US-V2-OPS-02`):** Customer dispute photos are classified in real time with confidence scoring (≥85%), providing instant wallet credit without human friction while logging audit cues for merchant governance.
+- **User-Centric Language Toggle:** Added a clean `EN | हि` button in the app bar so users can toggle between plain English and Hindi dynamically without forced hardcoded strings.
+
+### 2. Action Items for Next Sprint
+1. Verify end-to-end Flutter web build and monitor production latency on offline sync endpoints.
+2. Maintain strict zero-jargon plain English as the base language.

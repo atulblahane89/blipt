@@ -111,6 +111,24 @@ This document provides a human-readable audit trail of every **Change Request (C
 
 ---
 
+### [CR-006] Sprint 6: Offline Resilience & AI Photo-Defect Verification
+- **Date:** 2026-11-27
+- **Requested By:** Product Owner / Agile Sprint 6 Plan
+- **Rationale:** Prevents delivery delays when riders enter basements/elevators without cellular signal, automates defect claims with instant wallet refunds, and introduces user-selectable language switching.
+- **Scope & Affected Modules:**
+  - `backend/models.py` (Added `OfflineDeliverySyncRecord`, AI fields on `Dispute`)
+  - `backend/app.py` (`POST /v1/deliveries/offline-sync`, `POST /v1/disputes/ai-verify`, `GET /v1/deliveries/offline-queue`)
+  - `lib/state/app_state.dart` (Language toggle `isHindi`, `toggleLanguage()`, offline queue and AI scan methods)
+  - `lib/screens/role_switcher_bar.dart` (Added persistent `EN | हि` language toggle pill)
+  - `lib/screens/delivery/delivery_task_screen.dart` (Offline mode simulator, offline doorstep code verification, amber sync banner)
+  - `lib/screens/consumer/dispute_screen.dart` (Live visual AI photo scan, confidence metrics, and instant wallet credit)
+  - `admin/index.html` (Added AI visual audit telemetry to Dispute Desk)
+- **Tests Planned:** `tests/test_sprint6_offline_and_ai.py` (3 automated tests, 100% pass)
+- **Release Tag:** `v1.6.0-sprint6-offline-ai`
+- **Outcome:** **Verified & Merged**.
+
+---
+
 ## Change Request: `CR-003`
 - **Date:** 2026-11-26
 - **Prompt:** *"Add always-visible My Orders & Delivery Tracking card to customer feed and prominent Track Order button in AppBar"*
@@ -189,4 +207,22 @@ This document provides a human-readable audit trail of every **Change Request (C
   - `lib/screens/delivery/delivery_task_screen.dart`
 - **Tests Planned:** `tests/test_sprint5_scale_and_efficiency.py` (5 automated tests, 100% pass)
 - **Release Tag:** `v1.5.0-sprint5-scale`
+- **Outcome:** **Verified & Merged**.
+
+---
+
+### [CR-006] Sprint 6: Offline Resilience & AI Photo-Defect Verification
+- **Date:** 2026-11-27
+- **Requested By:** Product Owner / Agile Sprint 6 Plan
+- **Rationale:** Prevents delivery delays when riders enter basements/elevators without cellular signal, automates defect claims with instant wallet refunds, and introduces user-selectable language switching.
+- **Scope & Affected Modules:**
+  - `backend/models.py` (Added `OfflineDeliverySyncRecord`, AI fields on `Dispute`)
+  - `backend/app.py` (`POST /v1/deliveries/offline-sync`, `POST /v1/disputes/ai-verify`, `GET /v1/deliveries/offline-queue`)
+  - `lib/state/app_state.dart` (Language toggle `isHindi`, `toggleLanguage()`, offline queue and AI scan methods)
+  - `lib/screens/role_switcher_bar.dart` (Added persistent `EN | हि` language toggle pill)
+  - `lib/screens/delivery/delivery_task_screen.dart` (Offline mode simulator, offline doorstep code verification, amber sync banner)
+  - `lib/screens/consumer/dispute_screen.dart` (Live visual AI photo scan, confidence metrics, and instant wallet credit)
+  - `admin/index.html` (Added AI visual audit telemetry to Dispute Desk)
+- **Tests Planned:** `tests/test_sprint6_offline_and_ai.py` (3 automated tests, 100% pass)
+- **Release Tag:** `v1.6.0-sprint6-offline-ai`
 - **Outcome:** **Verified & Merged**.

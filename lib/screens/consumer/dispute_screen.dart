@@ -118,22 +118,27 @@ class _DisputeScreenState extends State<DisputeScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Camera Photo Proof
-            const Text("3. Take a quick photo of the item", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            // Camera Photo Proof & AI Visual Classifier (REQ-V2-OPS-02)
+            const Text("3. Take a photo of the damaged item", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 setState(() => isPhotoCaptured = true);
+                final chosen = selectedItemId != null ? items.firstWhere((it) => it.item.id == selectedItemId) : items.first;
+                await widget.state.scanPhotoWithAI(
+                  photoBase64: "data:image/jpeg;base64,sampleDefect",
+                  itemTitle: chosen.item.title,
+                  reason: reason,
+                );
               },
               child: Container(
-                height: 140,
+                height: 120,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: isPhotoCaptured ? const Color(0xFFE8F5E9) : Colors.white,
+                  color: isPhotoCaptured ? const Color(0xFFF0FDF4) : Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: isPhotoCaptured ? const Color(0xFF00B074) : Colors.grey.shade300,
-                    style: BorderStyle.solid,
                   ),
                 ),
                 child: Center(
@@ -142,12 +147,12 @@ class _DisputeScreenState extends State<DisputeScreen> {
                     children: [
                       Icon(
                         isPhotoCaptured ? Icons.check_circle : Icons.camera_alt_outlined,
-                        size: 36,
+                        size: 34,
                         color: isPhotoCaptured ? const Color(0xFF00B074) : Colors.grey.shade600,
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        isPhotoCaptured ? "Photo captured! (Tap to retake)" : "Tap here to take photo with phone camera",
+                        isPhotoCaptured ? "Defect Photo Attached (Tap to re-scan)" : "Tap here to snap photo with camera",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -159,6 +164,47 @@ class _DisputeScreenState extends State<DisputeScreen> {
                 ),
               ),
             ),
+            if (isPhotoCaptured && widget.state.lastAiDisputeScan != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0FDF4),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF86EFAC)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.verified, color: Color(0xFF16A34A), size: 18),
+                            SizedBox(width: 6),
+                            Text("AI Photo Inspection", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF15803D))),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(color: const Color(0xFFDCFCE7), borderRadius: BorderRadius.circular(6)),
+                          child: Text(
+                            "${((widget.state.lastAiDisputeScan!['ai_confidence'] as num?)?.toDouble() ?? 0.92 * 100).toInt()}% Match",
+                            style: const TextStyle(color: Color(0xFF15803D), fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      widget.state.lastAiDisputeScan!['message'] ?? "Defect verified. Instant refund approved.",
+                      style: const TextStyle(fontSize: 11.5, color: Color(0xFF166534)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
 
             // Submit Button

@@ -131,6 +131,19 @@ class Dispute:
     refund_amount: float
     status: str = "AUTO_RESOLVED"
     created_at: str = ""
+    ai_confidence: float = 0.92
+    ai_defect_detected: str = "PACKAGING_DEFECT_CONFIRMED"
+    ai_verdict: str = "AUTO_APPROVED"
+
+
+@dataclass
+class OfflineDeliverySyncRecord:
+    order_id: str
+    verified_at_timestamp: str
+    verification_method: str = "OFFLINE_OTP_HASH"
+    synced_at: str = ""
+    status: str = "SYNCED"
+    settled_amount: float = 0.0
 
 
 @dataclass
