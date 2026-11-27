@@ -14,6 +14,7 @@
 | **FAIL-004** | Windows AppData Sandbox Access Denied | `flutter` and `dart` tried writing to user's restricted `C:\Users\...\AppData\Roaming` during analysis and builds. | Shell crashes with `FileSystemException: Access is denied`. | **Rule: Sandbox Temp Redirection Rule.** Always run Flutter/Dart commands on Windows with `$env:LOCALAPPDATA="d:\blipto\.temp"; $env:APPDATA="d:\blipto\.temp"`. |
 | **FAIL-005** | Python HTTPServer Hang on Keep-Alive | Used Python's standard `http.server.HTTPServer` which is single-threaded. | Browser kept an HTTP connection open, causing subsequent API calls to block and hang indefinitely. | **Rule: Threading Server Mandate.** Never run standard `HTTPServer` in dev; always use `http.server.ThreadingHTTPServer`. |
 | **FAIL-006** | Git Merge Conflict in Living Pipeline Manifest | Two parallel branches modified `.pipeline/project_manifest.json` independently without deterministic order. | Git merge conflict blocked automated releases. | **Rule: Orchestrator Manifest Merge Rule.** The Living Pipeline Engine script must merge JSON dictionaries deterministically before completing git merges. |
+| **FAIL-007** | Relapse into Technical Jargon & Western FMCG Placeholders | Sprint 5 re-introduced terms like *"P2P Overflow Routing Telemetry"*, *"Mesh Standby"*, and foreign mock products (*Oat Milk Barista Edition, Artisanal Sourdough*). | Kirana merchants and local consumers cannot understand the UI; completely breaks Indian local context and violates FAIL-001. | **Rule: The Indian FMCG & Bilingual Neighborhood Rule.** 1) All products must be authentic Indian staples (Maggi, Amul, Tata Tea, Haldiram's, Aashirvaad, Fortune). 2) All shopkeeper screens must use conversational Hindi/English everyday phrasing (बोलकर सामान जोड़ें, आस-पड़ोस की मांग, पार्टनर दुकान से शेयरिंग). |
 
 ---
 
@@ -47,3 +48,22 @@
 - **Remediation & Guardrail:**
   1. Backend server in `backend/app.py` must subclass `ThreadingHTTPServer`.
   2. Any future background server scripts must be multi-threaded by default.
+
+---
+
+### Post-Mortem FAIL-007: Relapse into Technical Jargon & Western FMCG Placeholders
+- **Incident:** During Sprint 5, merchant and admin screens featured terms like *"Voice-to-Stock Catalog Intake"*, *"Neighborhood Unfulfilled Demand Signals"*, *"Peer-to-Peer Overflow Routing Telemetry"*, *"Mesh Standby"*, and foreign mock products like *"Oat Milk Barista Edition"* and *"Artisanal Sourdough Bread"*.
+- **Root Cause:** Developers copied raw technical terminology directly from feature specification documents into the UI strings and seeded synthetic mock catalogs using generic Western e-commerce datasets rather than authentic Indian FMCG staples.
+- **Remediation & Guardrail:**
+  1. **Strict Kirana Language Guardrail:** Replace all algorithmic titles with conversational bilingual phrasing:
+     - ❌ *Voice-to-Stock Catalog Intake* ➔ ✔️ **बोलकर सामान जोड़ें (Speak to Add Items)**
+     - ❌ *Neighborhood Unfulfilled Demand Signals / Zero-Result Searches* ➔ ✔️ **आस-पड़ोस की मांग (What Neighbors Looked For Today)**
+     - ❌ *P2P Overflow Routing Telemetry / Mesh Standby* ➔ ✔️ **पार्टनर दुकान ऑर्डर शेयरिंग (Order Sharing When Busy)**
+     - ❌ *Fulfillment SLA* ➔ ✔️ **डिलीवरी समय (Delivery Time: ~14 mins)**
+  2. **Everyday Indian FMCG Brands Only:** Every single product across catalogs, demand signals, search prompts, and sample voice intake chips must be household Indian brands:
+     - 🍜 **Maggi 2-Minute Masala Noodles**
+     - 🧈 **Amul Salted Butter & Taaza Milk**
+     - 🍵 **Tata Tea Gold Leaf Tea**
+     - 🥔 **Haldiram's Nagpur Aloo Bhujia**
+     - 🌾 **Aashirvaad Shudh Chakki Atta**
+     - 🌻 **Fortune Refined Sunflower Oil**

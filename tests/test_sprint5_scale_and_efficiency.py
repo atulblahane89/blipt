@@ -41,9 +41,10 @@ class TestSprint5ScaleAndEfficiency(unittest.TestCase):
         self.assertGreaterEqual(len(demand_signals), 3)
 
         queries = [item["query"] for item in demand_signals]
-        self.assertTrue(any("Oat Milk" in q for q in queries))
-        self.assertTrue(any("Greek Yogurt" in q for q in queries))
-        self.assertTrue(any("Sourdough" in q for q in queries))
+        self.assertTrue(any("Maggi" in q for q in queries))
+        self.assertTrue(any("Amul" in q for q in queries))
+        self.assertTrue(any("Tata Tea" in q for q in queries))
+        self.assertTrue(any("Haldiram" in q for q in queries))
 
         for signal in demand_signals:
             self.assertIn("searches_count", signal)

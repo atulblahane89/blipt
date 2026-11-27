@@ -475,7 +475,7 @@
         <span>🛡️</span> <span>Customer Complaints & Refunds</span>
       </div>
       <div class="nav-item" onclick="switchTab('overflow')">
-        <span>🔄</span> <span>P2P Overflow Routing Telemetry</span>
+        <span>🔄</span> <span>Partner Store Order Sharing</span>
       </div>
       <div class="nav-item" onclick="switchTab('datasaver')">
         <span>💾</span> <span>Save & Download All Data</span>
@@ -584,35 +584,35 @@
           </div>
         </div>
 
-        <!-- P2P Overflow Routing Telemetry Desk (REQ-V2-OPS-01) -->
+        <!-- Partner Store Order Sharing Desk (REQ-V2-OPS-01) -->
         <div class="data-saver-card" style="margin-bottom: 24px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
             <div>
-              <h3 style="font-size: 15px; font-weight: 700; color: #fff;">🔄 Peer-to-Peer (P2P) Overflow Routing Telemetry (REQ-V2-OPS-01)</h3>
-              <p style="font-size: 11.5px; color: var(--text-dim); margin-top: 2px;">Dynamic load-balancing across nearby partner stores (500m–1.2km) with 1.5% referral revenue share</p>
+              <h3 style="font-size: 15px; font-weight: 700; color: #fff;">🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)</h3>
+              <p style="font-size: 11.5px; color: var(--text-dim); margin-top: 2px;">Automatic order sharing across nearby partner stores (500m–1.2km) during rush hours with 1.5% commission</p>
             </div>
-            <span class="badge badge-success">Mesh Routing Active</span>
+            <span class="badge badge-success">Partner Sharing Active</span>
           </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
             <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Total Overflow Rerouted</div>
+              <div style="font-size: 11px; color: var(--text-dim);">Orders Shared During Rush</div>
               <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">2 Orders</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Prevented walkaway churn</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Prevented customer cancellation</div>
             </div>
             <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">P2P Referral Fee Pool (1.5%)</div>
+              <div style="font-size: 11px; color: var(--text-dim);">Store Commission Earned (1.5%)</div>
               <div style="font-size: 20px; font-weight: 800; color: var(--accent-blue); margin-top: 4px;">₹18.50</div>
               <div style="font-size: 10px; color: var(--text-muted);">Credited to busy origin shops</div>
             </div>
             <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Mesh Zero-Cancellation Rate</div>
+              <div style="font-size: 11px; color: var(--text-dim);">Saved Orders (Zero Cancellations)</div>
               <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">100%</div>
               <div style="font-size: 10px; color: var(--text-muted);">Zero orders lost during rushes</div>
             </div>
             <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Average Handoff Distance</div>
+              <div style="font-size: 11px; color: var(--text-dim);">Average Sharing Distance</div>
               <div style="font-size: 20px; font-weight: 800; color: var(--accent-purple); margin-top: 4px;">650m</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Within 15-min delivery promise</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Delivered in ~14 mins</div>
             </div>
           </div>
           <table>
@@ -620,7 +620,7 @@
               <tr>
                 <th>Order ID</th>
                 <th>Originating Store (Busy/Full)</th>
-                <th>Fulfilling Store (Mesh Partner)</th>
+                <th>Fulfilling Store (Partner Store)</th>
                 <th>Distance</th>
                 <th>Reason</th>
                 <th>Referral Margin (1.5%)</th>
@@ -839,16 +839,16 @@
         <div class="data-saver-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <div>
-              <h2 style="font-size: 16px; color: #fff;">🔄 Peer-to-Peer (P2P) Overflow Mesh Telemetry (REQ-V2-OPS-01)</h2>
+              <h2 style="font-size: 16px; color: #fff;">🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)</h2>
               <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 2px;">
-                Decentralized order load balancing across neighborhood partner stores (500m–1.2km) with automatic 1.5% margin referral revenue sharing.
+                Automatic order load balancing across neighborhood partner stores (500m–1.2km) with 1.5% referral commission.
               </p>
             </div>
-            <span class="badge badge-success">Dynamic Spillover Engine Active</span>
+            <span class="badge badge-success">Partner Sharing Active</span>
           </div>
           <div class="metrics-grid" style="margin-top: 18px; margin-bottom: 20px;">
             <div class="metric-card" style="--card-accent: #00B074;">
-              <div class="metric-label">Spillover Volume Handled</div>
+              <div class="metric-label">Orders Handled by Partners</div>
               <div class="metric-value">2 Orders</div>
               <div class="metric-sub">100% orders saved from cancellation</div>
             </div>
@@ -858,9 +858,9 @@
               <div class="metric-sub">1.5% commission credited to busy shops</div>
             </div>
             <div class="metric-card" style="--card-accent: #8B5CF6;">
-              <div class="metric-label">Mesh Catchment Distance</div>
+              <div class="metric-label">Partner Store Radius</div>
               <div class="metric-value">650m avg</div>
-              <div class="metric-sub">Within hyper-local delivery SLA</div>
+              <div class="metric-sub">Delivered in ~14 mins</div>
             </div>
             <div class="metric-card" style="--card-accent: #F59E0B;">
               <div class="metric-label">Zero-Churn Protection</div>
@@ -870,7 +870,7 @@
           </div>
           <div class="table-container">
             <div class="table-header">
-              <span class="table-title">Live Peer-to-Peer Rerouting Log</span>
+              <span class="table-title">Live Partner Store Order Sharing Log</span>
               <span class="badge badge-purple">Real-Time Telemetry</span>
             </div>
             <table>
@@ -878,7 +878,7 @@
                 <tr>
                   <th>Order ID</th>
                   <th>Originating Store (Busy/Full)</th>
-                  <th>Fulfilling Store (Mesh Partner)</th>
+                  <th>Fulfilling Store (Partner Store)</th>
                   <th>Catchment Distance</th>
                   <th>Spillover Trigger</th>
                   <th>Referral Margin (1.5%)</th>
@@ -1074,7 +1074,7 @@
         'inventory': ['Master Inventory & SKUs', 'Zero-phantom stockout shelf synchronization and price auditing'],
         'escrow': ['Escrow & Treasury Ledger', 'Track customer funds in escrow vs settled merchant balances'],
         'disputes': ['Dispute Desk & Governance', 'Automated photo refund audits and 3-strike merchant enforcement'],
-        'overflow': ['P2P Overflow Routing Telemetry', 'Decentralized peer-to-peer load balancing and 1.5% margin referral telemetry'],
+        'overflow': ['Partner Store Order Sharing', 'Automatic order sharing between nearby neighborhood stores during rush hour with 1.5% commission'],
         'datasaver': ['Master Data Saver & DB Explorer', 'One-click persistence, full JSON snapshot, and CSV exports']
       };
 

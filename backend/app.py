@@ -118,32 +118,32 @@ class BliptoBackendService:
         ]
         self.unfulfilled_demand: List[dict] = [
             {
-                "query": "Oat Milk 1 Litre",
+                "query": "Maggi 2-Minute Masala Noodles (Pack of 4)",
+                "searches_count": 48,
+                "category": "Snacks & Munchies",
+                "estimated_monthly_revenue": 2688.0,
+                "recommended_mrp": 56.0,
+            },
+            {
+                "query": "Amul Salted Butter (500g Block)",
+                "searches_count": 36,
+                "category": "Dairy & Eggs",
+                "estimated_monthly_revenue": 3960.0,
+                "recommended_mrp": 275.0,
+            },
+            {
+                "query": "Tata Tea Gold Leaf Tea (500g Pack)",
                 "searches_count": 28,
-                "category": "Dairy & Alternatives",
-                "estimated_monthly_revenue": 3360.0,
-                "recommended_mrp": 120.0,
+                "category": "Tea & Coffee",
+                "estimated_monthly_revenue": 3920.0,
+                "recommended_mrp": 280.0,
             },
             {
-                "query": "Epigamia Greek Yogurt (Blueberry)",
-                "searches_count": 19,
-                "category": "Dairy",
-                "estimated_monthly_revenue": 1140.0,
-                "recommended_mrp": 60.0,
-            },
-            {
-                "query": "Artisanal Sourdough Bread",
-                "searches_count": 14,
-                "category": "Bakery",
-                "estimated_monthly_revenue": 1400.0,
-                "recommended_mrp": 100.0,
-            },
-            {
-                "query": "Cold Pressed Coconut Oil",
-                "searches_count": 11,
-                "category": "Oils & Staples",
-                "estimated_monthly_revenue": 2420.0,
-                "recommended_mrp": 220.0,
+                "query": "Haldiram's Nagpur Aloo Bhujia (400g)",
+                "searches_count": 24,
+                "category": "Snacks & Munchies",
+                "estimated_monthly_revenue": 2640.0,
+                "recommended_mrp": 110.0,
             },
         ]
 

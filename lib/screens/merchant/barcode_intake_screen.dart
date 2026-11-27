@@ -109,7 +109,23 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
     } catch (_) {}
 
     // Fallback parsing
-    if (phrase.toLowerCase().contains("fortune")) {
+    if (phrase.toLowerCase().contains("maggi")) {
+      setState(() {
+        _titleCtrl.text = "Maggi 2-Minute Masala Instant Noodles";
+        _priceCtrl.text = "56";
+        _qtyCtrl.text = "10";
+        selectedCategory = "Instant Food";
+        _barcodeCtrl.text = "8901058852219";
+      });
+    } else if (phrase.toLowerCase().contains("atta") || phrase.toLowerCase().contains("aashirvaad")) {
+      setState(() {
+        _titleCtrl.text = "Aashirvaad Shudh Chakki Atta (5kg)";
+        _priceCtrl.text = "245";
+        _qtyCtrl.text = "5";
+        selectedCategory = "Oils & Staples";
+        _barcodeCtrl.text = "8901030383830";
+      });
+    } else if (phrase.toLowerCase().contains("fortune")) {
       setState(() {
         _titleCtrl.text = "Fortune Sunlite Refined Sunflower Oil";
         _priceCtrl.text = "135";
@@ -117,7 +133,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
         selectedCategory = "Oils & Staples";
         _barcodeCtrl.text = "8901058852219";
       });
-    } else if (phrase.toLowerCase().contains("milk")) {
+    } else if (phrase.toLowerCase().contains("milk") || phrase.toLowerCase().contains("amul")) {
       setState(() {
         _titleCtrl.text = "Amul Taaza Homogenised Toned Milk";
         _priceCtrl.text = "32";
@@ -147,7 +163,7 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
                     children: [
                       Text("🎙️", style: TextStyle(fontSize: 22)),
                       SizedBox(width: 8),
-                      Text("Voice-to-Stock Catalog Intake", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text("बोलकर सामान जोड़ें (Speak to Add Items)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
@@ -155,15 +171,16 @@ class _BarcodeIntakeScreenState extends State<BarcodeIntakeScreen> {
               ),
               const SizedBox(height: 6),
               const Text(
-                "Speak naturally in Hindi or English (e.g., 'Add 10 packets of Fortune Sunflower Oil 1 Litre at 135 rupees')",
+                "हिंदी या English में बोलें (जैसे: '10 पैकेट मैगी ₹56' या 'Add 10 Fortune Oil at ₹135')",
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 16),
-              const Text("Tap a spoken phrase sample to test:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text("टेस्ट करने के लिए किसी एक पर टैप करें:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              _buildVoiceChip(ctx, "Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135"),
+              _buildVoiceChip(ctx, "10 पैकेट Maggi 2-Minute Noodles ₹56 में जोड़ो"),
               _buildVoiceChip(ctx, "Add 20 packets of Amul Taaza Milk at ₹32"),
-              _buildVoiceChip(ctx, "Add 15 loaves of Modern Bread at ₹45"),
+              _buildVoiceChip(ctx, "5 पैकेट Aashirvaad Shudh Chakki Atta 5kg ₹245"),
+              _buildVoiceChip(ctx, "Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135"),
               const SizedBox(height: 12),
             ],
           ),
