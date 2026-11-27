@@ -9,18 +9,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Warm Bento & Cream Palette (Clean, uncluttered, spacious) */
+      /* Warm Bento & Cream Palette */
       --bg-cream: #F8F6F0;
       --card-white: #FFFFFF;
       --card-cream: #FAF9F5;
 
-      --charcoal-900: #18181B;
-      --charcoal-800: #27272A;
-      --charcoal-600: #52525B;
-      --charcoal-500: #71717A;
-      --charcoal-400: #A1A1AA;
-      --charcoal-200: #E4E4E7;
-      --charcoal-100: #F4F4F5;
+      --charcoal-950: #0E121B;
+      --charcoal-900: #141A26;
+      --charcoal-800: #1F2737;
+      --charcoal-700: #333F54;
+      --charcoal-600: #4B586F;
+      --charcoal-500: #6B788E;
+      --charcoal-400: #93A0B5;
+      --charcoal-200: #E2E6EE;
+      --charcoal-100: #F1F4F9;
 
       --accent-coral: #D95338;
       --accent-coral-soft: #FDF1EE;
@@ -28,7 +30,7 @@
       --accent-forest-soft: #EDF5F1;
       --accent-green: #15803D;
       --accent-green-soft: #F0FDF4;
-      --accent-amber: #B45309;
+      --accent-amber: #D97706;
       --accent-amber-soft: #FEF3C7;
       --accent-blue: #2563EB;
       --accent-blue-soft: #EFF6FF;
@@ -39,11 +41,11 @@
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --radius-xl: 28px;
+      --radius-xl: 32px;
       --radius-full: 9999px;
 
       --shadow-subtle: 0 4px 20px -2px rgba(24, 24, 27, 0.03), 0 1px 3px rgba(24, 24, 27, 0.02);
-      --shadow-hover: 0 10px 25px -4px rgba(24, 24, 27, 0.06);
+      --shadow-glass: 0 20px 50px rgba(10, 15, 26, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     }
 
     * {
@@ -62,53 +64,239 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Left Floating Dock (Minimal, Sleek) */
-    .dock-aside {
+    /* ========================================================
+       GLASSY SIDEBAR V10 (Exact Match to paulcodes spec)
+       ======================================================== */
+    .glassy-sidebar {
       position: fixed;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--charcoal-900);
-      border-radius: var(--radius-xl);
-      padding: 12px 8px;
+      left: 16px;
+      top: 16px;
+      bottom: 16px;
+      width: 68px; /* Collapsed default */
+      background: rgba(18, 24, 38, 0.88);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 36px;
+      box-shadow: var(--shadow-glass);
+      z-index: 1000;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-      box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      user-select: none;
     }
 
-    .dock-logo {
-      width: 38px;
-      height: 38px;
+    .glassy-sidebar.expanded {
+      width: 284px;
+      border-radius: 32px;
+    }
+
+    /* Outer Wrapper for content & rail */
+    .sidebar-inner-flex {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .sidebar-main-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      min-width: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Right Glassy Notch Rail (Visible in Expanded Mode) */
+    .sidebar-notch-rail {
+      width: 44px;
+      background: #FFFFFF;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      position: relative;
+      z-index: 3;
+      border-left: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .glassy-sidebar.expanded .sidebar-notch-rail {
+      display: flex;
+    }
+
+    .rail-top-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--charcoal-100);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--charcoal-900);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .rail-top-btn:hover {
+      background: var(--charcoal-200);
+    }
+
+    .rail-vertical-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--charcoal-400);
+      text-transform: uppercase;
+      padding-bottom: 12px;
+    }
+
+    /* Top Brand & Toggle Header */
+    .sidebar-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      height: 40px;
+    }
+
+    .sidebar-toggle-btn {
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+    .sidebar-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .brand-expanded-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .glassy-sidebar.expanded .brand-expanded-info {
+      display: flex;
+    }
+
+    .brand-logo-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
       background: linear-gradient(135deg, #FF6B4A, var(--accent-coral));
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 17px;
       font-weight: 800;
-      margin-bottom: 6px;
-      cursor: pointer;
+      font-size: 15px;
+      box-shadow: 0 4px 10px rgba(217, 83, 56, 0.4);
     }
 
-    .dock-btn {
-      width: 38px;
-      height: 38px;
+    .brand-meta h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.3px;
+    }
+    .brand-meta p {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* Search Bar in Expanded Mode */
+    .sidebar-search-box {
+      display: none;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius-full);
+      padding: 7px 12px;
+      margin-bottom: 16px;
+      color: #FFFFFF;
+      font-size: 12px;
+    }
+    .glassy-sidebar.expanded .sidebar-search-box {
+      display: flex;
+    }
+    .sidebar-search-box input {
       background: transparent;
       border: none;
+      outline: none;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-family: inherit;
+      width: 100%;
+      margin-left: 8px;
+    }
+    .sidebar-search-box input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    .kbd-shortcut {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Navigation Items List */
+    .sidebar-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .glass-nav-item {
+      display: flex;
+      align-items: center;
+      height: 42px;
+      border-radius: var(--radius-full);
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      padding: 0 11px;
+    }
+
+    .glass-nav-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--charcoal-400);
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s ease;
+      flex-shrink: 0;
     }
-
-    .dock-btn svg {
+    .nav-icon svg {
       width: 19px;
       height: 19px;
       stroke-width: 2;
@@ -116,55 +304,211 @@
       fill: none;
     }
 
-    .dock-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #FFFFFF;
-      transform: scale(1.06);
+    .nav-label {
+      display: none;
+      margin-left: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .glassy-sidebar.expanded .nav-label {
+      display: block;
     }
 
-    .dock-btn.active {
+    .nav-badge-pill {
+      display: none;
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      background: rgba(217, 119, 6, 0.25);
+      color: #FBBF24;
+      border: 1px solid rgba(217, 119, 6, 0.4);
+    }
+    .glassy-sidebar.expanded .nav-badge-pill {
+      display: inline-block;
+    }
+
+    /* ACTIVE ITEM: The Signature Solid White Bridge */
+    .glass-nav-item.active {
       background: #FFFFFF;
       color: var(--charcoal-900);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+    .glassy-sidebar.expanded .glass-nav-item.active {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      margin-right: -12px;
+      padding-right: 18px;
     }
 
-    .dock-btn .tooltip {
+    /* Tooltip in Collapsed Mode */
+    .glass-nav-item .tooltip {
       position: absolute;
-      left: 50px;
+      left: 54px;
       background: var(--charcoal-900);
       color: #FFFFFF;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 5px 11px;
       border-radius: var(--radius-sm);
       white-space: nowrap;
       pointer-events: none;
       opacity: 0;
       transform: translateX(-6px);
-      transition: all 0.18s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.16s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 1001;
     }
-
-    .dock-btn:hover .tooltip {
+    .glassy-sidebar:not(.expanded) .glass-nav-item:hover .tooltip {
       opacity: 1;
       transform: translateX(0);
     }
 
-    .dock-divider {
-      width: 20px;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.12);
-      margin: 4px auto;
+    /* Sub-Section (Categories in Expanded Mode) */
+    .sidebar-section-title {
+      display: none;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      margin: 16px 0 8px 10px;
+    }
+    .glassy-sidebar.expanded .sidebar-section-title {
+      display: block;
     }
 
-    /* Main Container */
+    .project-dot-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .project-dot-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #FFFFFF;
+    }
+    .color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .glassy-sidebar:not(.expanded) .project-dot-row {
+      justify-content: center;
+      padding: 6px 0;
+    }
+    .glassy-sidebar:not(.expanded) .project-dot-text {
+      display: none;
+    }
+
+    /* Bottom Profile & Pro Section */
+    .sidebar-footer-box {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pro-card-mini {
+      display: none;
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.2), rgba(217, 83, 56, 0.1));
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .glassy-sidebar.expanded .pro-card-mini {
+      display: flex;
+    }
+
+    .pro-badge-btn {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      background: #FBBF24;
+      color: var(--charcoal-900);
+      border: none;
+      cursor: pointer;
+    }
+
+    .user-profile-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar-glass {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: #F4ECE1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+      position: relative;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .avatar-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: var(--radius-full);
+      background: #10B981;
+      border: 2px solid var(--charcoal-900);
+    }
+
+    .user-meta-expanded {
+      display: none;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .glassy-sidebar.expanded .user-meta-expanded {
+      display: block;
+    }
+    .user-meta-expanded h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .user-meta-expanded p {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ========================================================
+       MAIN APP WORKSPACE (Dynamic margin based on sidebar)
+       ======================================================== */
     .app-main {
-      margin-left: 80px;
+      margin-left: 96px;
       flex: 1;
       padding: 24px 36px 60px 24px;
-      max-width: 1480px;
+      max-width: 1520px;
       min-width: 0;
+      transition: margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.sidebar-is-expanded .app-main {
+      margin-left: 312px;
     }
 
     /* Clean Top Navbar */
@@ -177,7 +521,7 @@
       justify-content: space-between;
       box-shadow: var(--shadow-subtle);
       border: 1px solid var(--border-card);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .brand-section {
@@ -436,7 +780,7 @@
       border-radius: var(--radius-full);
     }
 
-    /* Recent In-Flight Order Cards (3 Clean Cards) */
+    /* Recent In-Flight Order Cards */
     .recent-orders-card {
       background: var(--card-white);
       border-radius: var(--radius-lg);
@@ -495,7 +839,7 @@
       margin-top: 3px;
     }
 
-    /* Tables (Clean & Spacious) */
+    /* Tables */
     .table-container {
       background: var(--card-white);
       border-radius: var(--radius-lg);
@@ -574,7 +918,6 @@
     .badge-info { background: var(--accent-blue-soft); color: var(--accent-blue); }
     .badge-purple { background: #F3E8FF; color: #7E22CE; }
 
-    /* Code Viewer for DB Explorer */
     pre.code-viewer {
       background-color: var(--charcoal-900);
       border-radius: var(--radius-md);
@@ -597,54 +940,163 @@
 </head>
 <body>
 
-  <!-- Sleek Left Floating Dark Dock -->
-  <aside class="dock-aside">
-    <div class="dock-logo" onclick="switchTab('overview')">⚡</div>
+  <!-- ========================================================
+       GLASSY SIDEBAR V10 (COLLAPSED & EXPANDED MODES)
+       ======================================================== -->
+  <aside class="glassy-sidebar" id="glassy-sidebar">
+    <div class="sidebar-inner-flex">
+      
+      <!-- Main Glassy Pane -->
+      <div class="sidebar-main-pane">
+        
+        <!-- Header with Expand/Collapse Toggle & Brand -->
+        <div class="sidebar-header-row">
+          <div class="brand-expanded-info">
+            <div class="brand-logo-pill">⚡</div>
+            <div class="brand-meta">
+              <h4>Blipto</h4>
+              <p>Platform Tower</p>
+            </div>
+          </div>
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)">
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none;">
+              <rect x="3" y="3" width="18" height="18" rx="4"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+              <path d="M14 9l3 3-3 3" id="toggle-chevron"/>
+            </svg>
+          </button>
+        </div>
 
-    <button class="dock-btn active" id="dock-overview" onclick="switchTab('overview')" aria-label="Overview">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
-      <span class="tooltip">Overview & Sales</span>
-    </button>
+        <!-- Search Bar (Visible in Expanded Mode) -->
+        <div class="sidebar-search-box">
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; opacity: 0.6;">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" placeholder="Search tabs, orders...">
+          <span class="kbd-shortcut">⌘K</span>
+        </div>
 
-    <button class="dock-btn" id="dock-stores" onclick="switchTab('stores')" aria-label="Stores">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="tooltip">Local Kirana Stores</span>
-    </button>
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav-list">
+          <div class="glass-nav-item active" id="glass-overview" onclick="switchTab('overview')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+            </span>
+            <span class="nav-label">Overview & Sales</span>
+            <span class="tooltip">Overview & Sales</span>
+          </div>
 
-    <button class="dock-btn" id="dock-orders" onclick="switchTab('orders')" aria-label="Orders">
-      <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-      <span class="tooltip">Live Orders Stream</span>
-    </button>
+          <div class="glass-nav-item" id="glass-stores" onclick="switchTab('stores')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <span class="nav-label">Local Kiranas</span>
+            <span class="tooltip">Local Kirana Stores</span>
+          </div>
 
-    <button class="dock-btn" id="dock-inventory" onclick="switchTab('inventory')" aria-label="Inventory">
-      <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      <span class="tooltip">Master Inventory</span>
-    </button>
+          <div class="glass-nav-item" id="glass-orders" onclick="switchTab('orders')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+            </span>
+            <span class="nav-label">Live Orders</span>
+            <span class="tooltip">Live Orders Stream</span>
+          </div>
 
-    <button class="dock-btn" id="dock-escrow" onclick="switchTab('escrow')" aria-label="Escrow">
-      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <span class="tooltip">Escrow & Payouts</span>
-    </button>
+          <div class="glass-nav-item" id="glass-inventory" onclick="switchTab('inventory')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </span>
+            <span class="nav-label">Inventory & SKUs</span>
+            <span class="tooltip">Master Inventory</span>
+          </div>
 
-    <button class="dock-btn" id="dock-disputes" onclick="switchTab('disputes')" aria-label="Disputes">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span class="tooltip">Complaints & Appeals</span>
-    </button>
+          <div class="glass-nav-item" id="glass-escrow" onclick="switchTab('escrow')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <span class="nav-label">Escrow & Payouts</span>
+            <span class="tooltip">Escrow & Treasury</span>
+          </div>
 
-    <button class="dock-btn" id="dock-overflow" onclick="switchTab('overflow')" aria-label="Sharing">
-      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      <span class="tooltip">Partner Sharing</span>
-    </button>
+          <div class="glass-nav-item" id="glass-disputes" onclick="switchTab('disputes')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+            <span class="nav-label">Complaints & Appeals</span>
+            <span class="nav-badge-pill">1</span>
+            <span class="tooltip">Customer Complaints & 3-Strikes</span>
+          </div>
 
-    <div class="dock-divider"></div>
+          <div class="glass-nav-item" id="glass-overflow" onclick="switchTab('overflow')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </span>
+            <span class="nav-label">Partner Sharing</span>
+            <span class="tooltip">Partner Store Sharing (1.5%)</span>
+          </div>
 
-    <button class="dock-btn" id="dock-datasaver" onclick="switchTab('datasaver')" aria-label="Backup">
-      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-      <span class="tooltip">Database Backup</span>
-    </button>
+          <div class="glass-nav-item" id="glass-datasaver" onclick="switchTab('datasaver')">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            </span>
+            <span class="nav-label">Data DB Explorer</span>
+            <span class="tooltip">Database Backup</span>
+          </div>
+
+          <!-- Section: Catchment Clusters -->
+          <div class="sidebar-section-title">CATCHMENT HUBS</div>
+          <div class="project-dot-row" onclick="switchTab('stores')">
+            <span class="color-dot" style="background: #F59E0B;"></span>
+            <span class="project-dot-text">Bellandur Cluster (450m)</span>
+          </div>
+          <div class="project-dot-row" onclick="switchTab('stores')">
+            <span class="color-dot" style="background: #10B981;"></span>
+            <span class="project-dot-text">Green Glen Super (850m)</span>
+          </div>
+          <div class="project-dot-row" onclick="switchTab('overflow')">
+            <span class="color-dot" style="background: #EC4899;"></span>
+            <span class="project-dot-text">Sector 2 Spillover Active</span>
+          </div>
+        </nav>
+
+        <!-- Bottom Pro & User Profile Section -->
+        <div class="sidebar-footer-box">
+          <div class="pro-card-mini">
+            <div>
+              <div style="font-size: 11px; font-weight: 700; color: #FBBF24;">👑 Owner Tower</div>
+              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.6);">Full Admin Access</div>
+            </div>
+            <button class="pro-badge-btn" onclick="exportFullJSON()">Backup</button>
+          </div>
+
+          <div class="user-profile-row" onclick="switchTab('datasaver')">
+            <div class="user-avatar-glass">
+              👑
+              <span class="avatar-online-dot"></span>
+            </div>
+            <div class="user-meta-expanded">
+              <h5>App Owner</h5>
+              <p>admin@blipto.in</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Signature White Notch Rail (paulcodes Glassy Sidebar V10) -->
+      <div class="sidebar-notch-rail" id="sidebar-notch-rail">
+        <button class="rail-top-btn" onclick="toggleSidebar()" title="Collapse Sidebar">
+          ◫
+        </button>
+        <div class="rail-vertical-label" id="rail-active-name">OVERVIEW</div>
+      </div>
+
+    </div>
   </aside>
 
-  <!-- Main Workspace -->
+  <!-- ========================================================
+       MAIN APP WORKSPACE
+       ======================================================== -->
   <main class="app-main">
 
     <!-- Top Navigation Card -->
@@ -655,7 +1107,7 @@
         <span class="brand-sub">Platform Tower</span>
       </div>
 
-      <!-- Clean Horizontal Navigation Tabs -->
+      <!-- Horizontal Navigation Tabs -->
       <nav class="nav-tabs">
         <div class="tab-pill active" onclick="switchTab('overview')">Overview</div>
         <div class="tab-pill" onclick="switchTab('stores')">Stores</div>
@@ -746,7 +1198,6 @@
               </div>
             </div>
 
-            <!-- Smooth Terracotta Wave SVG (Breathing room, minimal noise) -->
             <div style="width: 100%; height: 160px; margin-top: 10px;">
               <svg viewBox="0 0 600 160" width="100%" height="100%" preserveAspectRatio="none">
                 <defs>
@@ -944,7 +1395,7 @@
     </div>
 
     <!-- ========================================================
-         TAB 5: ESCROW & PAYMENT BREAKDOWN (DEDICATED & CLEAN)
+         TAB 5: ESCROW & PAYMENT BREAKDOWN
          ======================================================== -->
     <div id="tab-escrow" class="tab-panel">
       <div class="bento-surface">
@@ -1175,9 +1626,34 @@
   </main>
 
   <!-- ========================================================
-       MASTER JAVASCRIPT LOGIC (100% CLEAN SYNTAX & ROBUST)
+       MASTER JAVASCRIPT LOGIC
        ======================================================== -->
   <script>
+    var isSidebarExpanded = false;
+
+    function toggleSidebar() {
+      isSidebarExpanded = !isSidebarExpanded;
+      var sidebar = document.getElementById('glassy-sidebar');
+      var chevron = document.getElementById('toggle-chevron');
+      if (isSidebarExpanded) {
+        sidebar.classList.add('expanded');
+        document.body.classList.add('sidebar-is-expanded');
+        if (chevron) chevron.setAttribute('d', 'M16 15l-3-3 3-3');
+      } else {
+        sidebar.classList.remove('expanded');
+        document.body.classList.remove('sidebar-is-expanded');
+        if (chevron) chevron.setAttribute('d', 'M14 9l3 3-3 3');
+      }
+    }
+
+    // Keyboard shortcut (Ctrl+B / Cmd+B) to toggle sidebar
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    });
+
     const masterData = {
       stores: [
         {
@@ -1297,13 +1773,13 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
       document.querySelectorAll('.tab-pill').forEach(function(n) { n.classList.remove('active'); });
-      document.querySelectorAll('.dock-btn').forEach(function(d) { d.classList.remove('active'); });
+      document.querySelectorAll('.glass-nav-item').forEach(function(d) { d.classList.remove('active'); });
 
       var target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      var dockBtn = document.getElementById('dock-' + tabId);
-      if (dockBtn) dockBtn.classList.add('active');
+      var glassBtn = document.getElementById('glass-' + tabId);
+      if (glassBtn) glassBtn.classList.add('active');
 
       var pillIndexMap = {
         'overview': 0, 'stores': 1, 'orders': 2, 'inventory': 3,
@@ -1330,6 +1806,11 @@
         var pageDesc = document.getElementById('page-desc');
         if (pageTitle) pageTitle.textContent = titles[tabId][0];
         if (pageDesc) pageDesc.textContent = titles[tabId][1];
+      }
+
+      var railActiveName = document.getElementById('rail-active-name');
+      if (railActiveName) {
+        railActiveName.textContent = tabId.toUpperCase();
       }
     }
 
