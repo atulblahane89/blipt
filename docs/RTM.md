@@ -22,3 +22,22 @@
 | **REQ-UX-01** | Natural Everyday Conversational Language (Anti-Jargon) | Sprint 2/CR-002 | `docs/user_requirements_specification.md`<br>`docs/use_case_specifications.md` | `lib/screens/role_switcher_bar.dart`<br>`lib/screens/consumer/*`<br>`lib/screens/merchant/*`<br>`lib/screens/delivery/*`<br>`admin/index.html` | `tests/test_admin_and_data_persistence.py` | Verified | CR-002 |
 | **REQ-UX-02** | Always-Visible Centered Order Tracking & Mobile Feed | Sprint 2/CR-003 | `docs/user_requirements_specification.md`<br>`docs/use_case_specifications.md` | `lib/screens/consumer/consumer_home_screen.dart`<br>`lib/screens/consumer/order_tracking_screen.dart` | `tests/test_inventory_and_orders.py` | Verified | CR-003 |
 | **REQ-PAY-01** | Multi-Mode Payment (UPI, Cards, Wallet & COD) | Sprint 3/CR-004 | `docs/user_stories.md`<br>`docs/openapi_spec.yaml` | `lib/screens/consumer/cart_screen.dart`<br>`lib/state/app_state.dart`<br>`backend/app.py`<br>`admin/index.html` | `tests/test_payments.py` | Verified | CR-004 |
+
+### V2 Product Backlog Requirements
+| Req ID | Requirement | Planned Phase | Linked Documents | Linked Code | Status |
+|:---|:---|:---:|:---|:---|:---:|
+| **REQ-V2-CON-01** | Scheduled & Recurring Daily Essentials | Sprint 4 | `docs/user_stories.md` | `lib/screens/consumer/*`<br>`backend/models.py` | Backlog |
+| **REQ-V2-CON-02** | Pre-Checkout Smart Substitute Approval | Sprint 4 | `docs/user_stories.md` | `lib/screens/consumer/cart_screen.dart` | Backlog |
+| **REQ-V2-CON-03** | Multi-Shop Split Cart (Zone Grouping) | Sprint 5 | `docs/user_stories.md` | `lib/state/app_state.dart`<br>`backend/app.py` | Backlog |
+| **REQ-V2-CON-04** | Store Trust & Reliability Badges | Sprint 4 | `docs/user_stories.md` | `lib/screens/consumer/consumer_home_screen.dart` | Backlog |
+| **REQ-V2-MER-01** | Voice-to-Stock & Shelf Photo Catalog | Sprint 5 | `docs/user_stories.md` | `lib/screens/merchant/barcode_intake_screen.dart` | Backlog |
+| **REQ-V2-MER-02** | Low-Stock & Perishable Expiry Alerts | Sprint 4 | `docs/user_stories.md` | `lib/screens/merchant/merchant_hub_screen.dart` | Backlog |
+| **REQ-V2-MER-03** | Daily Settlement & GST-Ready Tax Summary | Sprint 4 | `docs/user_stories.md` | `lib/screens/merchant/escrow_ledger_screen.dart` | Backlog |
+| **REQ-V2-MER-04** | Neighborhood Unfulfilled Demand Signals | Sprint 5 | `docs/user_stories.md` | `lib/screens/merchant/merchant_hub_screen.dart` | Backlog |
+| **REQ-V2-DLV-01** | Multi-Order Route Batching (Same Street) | Sprint 5 | `docs/user_stories.md` | `lib/screens/delivery/delivery_task_screen.dart` | Backlog |
+| **REQ-V2-DLV-02** | Fragile & Cold Packing Checklist | Sprint 4 | `docs/user_stories.md` | `lib/screens/delivery/delivery_task_screen.dart` | Backlog |
+| **REQ-V2-DLV-03** | Offline-Resilient Sync for Weak Signal | Sprint 6 | `docs/user_stories.md` | `lib/state/app_state.dart` | Backlog |
+| **REQ-V2-OPS-01** | Peer-to-Peer Overflow Routing | Sprint 5 | `docs/user_stories.md` | `backend/spillover_engine.py` | Backlog |
+| **REQ-V2-OPS-02** | Automated AI/OCR Photo-Defect Verification | Sprint 6 | `docs/user_stories.md` | `backend/app.py` | Backlog |
+| **REQ-V2-OPS-03** | Automated Seller Strike Appeal Workflow | Sprint 5 | `docs/user_stories.md` | `admin/index.html`<br>`backend/app.py` | Backlog |
+| **REQ-V2-OPS-04** | Same-Shop Basket Add-On Nudges | Sprint 4 | `docs/user_stories.md` | `lib/screens/consumer/cart_screen.dart` | Backlog |
