@@ -147,7 +147,16 @@ class BliptoBackendService:
         s.is_busy = is_busy
         return {"store_id": s.id, "is_busy": s.is_busy}
 
-    def create_order(self, consumer_id: str, store_id: str, consumer_lat: float, consumer_lng: float, items: list) -> dict:
+    def create_order(
+        self,
+        consumer_id: str,
+        store_id: str,
+        consumer_lat: float,
+        consumer_lng: float,
+        items: list,
+        payment_method: str = "UPI",
+        wallet_amount_used: float = 0.0,
+    ) -> dict:
         req_tuples = [(it["barcode"] if "barcode" in it else it["item_id"], it["quantity"]) for it in items]
 
         # Dynamic Spillover Resolution
@@ -177,6 +186,14 @@ class BliptoBackendService:
         order_id = f"ORD-{random.randint(1000, 9999)}"
         otp = f"{random.randint(1000, 9999)}"
 
+        # Deduct wallet if used
+        wallet_used = min(wallet_amount_used, total_amount)
+        if wallet_used > 0:
+            current_wallet = self.escrow.consumer_wallets.get(consumer_id, 50.0)
+            self.escrow.consumer_wallets[consumer_id] = max(0.0, current_wallet - wallet_used)
+
+        paid_amount = max(0.0, total_amount - wallet_used)
+
         order = Order(
             id=order_id,
             consumer_id=consumer_id,
@@ -191,6 +208,9 @@ class BliptoBackendService:
             status=OrderStatus.PLACED,
             created_at=datetime.now(timezone.utc).isoformat(),
             referral_commission=referral_fee,
+            payment_method=payment_method,
+            wallet_amount_used=wallet_used,
+            paid_amount=paid_amount,
         )
         self.orders[order_id] = order
 
@@ -207,6 +227,9 @@ class BliptoBackendService:
             "delivery_otp": order.delivery_otp,
             "total_amount": order.total_amount,
             "referral_commission": order.referral_commission,
+            "payment_method": order.payment_method,
+            "wallet_amount_used": order.wallet_amount_used,
+            "paid_amount": order.paid_amount,
         }
 
     def verify_delivery(self, order_id: str, otp: Optional[str] = None, photo_proof: Optional[str] = None) -> dict:
@@ -265,6 +288,13 @@ class BliptoBackendService:
         total_settled = sum(self.escrow.settled_balances.values())
         total_refunded = sum(d.refund_amount for d in self.disputes)
 
+        payment_counts = {"UPI": 0, "CARD": 0, "WALLET": 0, "COD": 0}
+        payment_volume = {"UPI": 0.0, "CARD": 0.0, "WALLET": 0.0, "COD": 0.0}
+        for o in self.orders.values():
+            pm = getattr(o, "payment_method", "UPI")
+            payment_counts[pm] = payment_counts.get(pm, 0) + 1
+            payment_volume[pm] = round(payment_volume.get(pm, 0.0) + o.total_amount, 2)
+
         return {
             "platform_gmv": round(total_gmv, 2),
             "platform_revenue": platform_fee,
@@ -274,6 +304,8 @@ class BliptoBackendService:
             "active_stores_count": len([s for s in self.stores if s.strikes < 3]),
             "total_orders_count": len(self.orders),
             "total_disputes_count": len(self.disputes),
+            "payment_counts": payment_counts,
+            "payment_volume": payment_volume,
         }
 
     def export_all_data(self) -> dict:
@@ -321,6 +353,9 @@ class BliptoBackendService:
                     "delivery_fee": o.delivery_fee,
                     "total_amount": o.total_amount,
                     "delivery_otp": o.delivery_otp,
+                    "payment_method": getattr(o, "payment_method", "UPI"),
+                    "wallet_amount_used": getattr(o, "wallet_amount_used", 0.0),
+                    "paid_amount": getattr(o, "paid_amount", o.total_amount),
                     "status": o.status.value,
                     "referral_commission": o.referral_commission,
                     "created_at": o.created_at,
@@ -443,6 +478,8 @@ class BliptoHTTPHandler(BaseHTTPRequestHandler):
                 consumer_lat=float(body.get("consumer_lat", 12.9352)),
                 consumer_lng=float(body.get("consumer_lng", 77.6245)),
                 items=body.get("items", []),
+                payment_method=body.get("payment_method", "UPI"),
+                wallet_amount_used=float(body.get("wallet_amount_used", 0.0)),
             )
             self._send_json(201, res)
 

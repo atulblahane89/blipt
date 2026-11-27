@@ -2,8 +2,8 @@
   "project_name": "Blipto",
   "root_dir": "D:\\blipto",
   "created_at": "2026-11-26T08:41:23.529377+00:00",
-  "current_phase": "Completed (v1.2.0-natural-ux Released)",
-  "current_sprint": 2,
+  "current_phase": "Sprint 3: Multi-Mode Payments",
+  "current_sprint": 3,
   "requirements": {
     "REQ-CON-01": {
       "req_id": "REQ-CON-01",
@@ -398,6 +398,28 @@
       ],
       "status": "Verified",
       "last_cr": "CR-003"
+    },
+    "REQ-PAY-01": {
+      "req_id": "REQ-PAY-01",
+      "title": "Multi-Mode Payment: UPI, Cards, Wallet & Cash",
+      "description": "Supports payment via UPI (GPay, PhonePe, Paytm), Credit/Debit Card, Blipto Wallet deduction, or Cash on Delivery.",
+      "phase": "Sprint 3",
+      "documents": [
+        "docs/user_stories.md",
+        "docs/openapi_spec.yaml"
+      ],
+      "code_files": [
+        "lib/screens/consumer/cart_screen.dart",
+        "lib/state/app_state.dart",
+        "backend/models.py",
+        "backend/app.py",
+        "admin/index.html"
+      ],
+      "test_files": [
+        "tests/test_payments.py"
+      ],
+      "status": "Verified",
+      "last_cr": "CR-004"
     }
   },
   "change_requests": [
@@ -490,5 +512,5 @@
   ],
   "git_initialized": true,
   "git_remote": "https://github.com/atulblahane89/blipt.git",
-  "latest_tag": "v1.2.0-natural-ux"
+  "latest_tag": "v1.3.0-payments"
 }

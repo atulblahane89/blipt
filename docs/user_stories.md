@@ -46,6 +46,15 @@ This document maintains the canonical **User Story Backlog** for Blipto across a
   - **Then** the item's full value is immediately credited to their Blipto wallet.
   - **And** the customer sees a green confirmation without human intervention.
 
+### [US-CON-06] Multi-Mode Payment (UPI, Credit/Debit Cards & Blipto Wallet)
+- **User Story:** As a customer, I want to pay using UPI (Google Pay, PhonePe, Paytm), Credit/Debit Card, my Blipto Wallet balance, or Cash on Delivery, so that I have complete freedom at checkout without having to hunt for exact physical cash.
+- **Acceptance Criteria:**
+  - **Given** items in the cart and a non-zero wallet balance,
+  - **When** the customer views the payment options,
+  - **Then** they can apply their Blipto Wallet balance with 1 tap, reducing the payable amount.
+  - **And** the remaining amount can be completed using UPI, Card, or Cash on Delivery.
+  - **And** upon order completion, funds are safely held in escrow until doorstep verification.
+
 ---
 
 ## 🏪 Persona 2: Local Shopkeeper (Kirana Merchant)

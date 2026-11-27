@@ -300,7 +300,7 @@ class AppState extends ChangeNotifier {
   double get cartTotal => cartSubtotal + cartDeliveryFee;
 
   // --- Dynamic Spillover & Order Placement ---
-  BliptoOrder placeOrder() {
+  BliptoOrder placeOrder({String paymentMethod = "UPI", double walletAmountUsed = 0.0}) {
     if (activeCartStoreId == null || cartItems.isEmpty) {
       throw StateError("Cart is empty");
     }
@@ -336,6 +336,14 @@ class AppState extends ChangeNotifier {
     });
 
     final randomOtp = (1000 + Random().nextInt(9000)).toString();
+
+    // Deduct wallet if used
+    final effectiveWalletUsed = min(walletAmountUsed, cartTotal);
+    if (effectiveWalletUsed > 0) {
+      consumerWalletBalance = max(0.0, consumerWalletBalance - effectiveWalletUsed);
+    }
+    final effectivePaidAmount = max(0.0, cartTotal - effectiveWalletUsed);
+
     final newOrder = BliptoOrder(
       id: "ORD-${1000 + Random().nextInt(9000)}",
       consumerId: "usr-881",
@@ -351,6 +359,9 @@ class AppState extends ChangeNotifier {
       deliveryOtp: randomOtp,
       createdAt: DateTime.now(),
       status: OrderStatus.placed,
+      paymentMethod: paymentMethod,
+      walletAmountUsed: effectiveWalletUsed,
+      paidAmount: effectivePaidAmount,
     );
 
     // Update store capacity
@@ -392,6 +403,8 @@ class AppState extends ChangeNotifier {
           "consumer_lat": 12.9352,
           "consumer_lng": 77.6245,
           "items": itemsPayload,
+          "payment_method": order.paymentMethod,
+          "wallet_amount_used": order.walletAmountUsed,
         }),
       );
     } catch (e) {

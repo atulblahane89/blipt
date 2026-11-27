@@ -516,7 +516,7 @@
         <div class="metrics-grid">
           <div class="metric-card" style="--card-accent: #00B074;">
             <div class="metric-header">
-              <span class="metric-label">Gross Merchandise Value (GMV)</span>
+              <span class="metric-label">Total Sales (GMV)</span>
               <span class="metric-icon">💰</span>
             </div>
             <div class="metric-value" id="val-gmv">₹4,820</div>
@@ -534,7 +534,7 @@
 
           <div class="metric-card" style="--card-accent: #F59E0B;">
             <div class="metric-header">
-              <span class="metric-label">Digital Escrow Treasury</span>
+              <span class="metric-label">Safe Escrow Treasury</span>
               <span class="metric-icon">🔒</span>
             </div>
             <div class="metric-value" id="val-escrow">₹580.00</div>
@@ -551,6 +551,36 @@
           </div>
         </div>
 
+        <!-- Payment Modes Breakdown Card (REQ-PAY-01) -->
+        <div class="data-saver-card" style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="font-size: 14px; font-weight: 700;">💳 Customer Payment Modes (Live GMV Split)</h3>
+            <span class="badge badge-success">Escrow Protected</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">⚡ UPI (GPay, PhonePe)</div>
+              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-upi-val">₹0.00</div>
+              <div style="font-size: 10px; color: var(--primary);" id="pay-upi-count">0 Orders</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">💳 Credit / Debit Cards</div>
+              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-card-val">₹0.00</div>
+              <div style="font-size: 10px; color: var(--accent-blue);" id="pay-card-count">0 Orders</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">👛 Blipto Wallet</div>
+              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-wallet-val">₹0.00</div>
+              <div style="font-size: 10px; color: var(--accent-purple);" id="pay-wallet-count">0 Orders</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">💵 Cash on Delivery</div>
+              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-cod-val">₹0.00</div>
+              <div style="font-size: 10px; color: var(--accent-amber);" id="pay-cod-count">0 Orders</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Recent In-Flight Runs -->
         <div class="table-container">
           <div class="table-header">
@@ -563,6 +593,7 @@
                 <th>Order ID</th>
                 <th>Origin Store</th>
                 <th>Fulfilling Store</th>
+                <th>Payment Mode</th>
                 <th>Routing Type</th>
                 <th>Amount</th>
                 <th>Handoff OTP</th>
@@ -895,6 +926,11 @@
           <td>${o.origin_store}</td>
           <td>${o.fulfilling_store}</td>
           <td>
+            <span class="badge ${o.payment_method === 'UPI' ? 'badge-info' : (o.payment_method === 'CARD' ? 'badge-purple' : (o.payment_method === 'WALLET' ? 'badge-success' : 'badge-warning'))}">
+              ${o.payment_method || 'UPI'}
+            </span>
+          </td>
+          <td>
             ${o.is_spillover 
               ? `<span class="badge badge-purple">⚡ Partner Spillover</span>` 
               : `<span class="badge badge-success">Direct Store</span>`}
@@ -1061,6 +1097,17 @@
           document.getElementById('val-escrow').textContent = `₹${overview.escrow_locked_funds.toFixed(2)}`;
           document.getElementById('val-stores').textContent = `${overview.active_stores_count} Stores`;
 
+          if (overview.payment_volume && overview.payment_counts) {
+            document.getElementById('pay-upi-val').textContent = `₹${(overview.payment_volume.UPI || 0).toFixed(0)}`;
+            document.getElementById('pay-upi-count').textContent = `${overview.payment_counts.UPI || 0} Orders`;
+            document.getElementById('pay-card-val').textContent = `₹${(overview.payment_volume.CARD || 0).toFixed(0)}`;
+            document.getElementById('pay-card-count').textContent = `${overview.payment_counts.CARD || 0} Orders`;
+            document.getElementById('pay-wallet-val').textContent = `₹${(overview.payment_volume.WALLET || 0).toFixed(0)}`;
+            document.getElementById('pay-wallet-count').textContent = `${overview.payment_counts.WALLET || 0} Orders`;
+            document.getElementById('pay-cod-val').textContent = `₹${(overview.payment_volume.COD || 0).toFixed(0)}`;
+            document.getElementById('pay-cod-count').textContent = `${overview.payment_counts.COD || 0} Orders`;
+          }
+
           if (exportData.stores && exportData.stores.length > 0) {
             masterData.stores = exportData.stores.map(s => ({
               id: s.id,
@@ -1091,6 +1138,7 @@
               delivery_fee: o.delivery_fee,
               total: o.total_amount,
               otp: o.delivery_otp,
+              payment_method: o.payment_method || "UPI",
               status: o.status,
               created_at: o.created_at || "Just now"
             }));

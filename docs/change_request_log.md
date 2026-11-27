@@ -42,6 +42,27 @@ This document provides a human-readable audit trail of every **Change Request (C
 
 ---
 
+## Change Request: `CR-004`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 3
+- **Prompt:** *"Implement Multi-Mode Payment through UPI, Credit and Debit Cards, and Blipto Wallet balance"*
+- **Rationale:** Customers require flexible, instant digital payments without being forced into physical cash on delivery, while retaining escrow protections.
+- **Impacted Requirements:** `REQ-PAY-01`, `REQ-CON-03`, `REQ-ADM-01`
+- **Files Modified:**
+  - `docs/user_stories.md`
+  - `docs/RTM.md`
+  - `backend/models.py`
+  - `backend/app.py`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `admin/index.html`
+- **Tests Added:** `tests/test_payments.py`
+- **Release Tag:** `v1.3.0-payments`
+- **Outcome:** **Verified & Merged**.
+
+---
+
 ## Change Request: `CR-003`
 - **Date:** 2026-11-26
 - **Prompt:** *"Add always-visible My Orders & Delivery Tracking card to customer feed and prominent Track Order button in AppBar"*
@@ -51,4 +72,25 @@ This document provides a human-readable audit trail of every **Change Request (C
   - `lib/screens/consumer/consumer_home_screen.dart`
   - `lib/screens/consumer/order_tracking_screen.dart`
 - **Release Tag:** `v1.2.0-natural-ux`
+- **Outcome:** **Verified & Merged**.
+
+---
+
+## Change Request: `CR-004`
+- **Date:** 2026-11-27
+- **Sprint:** Sprint 3
+- **Prompt:** *"Implement Multi-Mode Payment through UPI, Credit and Debit Cards, and Blipto Wallet balance"*
+- **Rationale:** Customers require flexible, instant digital payments without being forced into physical cash on delivery, while retaining escrow protections.
+- **Impacted Requirements:** `REQ-PAY-01`, `REQ-CON-03`, `REQ-ADM-01`
+- **Files Modified:**
+  - `docs/user_stories.md`
+  - `docs/RTM.md`
+  - `backend/models.py`
+  - `backend/app.py`
+  - `lib/models/order.dart`
+  - `lib/state/app_state.dart`
+  - `lib/screens/consumer/cart_screen.dart`
+  - `admin/index.html`
+- **Tests Added:** `tests/test_payments.py`
+- **Release Tag:** `v1.3.0-payments`
 - **Outcome:** **Verified & Merged**.

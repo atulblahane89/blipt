@@ -16,6 +16,13 @@ class OrderStatus(str, Enum):
     REFUNDED = "REFUNDED"
 
 
+class PaymentMethod(str, Enum):
+    UPI = "UPI"
+    CARD = "CARD"
+    WALLET = "WALLET"
+    COD = "COD"
+
+
 @dataclass
 class Store:
     id: str
@@ -84,6 +91,9 @@ class Order:
     created_at: str = ""
     delivery_photo_url: Optional[str] = None
     referral_commission: float = 0.0
+    payment_method: str = "UPI"
+    wallet_amount_used: float = 0.0
+    paid_amount: float = 0.0
 
 
 @dataclass

@@ -35,6 +35,9 @@ class BliptoOrder {
   OrderStatus status;
   String? deliveryProofPhoto;
   String? customerAddress;
+  final String paymentMethod;
+  final double walletAmountUsed;
+  final double paidAmount;
 
   BliptoOrder({
     required this.id,
@@ -53,7 +56,10 @@ class BliptoOrder {
     this.status = OrderStatus.placed,
     this.deliveryProofPhoto,
     this.customerAddress = "Flat 402, Green Glen Layout, Bellandur (450m away)",
-  });
+    this.paymentMethod = "UPI",
+    this.walletAmountUsed = 0.0,
+    double? paidAmount,
+  }) : paidAmount = paidAmount ?? (totalAmount - walletAmountUsed);
 
   String get statusDisplay {
     switch (status) {
