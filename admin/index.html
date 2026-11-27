@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Warm Bento & Cream Palette (Clean, spacious, easy to read) */
+      /* Warm Bento & Cream Palette */
       --bg-cream: #F8F6F0;
       --card-white: #FFFFFF;
       --card-cream: #FAF9F5;
@@ -65,7 +65,7 @@
     }
 
     /* ========================================================
-       GLASSY SIDEBAR V10 (Clean, Auto-expands on Hover, Single Toggle)
+       GLASSY SIDEBAR V10 (Fluidic Motion, Seamless Inverted Fillets)
        ======================================================== */
     .glassy-sidebar {
       position: fixed;
@@ -83,14 +83,14 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
       user-select: none;
     }
 
-    /* Hover or Locked Expanded State */
+    /* Auto-expand on hover or locked */
     .glassy-sidebar.expanded,
     .glassy-sidebar:hover {
-      width: 270px;
+      width: 288px;
       border-radius: 32px;
     }
 
@@ -105,7 +105,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 16px 12px;
+      padding: 18px 12px;
       min-width: 0;
       overflow-y: auto;
       overflow-x: hidden;
@@ -113,18 +113,18 @@
       z-index: 2;
     }
 
-    /* Right Signature White Notch Rail (Visible when Expanded or Hovered) */
+    /* Right Signature White Notch Rail (Exact Match to Video V10) */
     .sidebar-notch-rail {
-      width: 36px;
+      width: 44px;
       background: #FFFFFF;
       display: none;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      padding: 20px 0;
+      padding: 14px 0 20px 0;
       position: relative;
       z-index: 3;
-      border-left: 1px solid rgba(0, 0, 0, 0.06);
+      border-left: 1px solid rgba(0, 0, 0, 0.04);
     }
 
     .glassy-sidebar.expanded .sidebar-notch-rail,
@@ -132,15 +132,48 @@
       display: flex;
     }
 
+    /* Top Action Icons on White Rail (Folder, Plus, Sliders from Video) */
+    .rail-top-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rail-icon-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: #2563EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+      cursor: pointer;
+    }
+
+    .rail-icon-mini {
+      color: var(--charcoal-500);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.15s ease;
+    }
+    .rail-icon-mini:hover {
+      color: var(--charcoal-900);
+    }
+
     .rail-vertical-label {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       letter-spacing: 2px;
       color: var(--charcoal-400);
       text-transform: uppercase;
-      padding-bottom: 16px;
+      padding-bottom: 8px;
     }
 
     /* Top Brand & Single Toggle Button */
@@ -242,8 +275,9 @@
     .sidebar-nav-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       flex: 1;
+      position: relative;
     }
 
     .glass-nav-item {
@@ -256,9 +290,10 @@
       font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       padding: 0 11px;
+      z-index: 1;
     }
 
     .glass-nav-item:hover {
@@ -310,18 +345,54 @@
       display: inline-block;
     }
 
-    /* Active Item: Signature Solid White Bridge */
+    /* ========================================================
+       THE FLUIDIC NOTCH BRIDGE:
+       Inverted Border Radius curves connecting active tab to rail
+       ======================================================== */
     .glass-nav-item.active {
       background: #FFFFFF;
       color: var(--charcoal-900);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      z-index: 2;
     }
+
     .glassy-sidebar.expanded .glass-nav-item.active,
     .glassy-sidebar:hover .glass-nav-item.active {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
       margin-right: -12px;
       padding-right: 18px;
+    }
+
+    /* Top concave fillet curve */
+    .glassy-sidebar.expanded .glass-nav-item.active::before,
+    .glassy-sidebar:hover .glass-nav-item.active::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: transparent;
+      border-bottom-right-radius: 12px;
+      box-shadow: 4px 4px 0 4px #FFFFFF;
+      pointer-events: none;
+    }
+
+    /* Bottom concave fillet curve */
+    .glassy-sidebar.expanded .glass-nav-item.active::after,
+    .glassy-sidebar:hover .glass-nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: transparent;
+      border-top-right-radius: 12px;
+      box-shadow: 4px -4px 0 4px #FFFFFF;
+      pointer-events: none;
     }
 
     /* Tooltip in Pure Collapsed Mode */
@@ -355,7 +426,12 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      transition: background 0.15s ease;
+    }
+    .user-profile-row:hover {
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .user-avatar-glass {
@@ -413,11 +489,11 @@
       padding: 24px 36px 60px 24px;
       max-width: 1520px;
       min-width: 0;
-      transition: margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     body.sidebar-is-expanded .app-main {
-      margin-left: 298px;
+      margin-left: 316px;
     }
 
     /* Clean Top Navbar */
@@ -585,11 +661,11 @@
     }
     .tab-panel.active {
       display: block;
-      animation: fadeIn 0.2s ease-out;
+      animation: fluidFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+    @keyframes fluidFade {
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -603,7 +679,7 @@
       margin-bottom: 24px;
     }
 
-    /* Top 3 Metric Cards (Clean & Focused) */
+    /* Top 3 Metric Cards */
     .metrics-row-clean {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -689,7 +765,7 @@
       border-radius: var(--radius-full);
     }
 
-    /* Recent In-Flight Order Cards */
+    /* Recent Live Orders */
     .recent-orders-card {
       background: var(--card-white);
       border-radius: var(--radius-lg);
@@ -850,7 +926,7 @@
 <body>
 
   <!-- ========================================================
-       GLASSY SIDEBAR V10 (CLEAN, AUTO-EXPANDS ON HOVER, SINGLE TOGGLE)
+       GLASSY SIDEBAR V10 (Fluidic Inverted Cutout Fillets)
        ======================================================== -->
   <aside class="glassy-sidebar" id="glassy-sidebar">
     <div class="sidebar-inner-flex">
@@ -884,7 +960,7 @@
           <input type="text" placeholder="Search orders, stores...">
         </div>
 
-        <!-- Navigation Links (Plain, User-Friendly English) -->
+        <!-- Navigation Links (Default to FIRST Option 'Overview') -->
         <nav class="sidebar-nav-list">
           <div class="glass-nav-item active" id="glass-overview" onclick="switchTab('overview')">
             <span class="nav-icon">
@@ -944,9 +1020,9 @@
           </div>
         </nav>
 
-        <!-- Bottom User Profile Section (Clean, No clutter) -->
+        <!-- Bottom User Profile Section (Does NOT switch to last tab) -->
         <div class="sidebar-footer-box">
-          <div class="user-profile-row" onclick="switchTab('datasaver')">
+          <div class="user-profile-row">
             <div class="user-avatar-glass">
               👑
               <span class="avatar-online-dot"></span>
@@ -962,6 +1038,13 @@
 
       <!-- Right Signature White Notch Rail (paulcodes Glassy Sidebar V10) -->
       <div class="sidebar-notch-rail" id="sidebar-notch-rail">
+        <div class="rail-top-icons">
+          <div class="rail-icon-box" title="Quick Filters">
+            📁
+          </div>
+          <div class="rail-icon-mini" title="Add Store">＋</div>
+          <div class="rail-icon-mini" title="Filter View">☵</div>
+        </div>
         <div class="rail-vertical-label" id="rail-active-name">OVERVIEW</div>
       </div>
 
@@ -981,7 +1064,7 @@
         <span class="brand-sub">Owner Portal</span>
       </div>
 
-      <!-- Horizontal Navigation Tabs (Plain English) -->
+      <!-- Horizontal Navigation Tabs (Starts at Overview) -->
       <nav class="nav-tabs">
         <div class="tab-pill active" onclick="switchTab('overview')">Overview</div>
         <div class="tab-pill" onclick="switchTab('stores')">Local Stores</div>
@@ -1019,11 +1102,11 @@
     </div>
 
     <!-- ========================================================
-         TAB 1: OVERVIEW & SALES (PLAIN ENGLISH & AIRY)
+         TAB 1: OVERVIEW & SALES (DEFAULT ACTIVE)
          ======================================================== -->
     <div id="tab-overview" class="tab-panel active">
       
-      <!-- Top 3 Key Metrics (Clean & Plain English) -->
+      <!-- Top 3 Key Metrics -->
       <div class="metrics-row-clean">
         <div class="metric-pill-card">
           <div class="metric-top-label">
@@ -1385,7 +1468,7 @@
     </div>
 
     <!-- ========================================================
-         TAB 7: STORE SHARING (RUSH HOUR LOAD BALANCING)
+         TAB 7: STORE SHARING
          ======================================================== -->
     <div id="tab-overflow" class="tab-panel">
       <div class="bento-surface">
@@ -1460,7 +1543,7 @@
     </div>
 
     <!-- ========================================================
-         TAB 8: BACKUP DATA (PLAIN ENGLISH)
+         TAB 8: BACKUP DATA
          ======================================================== -->
     <div id="tab-datasaver" class="tab-panel">
       <div class="bento-surface">
@@ -2003,21 +2086,23 @@
           }
 
           if (exportData.orders && exportData.orders.length > 0) {
-            masterData.orders = exportData.orders.map(o => ({
-              id: o.id,
-              consumer_id: o.consumer_id,
-              origin_store: o.store_id,
-              fulfilling_store: o.fulfilling_store_id,
-              is_spillover: o.is_spillover,
-              items: "Fulfillment Batch",
-              subtotal: o.subtotal,
-              delivery_fee: o.delivery_fee,
-              total: o.total_amount,
-              otp: o.delivery_otp,
-              payment_method: o.payment_method || "UPI",
-              status: o.status,
-              created_at: o.created_at || "Just now"
-            }));
+            masterData.orders = exportData.orders.map(function(o) {
+              return {
+                id: o.id,
+                consumer_id: o.consumer_id,
+                origin_store: o.store_id,
+                fulfilling_store: o.fulfilling_store_id,
+                is_spillover: o.is_spillover,
+                items: "Fulfillment Batch",
+                subtotal: o.subtotal,
+                delivery_fee: o.delivery_fee,
+                total: o.total_amount,
+                otp: o.delivery_otp,
+                payment_method: o.payment_method || "UPI",
+                status: o.status,
+                created_at: o.created_at || "Just now"
+              };
+            });
           }
 
           renderAll();
@@ -2033,7 +2118,8 @@
       alert("✅ Data refreshed from live stores!");
     }
 
-    // Initial render and live backend sync
+    // Default to the first option (Overview) cleanly
+    switchTab('overview');
     renderAll();
     syncFromBackend();
   </script>
