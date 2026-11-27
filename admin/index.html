@@ -3,29 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blipto — Owner Command Center & Master Data Hub</title>
+  <title>Blipto — Platform Command Tower & Master Data Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0B0F17;
-      --bg-surface: #111827;
-      --bg-card: #1F2937;
-      --bg-card-hover: #283548;
-      --primary: #00B074;
-      --primary-hover: #009663;
-      --primary-glow: rgba(0, 176, 116, 0.2);
-      --accent-blue: #0284C7;
-      --accent-purple: #8B5CF6;
-      --accent-amber: #F59E0B;
-      --accent-red: #EF4444;
-      --text-main: #F9FAFB;
-      --text-muted: #9CA3AF;
-      --text-dim: #6B7280;
-      --border: #374151;
-      --border-light: #4B5563;
-      --radius: 12px;
+      /* Warm Bento & Cream Palette (Inspired by modern Rapport/warm CRM spec) */
+      --bg-cream: #F7F5EE;
+      --bg-cream-glow: #EFECE3;
+      --card-white: #FFFFFF;
+      --card-cream: #FAF8F2;
+      
+      --charcoal-900: #18181B;
+      --charcoal-800: #27272A;
+      --charcoal-700: #3F3F46;
+      --charcoal-600: #52525B;
+      --charcoal-400: #A1A1AA;
+      --charcoal-200: #E4E4E7;
+      --charcoal-100: #F4F4F5;
+
+      --accent-terracotta: #C84B31;
+      --accent-terracotta-light: #FBF0ED;
+      --accent-forest: #1E4D3E;
+      --accent-forest-light: #EAF2EE;
+      --accent-gold: #D99B26;
+      --accent-gold-light: #FEF8EC;
+      --accent-emerald: #10B981;
+      --accent-blue: #2563EB;
+      --accent-blue-light: #EFF6FF;
+
+      --text-primary: #18181B;
+      --text-secondary: #71717A;
+      --text-muted: #A1A1AA;
+
+      --border-subtle: rgba(220, 215, 204, 0.7);
+      --border-card: rgba(24, 24, 27, 0.06);
+
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --radius-full: 9999px;
+
+      --shadow-bento: 0 4px 20px -2px rgba(24, 24, 27, 0.04), 0 1px 3px rgba(24, 24, 27, 0.02);
+      --shadow-hover: 0 12px 32px -4px rgba(24, 24, 27, 0.08), 0 2px 6px rgba(24, 24, 27, 0.03);
+      --shadow-dock: 0 16px 36px -6px rgba(24, 24, 27, 0.35);
     }
 
     * {
@@ -35,173 +58,222 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      display: flex;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-cream);
+      background-image: 
+        radial-gradient(ellipse at 85% 0%, rgba(244, 230, 215, 0.6) 0%, transparent 60%),
+        radial-gradient(ellipse at 15% 100%, rgba(230, 238, 230, 0.5) 0%, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-primary);
       min-height: 100vh;
+      display: flex;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Sidebar */
-    aside {
-      width: 260px;
-      background-color: var(--bg-surface);
-      border-right: 1px solid var(--border);
+    /* ========================================================
+       LEFT FLOATING DARK PILL DOCK (Exact match from video)
+       ======================================================== */
+    .floating-dock {
+      position: fixed;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--charcoal-900);
+      border-radius: var(--radius-xl);
+      padding: 14px 10px;
       display: flex;
       flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
+      gap: 10px;
+      z-index: 1000;
+      box-shadow: var(--shadow-dock);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .brand {
-      padding: 24px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #00B074, #00897B);
+    .dock-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #FF6B4A, #C84B31);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 4px 12px var(--primary-glow);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(200, 75, 49, 0.4);
+    }
+
+    .dock-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--charcoal-400);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dock-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      transition: transform 0.2s ease;
+    }
+
+    .dock-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+
+    .dock-btn.active {
+      background: #FFFFFF;
+      color: var(--charcoal-900);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .dock-btn .tooltip {
+      position: absolute;
+      left: 54px;
+      background: var(--charcoal-900);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.18s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1001;
+    }
+
+    .dock-btn:hover .tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .dock-divider {
+      width: 24px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 4px auto;
+    }
+
+    /* ========================================================
+       MAIN APP CONTAINER & TOP NAV
+       ======================================================== */
+    .app-wrapper {
+      margin-left: 86px;
+      flex: 1;
+      padding: 24px 32px 60px 20px;
+      max-width: 1540px;
+      min-width: 0;
+    }
+
+    /* Top Nav Card */
+    .top-navbar {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-bento);
+      border: 1px solid var(--border-card);
+      margin-bottom: 28px;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon-box {
+      width: 32px;
+      height: 32px;
+      background: var(--charcoal-900);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
     }
 
     .brand-title {
       font-weight: 800;
-      font-size: 18px;
+      font-size: 17px;
       letter-spacing: -0.5px;
-      color: #fff;
+      color: var(--charcoal-900);
     }
 
     .brand-badge {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background-color: rgba(0, 176, 116, 0.15);
-      color: var(--primary);
+      font-size: 11px;
       font-weight: 700;
-      margin-left: auto;
-      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      background: var(--accent-terracotta-light);
+      color: var(--accent-terracotta);
+      border: 1px solid rgba(200, 75, 49, 0.2);
     }
 
-    .nav-menu {
-      padding: 20px 12px;
+    /* Horizontal Nav Tabs (Pills) */
+    .nav-pills {
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 4px;
-      flex: 1;
+      background: var(--card-cream);
+      padding: 4px 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
     }
 
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      color: var(--text-muted);
-      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      color: var(--charcoal-600);
+      font-size: 13px;
       font-weight: 600;
-      font-size: 13.5px;
+      text-decoration: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      user-select: none;
     }
 
     .nav-item:hover {
-      background-color: var(--bg-card);
-      color: #fff;
+      color: var(--charcoal-900);
+      background: rgba(255, 255, 255, 0.7);
     }
 
     .nav-item.active {
-      background: linear-gradient(90deg, rgba(0, 176, 116, 0.15), transparent);
-      color: var(--primary);
-      border-left: 3px solid var(--primary);
-      border-radius: 0 var(--radius) var(--radius) 0;
+      background: var(--charcoal-900);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     }
 
-    .owner-profile {
-      padding: 16px;
-      margin: 12px;
-      background-color: rgba(31, 41, 55, 0.5);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .owner-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #374151;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-
-    .owner-info {
-      font-size: 12px;
-    }
-
-    .owner-name {
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .owner-role {
-      color: var(--text-dim);
-      font-size: 11px;
-    }
-
-    /* Main Content Area */
-    main {
-      margin-left: 260px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    header {
-      padding: 18px 32px;
-      background-color: var(--bg-surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .header-title h1 {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
-
-    .header-title p {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .header-actions {
+    .top-right {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -209,7 +281,7 @@
 
     .btn {
       padding: 9px 16px;
-      border-radius: 8px;
+      border-radius: var(--radius-full);
       font-size: 13px;
       font-weight: 700;
       border: none;
@@ -217,145 +289,715 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       font-family: inherit;
+      text-decoration: none;
+    }
+
+    .btn-dark {
+      background: var(--charcoal-900);
+      color: #FFFFFF;
+    }
+    .btn-dark:hover {
+      background: var(--charcoal-800);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--charcoal-800);
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-outline:hover {
+      background: var(--card-cream);
+      border-color: var(--charcoal-400);
+    }
+
+    .btn-accent {
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+    }
+    .btn-accent:hover {
+      background: #B63F26;
+      box-shadow: 0 4px 12px rgba(200, 75, 49, 0.3);
     }
 
     .btn-primary {
-      background-color: var(--primary);
-      color: #fff;
+      background: var(--charcoal-900);
+      color: #FFFFFF;
     }
     .btn-primary:hover {
-      background-color: var(--primary-hover);
-      box-shadow: 0 4px 12px var(--primary-glow);
+      background: var(--charcoal-800);
     }
 
     .btn-secondary {
-      background-color: var(--bg-card);
-      color: var(--text-main);
-      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--charcoal-700);
+      border: 1px solid var(--border-subtle);
     }
     .btn-secondary:hover {
-      background-color: var(--bg-card-hover);
-      border-color: var(--border-light);
+      background: var(--card-cream);
     }
 
-    .content-body {
-      padding: 32px;
-      flex: 1;
-    }
-
-    /* Metrics Grid */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      margin-bottom: 30px;
-    }
-
-    .metric-card {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .metric-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--card-accent, var(--primary));
-    }
-
-    .metric-header {
+    .user-avatar-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-full);
+      background: #E8E4DA;
       display: flex;
       align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--charcoal-900);
+      position: relative;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .avatar-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-emerald);
+      border: 2px solid #FFFFFF;
+      border-radius: var(--radius-full);
+    }
+
+    /* Page Header Section */
+    .page-title-row {
+      display: flex;
       justify-content: space-between;
-      margin-bottom: 12px;
+      align-items: flex-end;
+      margin-bottom: 24px;
     }
 
-    .metric-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .metric-icon {
-      font-size: 18px;
-    }
-
-    .metric-value {
-      font-size: 26px;
+    .page-title-row h1 {
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #fff;
-      margin-bottom: 4px;
+      letter-spacing: -1px;
+      color: var(--charcoal-900);
     }
 
-    .metric-sub {
-      font-size: 11.5px;
-      color: var(--text-dim);
+    .page-title-row p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .header-pills-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--card-white);
+      border: 1px solid var(--border-card);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      color: var(--charcoal-700);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     /* Tab Panels */
     .tab-panel {
       display: none;
+      animation: fadeIn 0.25s ease-out;
     }
     .tab-panel.active {
       display: block;
     }
 
-    /* Data Tables */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       BENTO CARDS & GRIDS
+       ======================================================== */
+    .bento-card {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
+      padding: 24px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .bento-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Hero KPI 4-Card Row */
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .kpi-card {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 130px;
+    }
+
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .kpi-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      background: var(--charcoal-100);
+      color: var(--charcoal-700);
+    }
+
+    .kpi-pill.positive {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .kpi-value {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--charcoal-900);
+      margin-bottom: 4px;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Bento 2-Col Layout (Revenue Wave + Hot Deals) */
+    .bento-split-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    /* Revenue Wave Card */
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .chart-title-area h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+    }
+
+    .chart-big-figure {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: var(--charcoal-900);
+      margin-top: 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .chart-growth-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-terracotta);
+      background: var(--accent-terracotta-light);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .time-selector-pills {
+      display: flex;
+      background: var(--charcoal-100);
+      padding: 3px;
+      border-radius: var(--radius-full);
+      gap: 2px;
+    }
+
+    .time-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      color: var(--charcoal-600);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+
+    .time-pill.active {
+      background: #FFFFFF;
+      color: var(--charcoal-900);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Wave SVG Graphic */
+    .chart-svg-container {
+      width: 100%;
+      height: 180px;
+      position: relative;
+    }
+
+    /* Hot Orders Bento 3-Grid (Video frame_0 match) */
+    .hot-orders-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .hot-orders-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .hot-orders-head h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+    }
+
+    .hot-deals-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    /* Distinct colored order cards matching Rapport video */
+    .order-bento-item {
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .order-bento-item:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Card 1: Dark Charcoal */
+    .card-charcoal {
+      background: var(--charcoal-900);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(24, 24, 27, 0.15);
+    }
+    .card-charcoal .sub-label { color: rgba(255, 255, 255, 0.6); }
+    .card-charcoal .tag { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+    /* Card 2: Warm Terracotta */
+    .card-terracotta {
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(200, 75, 49, 0.2);
+    }
+    .card-terracotta .sub-label { color: rgba(255, 255, 255, 0.7); }
+    .card-terracotta .tag { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+    /* Card 3: Deep Forest Green */
+    .card-forest {
+      background: var(--accent-forest);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(30, 77, 62, 0.2);
+    }
+    .card-forest .sub-label { color: rgba(255, 255, 255, 0.7); }
+    .card-forest .tag { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+    .order-left-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .order-avatar-initials {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .order-meta h4 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .order-meta p {
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .order-right-meta {
+      text-align: right;
+    }
+
+    .order-price {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* Bento 3-Col Row (SLA Gauge + Payment Split + Overflow Stats) */
+    .bento-tri-row {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* Forest Green SLA Gauge Card (Video Frame 2 styling) */
+    .sla-gauge-card {
+      background: var(--accent-forest);
+      color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(30, 77, 62, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sla-gauge-card::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    .sla-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sla-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .sla-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .sla-center-metric {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 18px 0;
+    }
+
+    .gauge-circle {
+      width: 74px;
+      height: 74px;
+      position: relative;
+    }
+
+    .gauge-circle svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.15);
+      stroke-width: 6;
+    }
+
+    .gauge-val {
+      fill: none;
+      stroke: #A7F3D0;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 220;
+      stroke-dashoffset: 8;
+    }
+
+    .gauge-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .sla-text h2 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .sla-text p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2px;
+    }
+
+    .sla-footer {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Customer Payment Modes Split */
+    .payments-breakdown-card {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-sub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .card-sub-header h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+    }
+
+    .segmented-bar {
+      display: flex;
+      height: 10px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin: 14px 0 18px 0;
+      background: var(--charcoal-100);
+      gap: 2px;
+    }
+
+    .seg-upi { background: var(--accent-terracotta); width: 68%; }
+    .seg-card { background: var(--accent-blue); width: 18%; }
+    .seg-wallet { background: var(--accent-emerald); width: 9%; }
+    .seg-cod { background: var(--accent-gold); width: 5%; }
+
+    .payments-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .pay-mode-box {
+      background: var(--card-cream);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+
+    .pay-mode-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .pay-mode-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+      margin-top: 4px;
+    }
+
+    .pay-mode-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-terracotta);
+      margin-top: 2px;
+    }
+
+    /* Overflow / Sharing Stats Card */
+    .sharing-relief-card {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sharing-kpis-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-kpi-box {
+      background: var(--card-cream);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .mini-kpi-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .mini-kpi-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+      margin-top: 2px;
+    }
+
+    .mini-kpi-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ========================================================
+       DATA TABLES (WARM LUXE BENTO STYLE)
+       ======================================================== */
     .table-container {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
       overflow: hidden;
       margin-bottom: 24px;
     }
 
     .table-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .table-title {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--charcoal-900);
+      letter-spacing: -0.3px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13px;
+      font-size: 13.5px;
     }
 
     th {
-      background-color: rgba(31, 41, 55, 0.4);
-      padding: 12px 20px;
+      background: var(--card-cream);
+      padding: 13px 20px;
       font-weight: 700;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
       font-size: 11.5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     td {
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
-      color: var(--text-main);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(220, 215, 204, 0.45);
+      color: var(--charcoal-800);
+      vertical-align: middle;
     }
 
     tr:last-child td {
@@ -363,59 +1005,63 @@
     }
 
     tr:hover td {
-      background-color: rgba(31, 41, 55, 0.25);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .badge-success {
-      background: rgba(0, 176, 116, 0.15);
-      color: var(--primary);
-      border: 1px solid rgba(0, 176, 116, 0.3);
-    }
-
-    .badge-warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--accent-amber);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .badge-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--accent-red);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .badge-info {
-      background: rgba(2, 132, 199, 0.15);
-      color: var(--accent-blue);
-      border: 1px solid rgba(2, 132, 199, 0.3);
-    }
-
-    .badge-purple {
-      background: rgba(139, 92, 246, 0.15);
-      color: var(--accent-purple);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background-color: rgba(247, 245, 238, 0.6);
     }
 
     .mono {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 12.5px;
+      letter-spacing: -0.3px;
     }
 
-    /* JSON Data Saver Box */
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-success {
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid rgba(46, 125, 50, 0.2);
+    }
+
+    .badge-warning {
+      background: var(--accent-gold-light);
+      color: #B45309;
+      border: 1px solid rgba(180, 83, 9, 0.2);
+    }
+
+    .badge-danger {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+
+    .badge-info {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid rgba(29, 78, 216, 0.2);
+    }
+
+    .badge-purple {
+      background: #F3E8FF;
+      color: #7E22CE;
+      border: 1px solid rgba(126, 34, 206, 0.2);
+    }
+
+    /* Data Saver & DB Explorer */
     .data-saver-card {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-bento);
       padding: 24px;
       margin-bottom: 24px;
     }
@@ -423,197 +1069,731 @@
     .data-saver-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
       margin-top: 18px;
     }
 
     pre.code-viewer {
-      background-color: #080C14;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
+      background-color: var(--charcoal-900);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 18px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
-      color: #A5B4FC;
-      max-height: 350px;
+      color: #E2E8F0;
+      max-height: 400px;
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-all;
+      line-height: 1.6;
+    }
+
+    /* Modal / Drawer Preview (Video Frame 3 Receipt / Invoice Style) */
+    .invoice-card-preview {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+
+    .stamp-paid {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent-emerald);
+      border: 2px solid var(--accent-emerald);
+      padding: 4px 10px;
+      border-radius: 6px;
+      transform: rotate(-8deg);
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 1200px) {
+      .hero-stats-row { grid-template-columns: repeat(2, 1fr); }
+      .bento-split-row { grid-template-columns: 1fr; }
+      .bento-tri-row { grid-template-columns: 1fr; }
+      .payments-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .floating-dock { display: none; }
+      .app-wrapper { margin-left: 0; padding: 14px; }
+      .hero-stats-row { grid-template-columns: 1fr; }
+      .top-navbar { flex-direction: column; gap: 14px; align-items: stretch; }
+      .nav-pills { overflow-x: auto; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <aside>
-    <div class="brand">
-      <div class="brand-icon">⚡</div>
-      <div>
-        <div class="brand-title">Blipto</div>
-        <div style="font-size: 11px; color: var(--text-dim);">Platform Control Tower</div>
-      </div>
-      <span class="brand-badge">Owner</span>
-    </div>
+  <!-- ========================================================
+       FLOATING DARK PILL DOCK (Sleek left vertical icon bar)
+       ======================================================== -->
+  <aside class="floating-dock">
+    <div class="dock-logo" onclick="switchTab('overview')">⚡</div>
 
-    <div class="nav-menu">
-      <div class="nav-item active" onclick="switchTab('overview')">
-        <span>📊</span> <span>Overview & Sales</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('stores')">
-        <span>🏪</span> <span>Local Stores & Areas</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('orders')">
-        <span>📦</span> <span>Customer Orders</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('inventory')">
-        <span>🏷️</span> <span>All Store Products</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('escrow')">
-        <span>🔒</span> <span>Store Payments & Safe Escrow</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('disputes')">
-        <span>🛡️</span> <span>Customer Complaints & Refunds</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('overflow')">
-        <span>🔄</span> <span>Partner Store Order Sharing</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('datasaver')">
-        <span>💾</span> <span>Save & Download All Data</span>
-      </div>
-    </div>
+    <button class="dock-btn active" id="dock-overview" onclick="switchTab('overview')" aria-label="Overview">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+      <span class="tooltip">Overview & Sales</span>
+    </button>
 
-    <div class="owner-profile">
-      <div class="owner-avatar">👑</div>
-      <div class="owner-info">
-        <div class="owner-name">App Owner</div>
-        <div class="owner-role">Full Data & Settings Access</div>
-      </div>
-    </div>
+    <button class="dock-btn" id="dock-stores" onclick="switchTab('stores')" aria-label="Stores">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="tooltip">Local Kirana Stores</span>
+    </button>
+
+    <button class="dock-btn" id="dock-orders" onclick="switchTab('orders')" aria-label="Orders">
+      <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+      <span class="tooltip">Live Orders Stream</span>
+    </button>
+
+    <button class="dock-btn" id="dock-inventory" onclick="switchTab('inventory')" aria-label="Inventory">
+      <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      <span class="tooltip">Master Inventory & SKUs</span>
+    </button>
+
+    <button class="dock-btn" id="dock-escrow" onclick="switchTab('escrow')" aria-label="Escrow">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span class="tooltip">Safe Escrow Ledger</span>
+    </button>
+
+    <button class="dock-btn" id="dock-disputes" onclick="switchTab('disputes')" aria-label="Disputes">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span class="tooltip">Customer Complaints & 3-Strikes</span>
+    </button>
+
+    <button class="dock-btn" id="dock-overflow" onclick="switchTab('overflow')" aria-label="Partner Sharing">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      <span class="tooltip">Partner Store Sharing (1.5%)</span>
+    </button>
+
+    <div class="dock-divider"></div>
+
+    <button class="dock-btn" id="dock-datasaver" onclick="switchTab('datasaver')" aria-label="Backup">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      <span class="tooltip">Save & Backup Master DB</span>
+    </button>
   </aside>
 
-  <!-- Main View -->
-  <main>
-    <header>
-      <div class="header-title">
-        <h1 id="page-title">Overview & Sales</h1>
-        <p id="page-desc">Live status of all your local grocery stores, orders, and daily earnings</p>
+  <!-- ========================================================
+       MAIN APP WRAPPER
+       ======================================================== -->
+  <div class="app-wrapper">
+
+    <!-- Top Rounded Nav Card (Brand, Pill Nav, Actions) -->
+    <header class="top-navbar">
+      <div class="top-left">
+        <div class="brand-group">
+          <div class="brand-icon-box">⚡</div>
+          <span class="brand-title">blipto</span>
+          <span class="brand-badge">Owner Tower</span>
+        </div>
+
+        <!-- Pill Nav Bar -->
+        <nav class="nav-pills">
+          <div class="nav-item active" onclick="switchTab('overview')">Overview</div>
+          <div class="nav-item" onclick="switchTab('stores')">Stores</div>
+          <div class="nav-item" onclick="switchTab('orders')">Orders</div>
+          <div class="nav-item" onclick="switchTab('inventory')">Inventory</div>
+          <div class="nav-item" onclick="switchTab('escrow')">Escrow</div>
+          <div class="nav-item" onclick="switchTab('disputes')">Disputes</div>
+          <div class="nav-item" onclick="switchTab('overflow')">Partner Sharing</div>
+          <div class="nav-item" onclick="switchTab('datasaver')">Data DB</div>
+        </nav>
       </div>
-      <div class="header-actions">
-        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary" style="background: rgba(0, 176, 116, 0.2); border-color: var(--primary); color: #fff; text-decoration: none;">
-          <span>📱</span> <span>Open Mobile App (Web)</span>
+
+      <div class="top-right">
+        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">
+          <span>📱</span> <span>Mobile App</span>
         </a>
         <button class="btn btn-secondary" onclick="refreshData()">
-          <span>🔄</span> <span>Refresh Data</span>
+          <span>🔄</span> <span>Sync</span>
         </button>
-        <button class="btn btn-primary" onclick="exportFullJSON()">
-          <span>💾</span> <span>Download All Data (JSON)</span>
+        <button class="btn btn-dark" onclick="exportFullJSON()">
+          <span>💾</span> <span>Backup JSON</span>
         </button>
+        
+        <div class="user-avatar-circle" title="App Platform Owner">
+          👑
+          <span class="avatar-dot"></span>
+        </div>
       </div>
     </header>
 
-    <div class="content-body">
+    <!-- Page Title & Live Status Pill -->
+    <div class="page-title-row">
+      <div>
+        <h1 id="page-title">Overview & Sales</h1>
+        <p id="page-desc">Real-time telemetry across all decentralized neighborhood fulfillment centers</p>
+      </div>
+      <div class="header-pills-status">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>100% Hyperlocal Network Live</span>
+        </div>
+        <div class="status-pill">
+          <span>🛡️ Escrow Protected</span>
+        </div>
+      </div>
+    </div>
 
-      <!-- TAB 1: OVERVIEW -->
-      <div id="tab-overview" class="tab-panel active">
-        <!-- Metrics -->
-        <div class="metrics-grid">
-          <div class="metric-card" style="--card-accent: #00B074;">
-            <div class="metric-header">
-              <span class="metric-label">Total Sales (GMV)</span>
-              <span class="metric-icon">💰</span>
-            </div>
-            <div class="metric-value" id="val-gmv">₹4,820</div>
-            <div class="metric-sub">Platform GMV across local catchment</div>
+    <!-- ========================================================
+         TAB 1: OVERVIEW & SALES (WARM BENTO SPEC)
+         ======================================================== -->
+    <div id="tab-overview" class="tab-panel active">
+      
+      <!-- Row 1: 4 Hero KPI Cards -->
+      <div class="hero-stats-row">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Total Sales (GMV)</span>
+            <span class="kpi-pill positive">+14.2%</span>
           </div>
-
-          <div class="metric-card" style="--card-accent: #0284C7;">
-            <div class="metric-header">
-              <span class="metric-label">Blipto Software Fee (4.5%)</span>
-              <span class="metric-icon">📈</span>
-            </div>
-            <div class="metric-value" id="val-revenue">₹216.90</div>
-            <div class="metric-sub">Net software revenue (Zero dark store burn)</div>
-          </div>
-
-          <div class="metric-card" style="--card-accent: #F59E0B;">
-            <div class="metric-header">
-              <span class="metric-label">Safe Escrow Treasury</span>
-              <span class="metric-icon">🔒</span>
-            </div>
-            <div class="metric-value" id="val-escrow">₹580.00</div>
-            <div class="metric-sub">Held in escrow until doorstep OTP verify</div>
-          </div>
-
-          <div class="metric-card" style="--card-accent: #8B5CF6;">
-            <div class="metric-header">
-              <span class="metric-label">Active Partner Kiranas</span>
-              <span class="metric-icon">🏪</span>
-            </div>
-            <div class="metric-value" id="val-stores">3 Stores</div>
-            <div class="metric-sub">100% merchant-fulfilled logistics</div>
+          <div>
+            <div class="kpi-value" id="val-gmv">₹4,820</div>
+            <div class="kpi-sub">Across neighborhood cluster</div>
           </div>
         </div>
 
-        <!-- Payment Modes Breakdown Card (REQ-PAY-01) -->
-        <div class="data-saver-card" style="margin-bottom: 24px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="font-size: 14px; font-weight: 700;">💳 Customer Payment Modes (Live GMV Split)</h3>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Blipto Software Fee (4.5%)</span>
+            <span class="kpi-pill">Asset-Light</span>
+          </div>
+          <div>
+            <div class="kpi-value" id="val-revenue">₹216.90</div>
+            <div class="kpi-sub">Zero dark store burn</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Safe Escrow Treasury</span>
+            <span class="kpi-pill positive">🔒 Protected</span>
+          </div>
+          <div>
+            <div class="kpi-value" id="val-escrow">₹580.00</div>
+            <div class="kpi-sub">Held until doorstep OTP handoff</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Active Partner Kiranas</span>
+            <span class="kpi-pill">3 Active</span>
+          </div>
+          <div>
+            <div class="kpi-value" id="val-stores">3 Stores</div>
+            <div class="kpi-sub">Merchant-fulfilled delivery</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Bento Split (Revenue Curve Wave + Hot Deals Cards) -->
+      <div class="bento-split-row">
+        
+        <!-- Left: Revenue Wave Curve Chart Card -->
+        <div class="bento-card">
+          <div class="chart-header">
+            <div class="chart-title-area">
+              <h3>Revenue & GMV Wave</h3>
+              <div class="chart-big-figure">
+                <span>₹1,014,640</span>
+                <span class="chart-growth-tag">↑ +18.4%</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Cumulative platform GMV & daily sales volume</div>
+            </div>
+
+            <div class="time-selector-pills">
+              <button class="time-pill">Today</button>
+              <button class="time-pill">7D</button>
+              <button class="time-pill active">6M</button>
+              <button class="time-pill">12M</button>
+            </div>
+          </div>
+
+          <!-- Smooth Coral/Terracotta Wave SVG (Video frame_0 match) -->
+          <div class="chart-svg-container">
+            <svg viewBox="0 0 600 180" width="100%" height="100%" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="waveGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#C84B31" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#C84B31" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <!-- Target Dotted Line -->
+              <line x1="0" y1="50" x2="600" y2="50" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="4 4" />
+              <text x="540" y="44" fill="#A1A1AA" font-size="10" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600">Goal ₹1.2M</text>
+
+              <!-- Wave Gradient Area -->
+              <path d="M 0 160 
+                       C 80 140, 130 90, 200 95 
+                       C 270 100, 310 130, 380 70 
+                       C 450 10, 520 60, 600 30 
+                       L 600 180 L 0 180 Z" 
+                    fill="url(#waveGradient)"/>
+
+              <!-- Coral Wave Outline -->
+              <path d="M 0 160 
+                       C 80 140, 130 90, 200 95 
+                       C 270 100, 310 130, 380 70 
+                       C 450 10, 520 60, 600 30" 
+                    fill="none" 
+                    stroke="#C84B31" 
+                    stroke-width="3.5" 
+                    stroke-linecap="round"/>
+
+              <!-- Highlight Active Point -->
+              <circle cx="380" cy="70" r="5" fill="#FFFFFF" stroke="#C84B31" stroke-width="3"/>
+              <rect x="345" y="18" width="70" height="26" rx="6" fill="#18181B"/>
+              <text x="380" y="35" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">₹4,820</text>
+            </svg>
+          </div>
+
+          <!-- Bottom Metric Tickers -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-top: 10px;">
+            <div style="font-size: 12px; color: var(--text-secondary);">
+              <strong style="color: var(--charcoal-900);">Avg Order Value:</strong> ₹160.67
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary);">
+              <strong style="color: var(--charcoal-900);">Delivery Speed:</strong> 12.4 mins SLA
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary);">
+              <strong style="color: var(--charcoal-900);">Zero Phantom Stock:</strong> 100% verified
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Hot In-Flight Orders Bento (Video 3-Card Grid match) -->
+        <div class="bento-card hot-orders-container">
+          <div class="hot-orders-head">
+            <h3>Live Active Orders</h3>
+            <span class="badge badge-info" style="font-size: 11px;">Real-Time</span>
+          </div>
+
+          <div class="hot-deals-grid">
+            
+            <!-- Item 1: Charcoal Card (Out for Delivery) -->
+            <div class="order-bento-item card-charcoal" onclick="switchTab('orders')">
+              <div class="order-left-info">
+                <div class="order-avatar-initials">GK</div>
+                <div class="order-meta">
+                  <h4>#ORD-9281</h4>
+                  <p class="sub-label">Gupta Kirana · Milk & Bread</p>
+                </div>
+              </div>
+              <div class="order-right-meta">
+                <div class="order-price">₹119</div>
+                <span class="tag">Out for Delivery (OTP 4192)</span>
+              </div>
+            </div>
+
+            <!-- Item 2: Terracotta Card (Spillover Rush Relief) -->
+            <div class="order-bento-item card-terracotta" onclick="switchTab('overflow')">
+              <div class="order-left-info">
+                <div class="order-avatar-initials">⚡</div>
+                <div class="order-meta">
+                  <h4>#ORD-9350 · Rush Relief</h4>
+                  <p class="sub-label">Sri Venkateshwara ➔ Mahadev</p>
+                </div>
+              </div>
+              <div class="order-right-meta">
+                <div class="order-price">₹173</div>
+                <span class="tag">+₹10.50 Partner Margin</span>
+              </div>
+            </div>
+
+            <!-- Item 3: Deep Forest Green Card (Delivered) -->
+            <div class="order-bento-item card-forest" onclick="switchTab('orders')">
+              <div class="order-left-info">
+                <div class="order-avatar-initials">✓</div>
+                <div class="order-meta">
+                  <h4>#ORD-9104</h4>
+                  <p class="sub-label">Mahadev Daily · Farm Eggs</p>
+                </div>
+              </div>
+              <div class="order-right-meta">
+                <div class="order-price">₹65</div>
+                <span class="tag">Delivered in 11 mins</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 3: Bento Tri-Row (Forest Green Gauge + Payments Split + Overflow Stats) -->
+      <div class="bento-tri-row">
+        
+        <!-- Bento 1: Forest Green On-Time Delivery Circular Gauge -->
+        <div class="sla-gauge-card">
+          <div class="sla-top">
+            <span class="sla-title">Delivery SLA Performance</span>
+            <span class="sla-badge">12.4 Min Avg</span>
+          </div>
+
+          <div class="sla-center-metric">
+            <div class="gauge-circle">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="35" class="gauge-bg"/>
+                <circle cx="40" cy="40" r="35" class="gauge-val"/>
+              </svg>
+              <div class="gauge-text">98%</div>
+            </div>
+            <div class="sla-text">
+              <h2>98.4%</h2>
+              <p>On-Time Doorstep Guarantee</p>
+            </div>
+          </div>
+
+          <div class="sla-footer">
+            <span>Fastest: <strong>9 mins</strong></span>
+            <span>Customer SLA: <strong>15 mins</strong></span>
+          </div>
+        </div>
+
+        <!-- Bento 2: Customer Payment Modes (Live GMV Split) (REQ-PAY-01) -->
+        <div class="payments-breakdown-card">
+          <div class="card-sub-header">
+            <h3>💳 Customer Payment Modes (Live GMV Split)</h3>
             <span class="badge badge-success">Escrow Protected</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">⚡ UPI (GPay, PhonePe)</div>
-              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-upi-val">₹0.00</div>
-              <div style="font-size: 10px; color: var(--primary);" id="pay-upi-count">0 Orders</div>
+
+          <!-- Segmented bar -->
+          <div class="segmented-bar" title="Payment Mix: UPI 68%, Card 18%, Wallet 9%, COD 5%">
+            <div class="seg-upi" title="UPI"></div>
+            <div class="seg-card" title="Card"></div>
+            <div class="seg-wallet" title="Wallet"></div>
+            <div class="seg-cod" title="COD"></div>
+          </div>
+
+          <div class="payments-grid-4">
+            <div class="pay-mode-box">
+              <div class="pay-mode-name">⚡ UPI</div>
+              <div class="pay-mode-val" id="pay-upi-val">₹0.00</div>
+              <div class="pay-mode-count" id="pay-upi-count">0 Orders</div>
             </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">💳 Credit / Debit Cards</div>
-              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-card-val">₹0.00</div>
-              <div style="font-size: 10px; color: var(--accent-blue);" id="pay-card-count">0 Orders</div>
+
+            <div class="pay-mode-box">
+              <div class="pay-mode-name">💳 Cards</div>
+              <div class="pay-mode-val" id="pay-card-val">₹0.00</div>
+              <div class="pay-mode-count" id="pay-card-count" style="color: var(--accent-blue);">0 Orders</div>
             </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">👛 Blipto Wallet</div>
-              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-wallet-val">₹0.00</div>
-              <div style="font-size: 10px; color: var(--accent-purple);" id="pay-wallet-count">0 Orders</div>
+
+            <div class="pay-mode-box">
+              <div class="pay-mode-name">👛 Wallet</div>
+              <div class="pay-mode-val" id="pay-wallet-val">₹0.00</div>
+              <div class="pay-mode-count" id="pay-wallet-count" style="color: var(--accent-emerald);">0 Orders</div>
             </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">💵 Cash on Delivery</div>
-              <div style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px;" id="pay-cod-val">₹0.00</div>
-              <div style="font-size: 10px; color: var(--accent-amber);" id="pay-cod-count">0 Orders</div>
+
+            <div class="pay-mode-box">
+              <div class="pay-mode-name">💵 COD</div>
+              <div class="pay-mode-val" id="pay-cod-val">₹0.00</div>
+              <div class="pay-mode-count" id="pay-cod-count" style="color: var(--accent-gold);">0 Orders</div>
             </div>
           </div>
         </div>
 
-        <!-- Partner Store Order Sharing Desk (REQ-V2-OPS-01) -->
-        <div class="data-saver-card" style="margin-bottom: 24px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div>
-              <h3 style="font-size: 15px; font-weight: 700; color: #fff;">🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)</h3>
-              <p style="font-size: 11.5px; color: var(--text-dim); margin-top: 2px;">Automatic order sharing across nearby partner stores (500m–1.2km) during rush hours with 1.5% commission</p>
-            </div>
-            <span class="badge badge-success">Partner Sharing Active</span>
+        <!-- Bento 3: Partner Store Order Sharing Relief (REQ-V2-OPS-01) -->
+        <div class="sharing-relief-card">
+          <div class="card-sub-header">
+            <h3>🔄 Partner Sharing Telemetry</h3>
+            <span class="badge badge-purple">1.5% Fee</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Orders Shared During Rush</div>
-              <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">2 Orders</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Prevented customer cancellation</div>
+
+          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+            When one store is at max capacity, nearby partner stores fulfill the order seamlessly.
+          </p>
+
+          <div class="sharing-kpis-mini">
+            <div class="mini-kpi-box">
+              <div class="mini-kpi-label">Orders Saved</div>
+              <div class="mini-kpi-val" style="color: var(--accent-terracotta);">2 Runs</div>
+              <div class="mini-kpi-desc">0 cancellations</div>
             </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Store Commission Earned (1.5%)</div>
-              <div style="font-size: 20px; font-weight: 800; color: var(--accent-blue); margin-top: 4px;">₹18.50</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Credited to busy origin shops</div>
+
+            <div class="mini-kpi-box">
+              <div class="mini-kpi-label">Earned Margin</div>
+              <div class="mini-kpi-val" style="color: var(--accent-emerald);">₹18.50</div>
+              <div class="mini-kpi-desc">to busy origin shops</div>
             </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Saved Orders (Zero Cancellations)</div>
-              <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">100%</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Zero orders lost during rushes</div>
-            </div>
-            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-dim);">Average Sharing Distance</div>
-              <div style="font-size: 20px; font-weight: 800; color: var(--accent-purple); margin-top: 4px;">650m</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Delivered in ~14 mins</div>
-            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 4: Recent Hyper-Local Orders Table -->
+      <div class="table-container">
+        <div class="table-header">
+          <span class="table-title">Recent Hyper-Local Orders</span>
+          <button class="btn btn-secondary" onclick="switchTab('orders')" style="font-size: 12px; padding: 6px 14px;">
+            View Master Order Stream ➔
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Origin Store</th>
+              <th>Fulfilling Store</th>
+              <th>Payment Mode</th>
+              <th>Routing Type</th>
+              <th>Amount</th>
+              <th>Handoff OTP</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="overview-orders-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         TAB 2: STORES & CATCHMENT CONTROLS
+         ======================================================== -->
+    <div id="tab-stores" class="tab-panel">
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <span class="table-title">Partner Kirana Directory & Catchment Controls</span>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Manage partner kirana stores, delivery radius boundaries, and peak rush settings</p>
+          </div>
+          <button class="btn btn-dark" onclick="alert('Store KYC Approval Portal Ready')">+ Onboard New Kirana</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Store ID</th>
+              <th>Store Name & Address</th>
+              <th>Radius</th>
+              <th>Capacity</th>
+              <th>Rush / Busy Mode</th>
+              <th>Trust Rating</th>
+              <th>Strikes</th>
+              <th>UPI Payout Handle</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="stores-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TAB 3: LIVE ORDERS STREAM
+         ======================================================== -->
+    <div id="tab-orders" class="tab-panel">
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <span class="table-title">Global Master Order Stream</span>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Every single order placed across all neighborhood stores with full lifecycle auditing</p>
+          </div>
+          <button class="btn btn-secondary" onclick="exportOrdersCSV()">📊 Export Orders CSV</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer ID</th>
+              <th>Store</th>
+              <th>Items Summary</th>
+              <th>Total Bill</th>
+              <th>OTP</th>
+              <th>Status</th>
+              <th>Delivery SLA</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TAB 4: MASTER INVENTORY & SKUs
+         ======================================================== -->
+    <div id="tab-inventory" class="tab-panel">
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <span class="table-title">Master Stock & SKU Explorer (Zero-Phantom Audit)</span>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Real-time barcode inventory verified via Voice-to-Stock & Shelf-Cam</p>
+          </div>
+          <button class="btn btn-secondary" onclick="exportInventoryCSV()">📊 Export SKUs CSV</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Barcode (EAN-13)</th>
+              <th>Product Title</th>
+              <th>Store</th>
+              <th>Category</th>
+              <th>Shelf Price</th>
+              <th>Stock Count</th>
+              <th>Audit Status</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TAB 5: ESCROW & TREASURY LEDGER
+         ======================================================== -->
+    <div id="tab-escrow" class="tab-panel">
+      <div class="bento-card" style="margin-bottom: 24px;">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 8px;">
+          Platform Escrow & Merchant Payout Settlement
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; max-width: 800px;">
+          Blipto operates a zero-working-capital escrow treasury. Consumer payments are held in digital escrow upon checkout. 
+          Funds automatically release into the merchant's instant UPI ledger upon OTP handoff verification, eliminating retailer credit risk.
+        </p>
+
+        <div class="hero-stats-row" style="margin-top: 24px; margin-bottom: 0;">
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Escrow Locked Funds</span>
+            <div class="kpi-value" style="color: var(--accent-gold);">₹580.00</div>
+            <div class="kpi-sub">Protected against non-delivery claims</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Total Settled to Merchants</span>
+            <div class="kpi-value" style="color: var(--accent-emerald);">₹4,240.00</div>
+            <div class="kpi-sub">Direct UPI instant payouts</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Refunded on Defect Disputes</span>
+            <div class="kpi-value" style="color: var(--accent-terracotta);">₹87.00</div>
+            <div class="kpi-sub">Automated 1-tap customer refunds</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Merchant Default Risk</span>
+            <div class="kpi-value" style="color: var(--charcoal-900);">₹0.00</div>
+            <div class="kpi-sub">100% pre-funded escrow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TAB 6: DISPUTES & GOVERNANCE DESK
+         ======================================================== -->
+    <div id="tab-disputes" class="tab-panel">
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <span class="table-title">Customer Defect Claims & 3-Strike Governance Desk</span>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Automated computer vision photo auditing with 1-tap instant customer refunds</p>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Dispute ID</th>
+              <th>Order ID</th>
+              <th>Claimed Item</th>
+              <th>Reason</th>
+              <th>Refund Amount</th>
+              <th>Photo Evidence</th>
+              <th>AI Visual Audit (REQ-V2-OPS-02)</th>
+              <th>Resolution Status</th>
+              <th>Merchant Strike</th>
+            </tr>
+          </thead>
+          <tbody id="disputes-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Seller Strike Appeal Desk (REQ-V2-OPS-03) -->
+      <div class="table-container" style="margin-top: 24px;">
+        <div class="table-header">
+          <div>
+            <span class="table-title">⚖️ Merchant Strike Appeals (Counter-Proof Review)</span>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Kirana shopkeepers submit CCTV/dispatch photos to appeal unfair customer claims</p>
+          </div>
+          <span class="badge badge-warning" id="pending-appeals-badge">Review Desk</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Appeal ID</th>
+              <th>Store ID</th>
+              <th>Complaint Reason</th>
+              <th>Merchant Counter-Proof Note</th>
+              <th>Status</th>
+              <th>Owner Action</th>
+            </tr>
+          </thead>
+          <tbody id="strike-appeals-tbody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TAB 7: PARTNER STORE ORDER SHARING (OVERFLOW)
+         ======================================================== -->
+    <div id="tab-overflow" class="tab-panel">
+      <div class="bento-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 800; color: var(--charcoal-900);">
+              🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px; max-width: 750px;">
+              Automatic order load balancing across neighborhood partner stores (500m–1.2km) with 1.5% referral commission. 
+              Eliminates customer cancellations when a local shop is at full rush capacity.
+            </p>
+          </div>
+          <span class="badge badge-success">Partner Sharing Active</span>
+        </div>
+
+        <div class="hero-stats-row" style="margin-top: 20px; margin-bottom: 20px;">
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Orders Handled by Partners</span>
+            <div class="kpi-value" style="color: var(--accent-emerald);">2 Orders</div>
+            <div class="kpi-sub">100% saved from cancellation</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Partner Referral Margins</span>
+            <div class="kpi-value" style="color: var(--accent-blue);">₹18.50</div>
+            <div class="kpi-sub">1.5% credited to busy shops</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Partner Store Radius</span>
+            <div class="kpi-value" style="color: var(--charcoal-900);">650m avg</div>
+            <div class="kpi-sub">Delivered in ~14 mins</div>
+          </div>
+          <div class="kpi-card" style="background: var(--card-cream);">
+            <span class="kpi-label">Zero-Churn Protection</span>
+            <div class="kpi-value" style="color: var(--accent-terracotta);">100%</div>
+            <div class="kpi-sub">Zero lost revenue in peak rush</div>
+          </div>
+        </div>
+
+        <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-subtle);">
+          <div class="table-header">
+            <span class="table-title">Live Partner Store Order Sharing Log</span>
+            <span class="badge badge-purple">Real-Time Telemetry</span>
           </div>
           <table>
             <thead>
@@ -621,328 +1801,80 @@
                 <th>Order ID</th>
                 <th>Originating Store (Busy/Full)</th>
                 <th>Fulfilling Store (Partner Store)</th>
-                <th>Distance</th>
-                <th>Reason</th>
+                <th>Catchment Distance</th>
+                <th>Spillover Trigger</th>
                 <th>Referral Margin (1.5%)</th>
-                <th>Status</th>
+                <th>Delivery SLA</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="mono">ORD-9350</td>
-                <td><span style="color: #F87171; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
-                <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                <td class="mono"><strong>#ORD-9350</strong></td>
+                <td><span style="color: #DC2626; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
+                <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
                 <td>650m</td>
-                <td>Store Queue Cap (3/3 Active)</td>
-                <td><span style="color: #60A5FA; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
-                <td><span class="badge badge-success">Delivered (14 min)</span></td>
+                <td>Queue Full (3/3 Active Runs)</td>
+                <td><span style="color: #2563EB; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
+                <td><span class="badge badge-success">Delivered in 14 mins</span></td>
               </tr>
               <tr>
-                <td class="mono">ORD-9412</td>
-                <td><span style="color: #F87171; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
-                <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                <td class="mono"><strong>#ORD-9412</strong></td>
+                <td><span style="color: #DC2626; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
+                <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
                 <td>850m</td>
                 <td>Merchant Manually Toggled Busy Mode</td>
-                <td><span style="color: #60A5FA; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
-                <td><span class="badge badge-success">Delivered (16 min)</span></td>
+                <td><span style="color: #2563EB; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
+                <td><span class="badge badge-success">Delivered in 16 mins</span></td>
               </tr>
             </tbody>
           </table>
         </div>
-
-        <!-- Recent In-Flight Runs -->
-        <div class="table-container">
-          <div class="table-header">
-            <span class="table-title">Recent Hyper-Local Orders</span>
-            <button class="btn btn-secondary" onclick="switchTab('orders')" style="font-size: 11.5px; padding: 4px 10px;">View All Orders ➔</button>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Origin Store</th>
-                <th>Fulfilling Store</th>
-                <th>Payment Mode</th>
-                <th>Routing Type</th>
-                <th>Amount</th>
-                <th>Handoff OTP</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="overview-orders-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
       </div>
-
-      <!-- TAB 2: STORES & CATCHMENT -->
-      <div id="tab-stores" class="tab-panel">
-        <div class="table-container">
-          <div class="table-header">
-            <span class="table-title">Partner Kirana Directory & Catchment Controls</span>
-            <button class="btn btn-primary" onclick="alert('Store KYC Approval Portal Ready')">+ Onboard New Kirana</button>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Store ID</th>
-                <th>Store Name & Address</th>
-                <th>Radius</th>
-                <th>Capacity</th>
-                <th>Rush / Busy Mode</th>
-                <th>Trust Rating</th>
-                <th>Strikes</th>
-                <th>UPI Payout Handle</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="stores-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB 3: LIVE ORDERS STREAM -->
-      <div id="tab-orders" class="tab-panel">
-        <div class="table-container">
-          <div class="table-header">
-            <span class="table-title">Global Master Order Stream</span>
-            <button class="btn btn-secondary" onclick="exportOrdersCSV()">📊 Export Orders CSV</button>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer ID</th>
-                <th>Store</th>
-                <th>Items Summary</th>
-                <th>Total Bill</th>
-                <th>OTP</th>
-                <th>Status</th>
-                <th>Delivery SLA</th>
-              </tr>
-            </thead>
-            <tbody id="orders-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB 4: MASTER INVENTORY -->
-      <div id="tab-inventory" class="tab-panel">
-        <div class="table-container">
-          <div class="table-header">
-            <span class="table-title">Master Stock & SKU Explorer (Zero-Phantom Audit)</span>
-            <button class="btn btn-secondary" onclick="exportInventoryCSV()">📊 Export SKUs CSV</button>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Barcode (EAN-13)</th>
-                <th>Product Title</th>
-                <th>Store</th>
-                <th>Category</th>
-                <th>Shelf Price</th>
-                <th>Stock Count</th>
-                <th>Audit Status</th>
-              </tr>
-            </thead>
-            <tbody id="inventory-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB 5: ESCROW & TREASURY -->
-      <div id="tab-escrow" class="tab-panel">
-        <div class="data-saver-card">
-          <h2 style="font-size: 16px; margin-bottom: 8px;">Platform Escrow & Merchant Payout Settlement</h2>
-          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5;">
-            Blipto operates a zero-working-capital escrow treasury. Consumer payments are held in digital escrow upon checkout. 
-            Funds automatically release into the merchant's instant UPI ledger upon OTP handoff verification, eliminating retailer credit risk.
-          </p>
-          <div class="metrics-grid" style="margin-top: 20px; margin-bottom: 0;">
-            <div class="metric-card" style="--card-accent: #F59E0B;">
-              <div class="metric-label">Escrow Locked Funds</div>
-              <div class="metric-value">₹580.00</div>
-              <div class="metric-sub">Protected against non-delivery claims</div>
-            </div>
-            <div class="metric-card" style="--card-accent: #00B074;">
-              <div class="metric-label">Total Settled to Merchants</div>
-              <div class="metric-value">₹4,240.00</div>
-              <div class="metric-sub">Direct UPI instant payouts</div>
-            </div>
-            <div class="metric-card" style="--card-accent: #EF4444;">
-              <div class="metric-label">Refunded on Defect Disputes</div>
-              <div class="metric-value">₹87.00</div>
-              <div class="metric-sub">Automated 1-tap customer refunds</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 6: DISPUTES & GOVERNANCE -->
-      <div id="tab-disputes" class="tab-panel">
-        <div class="table-container">
-          <div class="table-header">
-            <span class="table-title">Customer Defect Claims & 3-Strike Governance Desk</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Dispute ID</th>
-                <th>Order ID</th>
-                <th>Claimed Item</th>
-                <th>Reason</th>
-                <th>Refund Amount</th>
-                <th>Photo Evidence</th>
-                <th>AI Visual Audit (REQ-V2-OPS-02)</th>
-                <th>Resolution Status</th>
-                <th>Merchant Strike</th>
-              </tr>
-            </thead>
-            <tbody id="disputes-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Seller Strike Appeal Desk (REQ-V2-OPS-03) -->
-        <div class="table-container" style="margin-top: 24px;">
-          <div class="table-header">
-            <span class="table-title">⚖️ Merchant Strike Appeals (Counter-Proof Review)</span>
-            <span class="badge badge-warning" id="pending-appeals-badge">Review Desk</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Appeal ID</th>
-                <th>Store ID</th>
-                <th>Complaint Reason</th>
-                <th>Merchant Counter-Proof Note</th>
-                <th>Status</th>
-                <th>Owner Action</th>
-              </tr>
-            </thead>
-            <tbody id="strike-appeals-tbody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB: P2P OVERFLOW TELEMETRY (REQ-V2-OPS-01) -->
-      <div id="tab-overflow" class="tab-panel">
-        <div class="data-saver-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div>
-              <h2 style="font-size: 16px; color: #fff;">🔄 Partner Store Order Sharing & Rush Hour Protection (REQ-V2-OPS-01)</h2>
-              <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 2px;">
-                Automatic order load balancing across neighborhood partner stores (500m–1.2km) with 1.5% referral commission.
-              </p>
-            </div>
-            <span class="badge badge-success">Partner Sharing Active</span>
-          </div>
-          <div class="metrics-grid" style="margin-top: 18px; margin-bottom: 20px;">
-            <div class="metric-card" style="--card-accent: #00B074;">
-              <div class="metric-label">Orders Handled by Partners</div>
-              <div class="metric-value">2 Orders</div>
-              <div class="metric-sub">100% orders saved from cancellation</div>
-            </div>
-            <div class="metric-card" style="--card-accent: #0284C7;">
-              <div class="metric-label">Partner Referral Margins</div>
-              <div class="metric-value">₹18.50</div>
-              <div class="metric-sub">1.5% commission credited to busy shops</div>
-            </div>
-            <div class="metric-card" style="--card-accent: #8B5CF6;">
-              <div class="metric-label">Partner Store Radius</div>
-              <div class="metric-value">650m avg</div>
-              <div class="metric-sub">Delivered in ~14 mins</div>
-            </div>
-            <div class="metric-card" style="--card-accent: #F59E0B;">
-              <div class="metric-label">Zero-Churn Protection</div>
-              <div class="metric-value">100%</div>
-              <div class="metric-sub">Zero lost revenue during peak rush</div>
-            </div>
-          </div>
-          <div class="table-container">
-            <div class="table-header">
-              <span class="table-title">Live Partner Store Order Sharing Log</span>
-              <span class="badge badge-purple">Real-Time Telemetry</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Originating Store (Busy/Full)</th>
-                  <th>Fulfilling Store (Partner Store)</th>
-                  <th>Catchment Distance</th>
-                  <th>Spillover Trigger</th>
-                  <th>Referral Margin (1.5%)</th>
-                  <th>Delivery SLA</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="mono"><strong>#ORD-9350</strong></td>
-                  <td><span style="color: #F87171; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
-                  <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                  <td>650m</td>
-                  <td>Queue Full (3/3 Active Runs)</td>
-                  <td><span style="color: #60A5FA; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
-                  <td><span class="badge badge-success">Delivered in 14 mins</span></td>
-                </tr>
-                <tr>
-                  <td class="mono"><strong>#ORD-9412</strong></td>
-                  <td><span style="color: #F87171; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
-                  <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                  <td>850m</td>
-                  <td>Merchant Toggled Busy Mode</td>
-                  <td><span style="color: #60A5FA; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
-                  <td><span class="badge badge-success">Delivered in 16 mins</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 7: MASTER DATA SAVER -->
-      <div id="tab-datasaver" class="tab-panel">
-        <div class="data-saver-card">
-          <h2 style="font-size: 16px; margin-bottom: 6px;">App Owner Database Snapshot & Data Persistence</h2>
-          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5;">
-            As the platform owner, you have full custody of all raw records. Save, backup, or export your complete marketplace database at any time.
-          </p>
-          <div class="data-saver-actions">
-            <button class="btn btn-primary" onclick="exportFullJSON()">
-              <span>💾</span> <span>Download Full DB (JSON)</span>
-            </button>
-            <button class="btn btn-secondary" onclick="exportOrdersCSV()">
-              <span>📊</span> <span>Export Orders (CSV)</span>
-            </button>
-            <button class="btn btn-secondary" onclick="exportStoresCSV()">
-              <span>🏪</span> <span>Export Stores (CSV)</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="data-saver-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="font-size: 14px;">Live Database Inspector</h3>
-            <span class="mono" style="font-size: 11px; color: var(--text-dim);">Tables: stores, catalog_items, orders, disputes, escrow_ledger</span>
-          </div>
-          <pre class="code-viewer" id="db-json-viewer"></pre>
-        </div>
-      </div>
-
     </div>
-  </main>
 
+    <!-- ========================================================
+         TAB 8: MASTER DATA SAVER & DB EXPLORER
+         ======================================================== -->
+    <div id="tab-datasaver" class="tab-panel">
+      <div class="data-saver-card">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 6px;">
+          App Owner Database Snapshot & Data Persistence
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6;">
+          As the platform owner, you have full custody of all raw records. Save, backup, or export your complete marketplace database at any time.
+        </p>
+        <div class="data-saver-actions">
+          <button class="btn btn-dark" onclick="exportFullJSON()">
+            <span>💾</span> <span>Download Full DB (JSON)</span>
+          </button>
+          <button class="btn btn-secondary" onclick="exportOrdersCSV()">
+            <span>📊</span> <span>Export Orders (CSV)</span>
+          </button>
+          <button class="btn btn-secondary" onclick="exportStoresCSV()">
+            <span>🏪</span> <span>Export Stores (CSV)</span>
+          </button>
+          <button class="btn btn-secondary" onclick="exportInventoryCSV()">
+            <span>🏷️</span> <span>Export Inventory (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="data-saver-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--charcoal-900);">Live Database Inspector</h3>
+          <span class="mono" style="font-size: 11.5px; color: var(--text-muted);">
+            Tables: stores, catalog_items, orders, disputes, escrow_ledger
+          </span>
+        </div>
+        <pre class="code-viewer" id="db-json-viewer"></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       MASTER JAVASCRIPT LOGIC (100% PRESERVED & CONNECTED)
+       ======================================================== -->
   <script>
     // Master In-Memory Data Store (Synchronized with Backend API)
     const masterData = {
@@ -984,7 +1916,7 @@
           latitude: 12.9310,
           longitude: 77.6210,
           radius_meters: 2000,
-          is_busy: true, // In Busy Mode
+          is_busy: true,
           max_orders: 3,
           active_orders: 3,
           trust_rating: 4.7,
@@ -1064,12 +1996,26 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.dock-btn').forEach(d => d.classList.remove('active'));
 
       const target = document.getElementById(`tab-${tabId}`);
       if (target) target.classList.add('active');
 
+      const dockBtn = document.getElementById(`dock-${tabId}`);
+      if (dockBtn) dockBtn.classList.add('active');
+
+      // Sync top nav pills
+      const pillIndexMap = {
+        'overview': 0, 'stores': 1, 'orders': 2, 'inventory': 3,
+        'escrow': 4, 'disputes': 5, 'overflow': 6, 'datasaver': 7
+      };
+      const pills = document.querySelectorAll('.nav-item');
+      if (pillIndexMap[tabId] !== undefined && pills[pillIndexMap[tabId]]) {
+        pills[pillIndexMap[tabId]].classList.add('active');
+      }
+
       const titles = {
-        'overview': ['Marketplace Overview', 'Real-time telemetry across all decentralized neighborhood fulfillment centers'],
+        'overview': ['Overview & Sales', 'Real-time telemetry across all decentralized neighborhood fulfillment centers'],
         'stores': ['Stores & Catchment Controls', 'Manage partner kiranas, delivery radius, and KYC approvals'],
         'orders': ['Live Orders Stream', 'Real-time order dispatch, dynamic spillovers, and delivery status'],
         'inventory': ['Master Inventory & SKUs', 'Zero-phantom stockout shelf synchronization and price auditing'],
@@ -1083,8 +2029,6 @@
         document.getElementById('page-title').textContent = titles[tabId][0];
         document.getElementById('page-desc').textContent = titles[tabId][1];
       }
-
-      event.currentTarget.classList.add('active');
     }
 
     function renderAll() {
@@ -1093,7 +2037,7 @@
       ovTbody.innerHTML = masterData.orders.map(o => `
         <tr>
           <td class="mono"><strong>#${o.id}</strong></td>
-          <td>${o.origin_store}</td>
+          <td><strong>${o.origin_store}</strong></td>
           <td>${o.fulfilling_store}</td>
           <td>
             <span class="badge ${o.payment_method === 'UPI' ? 'badge-info' : (o.payment_method === 'CARD' ? 'badge-purple' : (o.payment_method === 'WALLET' ? 'badge-success' : 'badge-warning'))}">
@@ -1106,7 +2050,7 @@
               : `<span class="badge badge-success">Direct Store</span>`}
           </td>
           <td><strong>₹${o.total.toFixed(0)}</strong></td>
-          <td class="mono">${o.otp}</td>
+          <td class="mono"><strong>${o.otp}</strong></td>
           <td>
             <span class="badge ${o.status === 'DELIVERED' ? 'badge-success' : 'badge-info'}">
               ${o.status}
@@ -1119,27 +2063,27 @@
       const stTbody = document.getElementById('stores-tbody');
       stTbody.innerHTML = masterData.stores.map(s => `
         <tr>
-          <td class="mono">${s.id}</td>
+          <td class="mono"><strong>${s.id}</strong></td>
           <td>
-            <strong>${s.name}</strong><br>
-            <span style="font-size: 11px; color: var(--text-dim);">${s.address}</span>
+            <strong style="color: var(--charcoal-900);">${s.name}</strong><br>
+            <span style="font-size: 11.5px; color: var(--text-secondary);">${s.address}</span>
           </td>
-          <td>${s.radius_meters}m</td>
+          <td><strong>${s.radius_meters}m</strong></td>
           <td>${s.active_orders} / ${s.max_orders} Runs</td>
           <td>
             ${s.is_busy 
               ? `<span class="badge badge-warning">Busy (Spillover Active)</span>` 
               : `<span class="badge badge-success">Fulfilling Live</span>`}
           </td>
-          <td>⭐ ${s.trust_rating}</td>
+          <td>⭐ <strong>${s.trust_rating}</strong></td>
           <td>
             ${s.strikes > 0 
               ? `<span class="badge badge-danger">${s.strikes}/3 Strikes</span>` 
               : `<span class="badge badge-success">0 Strikes</span>`}
           </td>
-          <td class="mono">${s.upi_id}</td>
+          <td class="mono" style="font-size: 12px;">${s.upi_id}</td>
           <td>
-            <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleStoreBusy('${s.id}')">
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 10px;" onclick="toggleStoreBusy('${s.id}')">
               ${s.is_busy ? 'Set Live' : 'Set Busy'}
             </button>
           </td>
@@ -1152,10 +2096,10 @@
         <tr>
           <td class="mono"><strong>#${o.id}</strong></td>
           <td class="mono">${o.consumer_id}</td>
-          <td>${o.fulfilling_store}</td>
+          <td><strong>${o.fulfilling_store}</strong></td>
           <td>${o.items}</td>
           <td><strong>₹${o.total.toFixed(2)}</strong></td>
-          <td class="mono">${o.otp}</td>
+          <td class="mono"><strong>${o.otp}</strong></td>
           <td><span class="badge ${o.status === 'DELIVERED' ? 'badge-success' : 'badge-info'}">${o.status}</span></td>
           <td>${o.created_at}</td>
         </tr>
@@ -1187,9 +2131,9 @@
           <td class="mono">#${d.order_id}</td>
           <td><strong>${d.item}</strong></td>
           <td>${d.reason}</td>
-          <td><strong style="color: var(--accent-red);">₹${d.refund.toFixed(0)}</strong></td>
-          <td class="mono">${d.photo}</td>
-          <td><span class="badge badge-success" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid #10B981;">🤖 ${d.ai_audit || 'Shell Crack (94%)'}</span></td>
+          <td><strong style="color: var(--accent-terracotta);">₹${d.refund.toFixed(0)}</strong></td>
+          <td class="mono" style="font-size: 11px;">${d.photo}</td>
+          <td><span class="badge badge-success">🤖 ${d.ai_audit || 'Shell Crack (94%)'}</span></td>
           <td><span class="badge badge-success">Auto-Refunded</span></td>
           <td><span class="badge badge-danger">+1 Strike Logged</span></td>
         </tr>
@@ -1218,17 +2162,17 @@
       tbody.innerHTML = strikeAppealsList.map(a => `
         <tr>
           <td class="mono"><strong>#${a.id}</strong></td>
-          <td>${a.store_id}</td>
+          <td><strong>${a.store_id}</strong></td>
           <td>${a.reason}</td>
-          <td><span style="color: var(--text-main); font-size: 12px;">${a.proof_note}</span></td>
+          <td><span style="color: var(--charcoal-900); font-size: 12.5px;">${a.proof_note}</span></td>
           <td><span class="badge ${a.status === 'APPROVED' ? 'badge-success' : (a.status === 'PENDING' ? 'badge-warning' : 'badge-danger')}">${a.status}</span></td>
           <td>
             ${a.status === 'PENDING' ? `
               <div style="display: flex; gap: 6px;">
-                <button class="btn btn-primary" onclick="reviewAppeal('${a.id}', 'APPROVE')" style="padding: 4px 8px; font-size: 11px;">✓ Approve & Remove Strike</button>
-                <button class="btn btn-secondary" onclick="reviewAppeal('${a.id}', 'DISMISS')" style="padding: 4px 8px; font-size: 11px;">✕ Dismiss</button>
+                <button class="btn btn-dark" onclick="reviewAppeal('${a.id}', 'APPROVE')" style="padding: 4px 10px; font-size: 11.5px;">✓ Approve & Remove Strike</button>
+                <button class="btn btn-secondary" onclick="reviewAppeal('${a.id}', 'DISMISS')" style="padding: 4px 10px; font-size: 11.5px;">✕ Dismiss</button>
               </div>
-            ` : `<span style="font-size: 11px; color: var(--text-muted);">${a.status === 'APPROVED' ? 'Strike Removed' : 'Appeal Dismissed'}</span>`}
+            ` : `<span style="font-size: 11.5px; color: var(--text-secondary);">${a.status === 'APPROVED' ? 'Strike Removed' : 'Appeal Dismissed'}</span>`}
           </td>
         </tr>
       `).join('');
@@ -1275,7 +2219,8 @@
     function exportOrdersCSV() {
       const headers = ["Order_ID", "Consumer_ID", "Fulfilling_Store", "Subtotal", "Delivery_Fee", "Total", "OTP", "Status"];
       const rows = masterData.orders.map(o => [o.id, o.consumer_id, `"${o.fulfilling_store}"`, o.subtotal, o.delivery_fee, o.total, o.otp, o.status]);
-      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('
+');
       const a = document.createElement('a');
       a.setAttribute("href", encodeURI(csvContent));
       a.setAttribute("download", "blipto_orders.csv");
@@ -1287,7 +2232,8 @@
     function exportStoresCSV() {
       const headers = ["Store_ID", "Store_Name", "Address", "Radius_Meters", "Is_Busy", "Max_Orders", "UPI_ID"];
       const rows = masterData.stores.map(s => [s.id, `"${s.name}"`, `"${s.address}"`, s.radius_meters, s.is_busy, s.max_orders, s.upi_id]);
-      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('
+');
       const a = document.createElement('a');
       a.setAttribute("href", encodeURI(csvContent));
       a.setAttribute("download", "blipto_stores.csv");
@@ -1299,7 +2245,8 @@
     function exportInventoryCSV() {
       const headers = ["Barcode", "Title", "Store", "Category", "Price", "Stock"];
       const rows = masterData.inventory.map(i => [i.barcode, `"${i.title}"`, `"${i.store}"`, i.category, i.price, i.stock]);
-      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('
+');
       const a = document.createElement('a');
       a.setAttribute("href", encodeURI(csvContent));
       a.setAttribute("download", "blipto_inventory.csv");
