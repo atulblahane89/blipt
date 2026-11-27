@@ -122,7 +122,7 @@ class MerchantHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // 1. HERO FEATURE: बोलकर सामान जोड़ें (Speak to Add Items) (REQ-V2-MER-01)
+            // 1. HERO FEATURE: Speak to Add Stock (REQ-V2-MER-01)
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(16),
@@ -148,7 +148,7 @@ class MerchantHubScreen extends StatelessWidget {
                           Icon(Icons.mic, color: Color(0xFF00B074), size: 22),
                           SizedBox(width: 8),
                           Text(
-                            "बोलकर सामान जोड़ें (Speak to Add Items)",
+                            "Speak to Add Stock",
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ],
@@ -160,13 +160,13 @@ class MerchantHubScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(color: const Color(0xFF00B074)),
                         ),
-                        child: const Text("बोलें और जोड़ें", style: TextStyle(color: Color(0xFF00B074), fontSize: 10, fontWeight: FontWeight.bold)),
+                        child: const Text("Voice Add", style: TextStyle(color: Color(0xFF00B074), fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    "हिंदी या English में बोलें (जैसे: '10 पैकेट फॉर्च्यून तेल 1 लीटर ₹135') - बिना टाइप किए सामान तुरंत दुकान में जुड़ जाएगा।",
+                    "Speak naturally (e.g. 'Add 10 packets of Maggi Noodles at ₹56') to stock your shelf instantly without typing.",
                     style: TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.3),
                   ),
                   const SizedBox(height: 12),
@@ -181,7 +181,7 @@ class MerchantHubScreen extends StatelessWidget {
                       ),
                       icon: const Icon(Icons.mic_none_rounded, color: Colors.white, size: 20),
                       label: const Text(
-                        "🎙️ बोलकर सामान जोड़ें (Tap & Speak)",
+                        "🎙️ Tap & Speak to Add Stock",
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       onPressed: () => _openVoiceIntakeDialog(context, state),
@@ -202,7 +202,7 @@ class MerchantHubScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: const Icon(Icons.mic, color: Color(0xFF00B074), size: 17),
-                    label: const Text("बोलकर जोड़ें", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                    label: const Text("Voice Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                     onPressed: () => _openVoiceIntakeDialog(context, state),
                   ),
                 ),
@@ -215,7 +215,7 @@ class MerchantHubScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 17),
-                    label: const Text("बारकोड स्कैन", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                    label: const Text("Scan Barcode", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -234,7 +234,7 @@ class MerchantHubScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: const Icon(Icons.currency_rupee, size: 16),
-                    label: const Text("बैंक खाता", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    label: const Text("Bank Payout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -247,7 +247,7 @@ class MerchantHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // 2. HERO FEATURE: आस-पड़ोस की मांग (What Neighbors Looked For Today) (REQ-V2-MER-04)
+            // 2. HERO FEATURE: What Neighbors Looked For Today (REQ-V2-MER-04)
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(15),
@@ -269,18 +269,18 @@ class MerchantHubScreen extends StatelessWidget {
                         children: [
                           Text("📈", style: TextStyle(fontSize: 18)),
                           SizedBox(width: 6),
-                          Text("आस-पड़ोस की मांग (Neighborhood Demand)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
+                          Text("What Neighbors Looked For Today", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
                         ],
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(6)),
-                        child: const Text("🔥 आज सबसे ज़्यादा खोजा गया", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
+                        child: const Text("🔥 Top Unfulfilled Searches", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  const Text("आस-पास के ग्राहकों ने आज यह सामान ढूंढा जो किसी दुकान पर नहीं मिला:", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                  const Text("Items customers in your area searched for today that were not found in any store:", style: TextStyle(fontSize: 11, color: Colors.grey)),
                   const SizedBox(height: 12),
                   _buildDemandSignalItem(
                     context,
@@ -330,7 +330,7 @@ class MerchantHubScreen extends StatelessWidget {
               ),
             ),
 
-            // 3. HERO FEATURE: भीड़ में पार्टनर दुकान को ऑर्डर भेजना (Order Sharing When Busy) (REQ-V2-OPS-01)
+            // 3. HERO FEATURE: Partner Store Order Sharing (REQ-V2-OPS-01)
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(15),
@@ -352,7 +352,7 @@ class MerchantHubScreen extends StatelessWidget {
                         children: [
                           Icon(Icons.handshake_outlined, color: Color(0xFF00B074), size: 18),
                           SizedBox(width: 6),
-                          Text("पार्टनर दुकान ऑर्डर शेयरिंग (Order Sharing)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
+                          Text("Partner Store Order Sharing", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
                         ],
                       ),
                       Container(
@@ -363,7 +363,7 @@ class MerchantHubScreen extends StatelessWidget {
                           border: Border.all(color: store.isBusy ? Colors.deepOrange : const Color(0xFF16A34A)),
                         ),
                         child: Text(
-                          store.isBusy ? "🟠 पार्टनर दुकान संभाल रही है (1.5% कमाई चालू)" : "🟢 आपकी दुकान चालू है",
+                          store.isBusy ? "🟠 Partner Store Helping (1.5% Commission)" : "🟢 Your Store Ready",
                           style: TextStyle(
                             color: store.isBusy ? Colors.deepOrange : const Color(0xFF15803D),
                             fontSize: 10,
@@ -376,8 +376,8 @@ class MerchantHubScreen extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     store.isBusy
-                        ? "दुकान में भीड़ होने पर अतिरिक्त ऑर्डर महादेव सुपरमार्केट (850m) को भेजे जा रहे हैं। आपको बिना सामान पैक किए 1.5% कमीशन मिल रहा है।"
-                        : "जब दुकान में बहुत भीड़ हो या 'व्यस्त' चालू हो, तो ऑर्डर पास की पार्टनर दुकान पर चले जाते हैं ताकि ग्राहक ना छूटे और आपको 1.5% कमीशन मिलता रहे।",
+                        ? "During rush hour, extra orders are shared with Mahadev Supermarket (850m away). You earn 1.5% commission without packing anything."
+                        : "When your store gets too busy, extra orders are shared with nearby partner stores so customers don't wait and you earn 1.5% commission.",
                     style: TextStyle(fontSize: 11, color: store.isBusy ? Colors.deepOrange.shade900 : Colors.grey.shade600, height: 1.3),
                   ),
                   const SizedBox(height: 12),
@@ -391,10 +391,10 @@ class MerchantHubScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildTelemetryItem("पार्टनर दुकान", "महादेव सुपरमार्केट (850m)"),
-                        _buildTelemetryItem("भेजे गए ऑर्डर", store.isBusy ? "2 ऑर्डर" : "0 (तैयार)"),
-                        _buildTelemetryItem("आपकी कमाई", store.isBusy ? "₹18.50 (1.5%)" : "₹0.00"),
-                        _buildTelemetryItem("डिलीवरी समय", "14 मिनट"),
+                        _buildTelemetryItem("Partner Store", "Mahadev Supermarket (850m)"),
+                        _buildTelemetryItem("Shared Orders", store.isBusy ? "2 Orders" : "0 (Ready)"),
+                        _buildTelemetryItem("Your Commission", store.isBusy ? "₹18.50 (1.5%)" : "₹0.00"),
+                        _buildTelemetryItem("Delivery Time", "~14 mins"),
                       ],
                     ),
                   ),
@@ -766,7 +766,7 @@ class MerchantHubScreen extends StatelessWidget {
                     children: [
                       Text("🎙️", style: TextStyle(fontSize: 22)),
                       SizedBox(width: 8),
-                      Text("बोलकर सामान जोड़ें (Speak to Add Items)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text("Speak to Add Stock", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
@@ -774,15 +774,15 @@ class MerchantHubScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               const Text(
-                "हिंदी या English में बोलें (जैसे: '10 पैकेट मैगी नूडल्स ₹56' या 'Add 10 Fortune Oil at ₹135')",
+                "Say what you want to add (e.g. 'Add 10 packets of Maggi Noodles at ₹56' or 'Add 10 Fortune Oil at ₹135')",
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 16),
-              const Text("टेस्ट करने के लिए किसी एक पर टैप करें:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text("Tap a voice phrase sample to test:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              _buildVoiceOption(context, state, ctx, "10 पैकेट Maggi 2-Minute Noodles ₹56 में जोड़ो"),
+              _buildVoiceOption(context, state, ctx, "Add 10 packets of Maggi 2-Minute Noodles at ₹56"),
               _buildVoiceOption(context, state, ctx, "Add 20 packets of Amul Taaza Milk at ₹32"),
-              _buildVoiceOption(context, state, ctx, "5 पैकेट Aashirvaad Shudh Chakki Atta 5kg ₹245"),
+              _buildVoiceOption(context, state, ctx, "Add 5 packets of Aashirvaad Shudh Chakki Atta 5kg at ₹245"),
               _buildVoiceOption(context, state, ctx, "Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135"),
               const SizedBox(height: 12),
             ],
