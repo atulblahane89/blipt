@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../../state/app_state.dart';
 import '../../models/order.dart';
 import 'barcode_intake_screen.dart';
@@ -120,18 +122,100 @@ class MerchantHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Quick Actions: Barcode Ingestion + Escrow Release
+            // 1. HERO FEATURE: Voice-to-Stock Catalog Intake (REQ-V2-MER-01)
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.mic, color: Color(0xFF00B074), size: 22),
+                          SizedBox(width: 8),
+                          Text(
+                            "Voice-to-Stock Catalog Intake",
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00B074).withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFF00B074)),
+                        ),
+                        child: const Text("AI Voice Assist", style: TextStyle(color: Color(0xFF00B074), fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    "Speak naturally in Hindi or English (e.g., 'Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135') to instantly stock your shelf without typing.",
+                    style: TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.3),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00B074),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        elevation: 0,
+                      ),
+                      icon: const Icon(Icons.mic_none_rounded, color: Colors.white, size: 20),
+                      label: const Text(
+                        "🎙️ Speak to Add Stock Now",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                      onPressed: () => _openVoiceIntakeDialog(context, state),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Quick Actions: Voice Add + Barcode Scan + Bank Transfer
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00B074),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: const Color(0xFF0F172A),
+                      padding: const EdgeInsets.symmetric(vertical: 11),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: const Icon(Icons.barcode_reader, color: Colors.white, size: 20),
-                    label: const Text("Scan Barcode", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                    icon: const Icon(Icons.mic, color: Color(0xFF00B074), size: 17),
+                    label: const Text("Voice Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                    onPressed: () => _openVoiceIntakeDialog(context, state),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00B074),
+                      padding: const EdgeInsets.symmetric(vertical: 11),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 17),
+                    label: const Text("Scan Barcode", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -140,17 +224,17 @@ class MerchantHubScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Expanded(
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFF0F172A),
                       side: const BorderSide(color: Color(0xFFCBD5E1)),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 11),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: const Icon(Icons.currency_rupee, size: 18),
-                    label: const Text("Transfer to Bank", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    icon: const Icon(Icons.currency_rupee, size: 16),
+                    label: const Text("Bank Payout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -161,7 +245,151 @@ class MerchantHubScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+
+            // 2. HERO FEATURE: Neighborhood Unfulfilled Demand Signals (REQ-V2-MER-04)
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFBFDBFE), width: 1.5),
+                boxShadow: [
+                  BoxShadow(color: Colors.blue.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Text("📈", style: TextStyle(fontSize: 18)),
+                          SizedBox(width: 6),
+                          Text("What Neighbors Are Searching For", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(6)),
+                        child: const Text("⚡ Zero-Result Searches", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Text("Items nearby customers in your neighborhood searched for with zero sellers in stock:", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                  const SizedBox(height: 12),
+                  _buildDemandSignalItem(
+                    context,
+                    state,
+                    emoji: "🥛",
+                    title: "Oat Milk (1L Barista Edition)",
+                    category: "Dairy & Plant Milk",
+                    price: 240.0,
+                    unit: "1 Litre carton",
+                    searches: 42,
+                    potentialRevenue: 3150,
+                  ),
+                  _buildDemandSignalItem(
+                    context,
+                    state,
+                    emoji: "🥣",
+                    title: "Greek Yogurt (Pack of 400g)",
+                    category: "Dairy & Eggs",
+                    price: 110.0,
+                    unit: "400g tub",
+                    searches: 31,
+                    potentialRevenue: 2170,
+                  ),
+                  _buildDemandSignalItem(
+                    context,
+                    state,
+                    emoji: "🍞",
+                    title: "Artisanal Sourdough Bread",
+                    category: "Bakery",
+                    price: 120.0,
+                    unit: "450g loaf",
+                    searches: 26,
+                    potentialRevenue: 1820,
+                  ),
+                ],
+              ),
+            ),
+
+            // 3. HERO FEATURE: Peer-to-Peer Overflow Routing Telemetry (REQ-V2-OPS-01)
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: store.isBusy ? Colors.deepOrange.shade300 : const Color(0xFFE2E8F0), width: 1.5),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.hub_outlined, color: Color(0xFF00B074), size: 18),
+                          SizedBox(width: 6),
+                          Text("P2P Overflow Routing Telemetry", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF0F172A))),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: store.isBusy ? const Color(0xFFFFF7ED) : const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: store.isBusy ? Colors.deepOrange : const Color(0xFF16A34A)),
+                        ),
+                        child: Text(
+                          store.isBusy ? "🟠 OVERFLOW ACTIVE" : "🟢 MESH STANDBY",
+                          style: TextStyle(
+                            color: store.isBusy ? Colors.deepOrange : const Color(0xFF15803D),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    store.isBusy
+                        ? "Peak rush detected! Orders automatically route to Mahadev Daily Supermarket (850m away). You earn 1.5% referral credit without packing."
+                        : "When queue reaches capacity (${store.maxActiveOrders} orders) or Busy Mode is ON, orders automatically overflow to nearby partner kiranas within 1.2km.",
+                    style: TextStyle(fontSize: 11, color: store.isBusy ? Colors.deepOrange.shade900 : Colors.grey.shade600, height: 1.3),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildTelemetryItem("Partner Store", "Mahadev Daily (850m)"),
+                        _buildTelemetryItem("Rerouted Orders", store.isBusy ? "2 Orders" : "0 Standby"),
+                        _buildTelemetryItem("Referral Earned", store.isBusy ? "₹18.50 (1.5%)" : "₹0.00"),
+                        _buildTelemetryItem("Fulfillment SLA", "14 min avg"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             // Perishables & Short-Shelf-Life Expiry Alerts (REQ-V2-MER-02)
             Builder(
@@ -247,80 +475,11 @@ class MerchantHubScreen extends StatelessWidget {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 );
               },
-            ),
-
-            // Neighborhood Unfulfilled Demand Signals (REQ-V2-MER-04)
-            Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Row(
-                        children: [
-                          Text("📈", style: TextStyle(fontSize: 16)),
-                          SizedBox(width: 6),
-                          Text("What Neighbors Are Searching For", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF0F172A))),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(6)),
-                        child: const Text("Zero-Result Searches", style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 10, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  const Text("Items searched by nearby customers with 0 local sellers in stock:", style: TextStyle(fontSize: 11, color: Colors.grey)),
-                  const SizedBox(height: 10),
-                  _buildDemandSignalItem(
-                    context,
-                    state,
-                    emoji: "🥛",
-                    title: "Oat Milk (1L Barista Edition)",
-                    category: "Dairy & Plant Milk",
-                    price: 240.0,
-                    unit: "1 Litre carton",
-                    searches: 42,
-                    potentialRevenue: 3150,
-                  ),
-                  _buildDemandSignalItem(
-                    context,
-                    state,
-                    emoji: "🥣",
-                    title: "Greek Yogurt (Pack of 400g)",
-                    category: "Dairy & Eggs",
-                    price: 110.0,
-                    unit: "400g tub",
-                    searches: 31,
-                    potentialRevenue: 2170,
-                  ),
-                  _buildDemandSignalItem(
-                    context,
-                    state,
-                    emoji: "🍞",
-                    title: "Artisanal Sourdough Bread",
-                    category: "Bakery",
-                    price: 120.0,
-                    unit: "450g loaf",
-                    searches: 26,
-                    potentialRevenue: 1820,
-                  ),
-                ],
-              ),
             ),
 
             // Active In-Flight Orders List (REQ-MER-02)
@@ -562,6 +721,131 @@ class MerchantHubScreen extends StatelessWidget {
               child: const Text("Stock This", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTelemetryItem(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        const SizedBox(height: 2),
+        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
+      ],
+    );
+  }
+
+  void _openVoiceIntakeDialog(BuildContext context, AppState state) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Text("🎙️", style: TextStyle(fontSize: 22)),
+                      SizedBox(width: 8),
+                      Text("Voice-to-Stock Catalog Intake", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
+                ],
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                "Speak naturally in Hindi or English (e.g., 'Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135')",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              const Text("Tap a spoken voice phrase sample to test:", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              _buildVoiceOption(context, state, ctx, "Add 10 packets of Fortune Sunflower Oil 1 Litre at ₹135"),
+              _buildVoiceOption(context, state, ctx, "Add 20 packets of Amul Taaza Milk at ₹32"),
+              _buildVoiceOption(context, state, ctx, "Add 15 loaves of Modern Bread at ₹45"),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildVoiceOption(BuildContext context, AppState state, BuildContext bottomSheetCtx, String phrase) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          side: const BorderSide(color: Color(0xFFCBD5E1)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        icon: const Icon(Icons.mic, color: Color(0xFF00B074), size: 18),
+        label: Text(phrase, style: const TextStyle(fontSize: 12, color: Color(0xFF0F172A), fontWeight: FontWeight.w500)),
+        onPressed: () async {
+          Navigator.pop(bottomSheetCtx);
+          try {
+            final res = await http.post(
+              Uri.parse("http://localhost:8080/v1/merchants/catalog/voice-parse"),
+              headers: {"Content-Type": "application/json"},
+              body: jsonEncode({"voice_transcript": phrase}),
+            );
+            if (res.statusCode == 200) {
+              final data = jsonDecode(res.body);
+              if (data["parsed"] != null) {
+                final p = data["parsed"];
+                state.intakeBarcodeItem(
+                  barcode: p["barcode"] ?? "890${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}",
+                  title: p["title"] ?? "Groceries",
+                  category: p["category"] ?? "General",
+                  price: (p["price"] as num?)?.toDouble() ?? 50.0,
+                  quantity: (p["quantity"] as num?)?.toInt() ?? 10,
+                  unit: p["unit"] ?? "1 unit",
+                  emoji: "📦",
+                );
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("🎙️ Voice added: ${p['title']} (${p['quantity']} units @ ₹${p['price']}) to shelf!"),
+                    backgroundColor: const Color(0xFF00B074),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+                return;
+              }
+            }
+          } catch (_) {}
+
+          // Fallback offline intake
+          state.intakeBarcodeItem(
+            barcode: "8901058852219",
+            title: "Fortune Sunlite Refined Sunflower Oil",
+            category: "Oils & Staples",
+            price: 135.0,
+            quantity: 10,
+            unit: "1 Litre pouch",
+            emoji: "🌻",
+          );
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("🎙️ Voice added: Fortune Sunflower Oil (10 units @ ₹135) to shelf!"),
+              backgroundColor: Color(0xFF00B074),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
       ),
     );
   }

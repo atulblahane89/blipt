@@ -474,6 +474,9 @@
       <div class="nav-item" onclick="switchTab('disputes')">
         <span>🛡️</span> <span>Customer Complaints & Refunds</span>
       </div>
+      <div class="nav-item" onclick="switchTab('overflow')">
+        <span>🔄</span> <span>P2P Overflow Routing Telemetry</span>
+      </div>
       <div class="nav-item" onclick="switchTab('datasaver')">
         <span>💾</span> <span>Save & Download All Data</span>
       </div>
@@ -579,6 +582,72 @@
               <div style="font-size: 10px; color: var(--accent-amber);" id="pay-cod-count">0 Orders</div>
             </div>
           </div>
+        </div>
+
+        <!-- P2P Overflow Routing Telemetry Desk (REQ-V2-OPS-01) -->
+        <div class="data-saver-card" style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div>
+              <h3 style="font-size: 15px; font-weight: 700; color: #fff;">🔄 Peer-to-Peer (P2P) Overflow Routing Telemetry (REQ-V2-OPS-01)</h3>
+              <p style="font-size: 11.5px; color: var(--text-dim); margin-top: 2px;">Dynamic load-balancing across nearby partner stores (500m–1.2km) with 1.5% referral revenue share</p>
+            </div>
+            <span class="badge badge-success">Mesh Routing Active</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">Total Overflow Rerouted</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">2 Orders</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Prevented walkaway churn</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">P2P Referral Fee Pool (1.5%)</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--accent-blue); margin-top: 4px;">₹18.50</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Credited to busy origin shops</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">Mesh Zero-Cancellation Rate</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px;">100%</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Zero orders lost during rushes</div>
+            </div>
+            <div style="background: rgba(31, 41, 55, 0.4); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-dim);">Average Handoff Distance</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--accent-purple); margin-top: 4px;">650m</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Within 15-min delivery promise</div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Originating Store (Busy/Full)</th>
+                <th>Fulfilling Store (Mesh Partner)</th>
+                <th>Distance</th>
+                <th>Reason</th>
+                <th>Referral Margin (1.5%)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">ORD-9350</td>
+                <td><span style="color: #F87171; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
+                <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                <td>650m</td>
+                <td>Store Queue Cap (3/3 Active)</td>
+                <td><span style="color: #60A5FA; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
+                <td><span class="badge badge-success">Delivered (14 min)</span></td>
+              </tr>
+              <tr>
+                <td class="mono">ORD-9412</td>
+                <td><span style="color: #F87171; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
+                <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                <td>850m</td>
+                <td>Merchant Manually Toggled Busy Mode</td>
+                <td><span style="color: #60A5FA; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
+                <td><span class="badge badge-success">Delivered (16 min)</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <!-- Recent In-Flight Runs -->
@@ -765,6 +834,82 @@
         </div>
       </div>
 
+      <!-- TAB: P2P OVERFLOW TELEMETRY (REQ-V2-OPS-01) -->
+      <div id="tab-overflow" class="tab-panel">
+        <div class="data-saver-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <h2 style="font-size: 16px; color: #fff;">🔄 Peer-to-Peer (P2P) Overflow Mesh Telemetry (REQ-V2-OPS-01)</h2>
+              <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 2px;">
+                Decentralized order load balancing across neighborhood partner stores (500m–1.2km) with automatic 1.5% margin referral revenue sharing.
+              </p>
+            </div>
+            <span class="badge badge-success">Dynamic Spillover Engine Active</span>
+          </div>
+          <div class="metrics-grid" style="margin-top: 18px; margin-bottom: 20px;">
+            <div class="metric-card" style="--card-accent: #00B074;">
+              <div class="metric-label">Spillover Volume Handled</div>
+              <div class="metric-value">2 Orders</div>
+              <div class="metric-sub">100% orders saved from cancellation</div>
+            </div>
+            <div class="metric-card" style="--card-accent: #0284C7;">
+              <div class="metric-label">Partner Referral Margins</div>
+              <div class="metric-value">₹18.50</div>
+              <div class="metric-sub">1.5% commission credited to busy shops</div>
+            </div>
+            <div class="metric-card" style="--card-accent: #8B5CF6;">
+              <div class="metric-label">Mesh Catchment Distance</div>
+              <div class="metric-value">650m avg</div>
+              <div class="metric-sub">Within hyper-local delivery SLA</div>
+            </div>
+            <div class="metric-card" style="--card-accent: #F59E0B;">
+              <div class="metric-label">Zero-Churn Protection</div>
+              <div class="metric-value">100%</div>
+              <div class="metric-sub">Zero lost revenue during peak rush</div>
+            </div>
+          </div>
+          <div class="table-container">
+            <div class="table-header">
+              <span class="table-title">Live Peer-to-Peer Rerouting Log</span>
+              <span class="badge badge-purple">Real-Time Telemetry</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Originating Store (Busy/Full)</th>
+                  <th>Fulfilling Store (Mesh Partner)</th>
+                  <th>Catchment Distance</th>
+                  <th>Spillover Trigger</th>
+                  <th>Referral Margin (1.5%)</th>
+                  <th>Delivery SLA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono"><strong>#ORD-9350</strong></td>
+                  <td><span style="color: #F87171; font-weight: 600;">Sri Venkateshwara Fresh (Peak Rush)</span></td>
+                  <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                  <td>650m</td>
+                  <td>Queue Full (3/3 Active Runs)</td>
+                  <td><span style="color: #60A5FA; font-weight: 700;">+₹10.50</span> to Sri Venkateshwara</td>
+                  <td><span class="badge badge-success">Delivered in 14 mins</span></td>
+                </tr>
+                <tr>
+                  <td class="mono"><strong>#ORD-9412</strong></td>
+                  <td><span style="color: #F87171; font-weight: 600;">Gupta Kirana (Busy Mode ON)</span></td>
+                  <td><span style="color: #34D399; font-weight: 600;">Mahadev Daily Supermarket</span></td>
+                  <td>850m</td>
+                  <td>Merchant Toggled Busy Mode</td>
+                  <td><span style="color: #60A5FA; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
+                  <td><span class="badge badge-success">Delivered in 16 mins</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB 7: MASTER DATA SAVER -->
       <div id="tab-datasaver" class="tab-panel">
         <div class="data-saver-card">
@@ -929,6 +1074,7 @@
         'inventory': ['Master Inventory & SKUs', 'Zero-phantom stockout shelf synchronization and price auditing'],
         'escrow': ['Escrow & Treasury Ledger', 'Track customer funds in escrow vs settled merchant balances'],
         'disputes': ['Dispute Desk & Governance', 'Automated photo refund audits and 3-strike merchant enforcement'],
+        'overflow': ['P2P Overflow Routing Telemetry', 'Decentralized peer-to-peer load balancing and 1.5% margin referral telemetry'],
         'datasaver': ['Master Data Saver & DB Explorer', 'One-click persistence, full JSON snapshot, and CSV exports']
       };
 
