@@ -43,3 +43,24 @@ This log captures formal Scrum Sprint Retrospectives, documenting what went well
 ### Process Improvements for Sprint 3:
 1. Run `dart analyze` before triggering `flutter build web` to catch missing imports in seconds.
 2. Maintain the **System Failures & Anti-Patterns Log** (`docs/failures_and_anti_patterns.md`) so previous mistakes are never repeated.
+
+---
+
+## 🏃 Sprint 3 Retrospective (Multi-Mode Payments & Escrow Telemetry)
+- **Sprint Duration:** CR-004
+- **Goal:** Implement UPI, Credit/Debit Cards, Blipto Wallet deductions, and COD with escrow integration and Owner dashboard payment telemetry.
+- **Git Tag:** `v1.3.0-payments`
+
+### What Went Well:
+1. **Painless Checkout UX:** Customer can pay via UPI, Card, or apply their Blipto Wallet balance with 1 tap.
+2. **Escrow & Wallet Integration:** Wallet deductions reduce payable balance immediately, locking remainder in escrow.
+3. **Owner Telemetry:** Owner Dashboard displays real-time GMV split by payment method (`UPI`, `CARD`, `WALLET`, `COD`).
+4. **Early Error Catching:** Running `dart analyze` before build immediately caught duplicate lines from a code edit in 4 seconds instead of waiting for a 60-second build crash.
+5. **100% Test Coverage:** 18/18 unit and integration tests passing.
+
+### What Went Wrong / Friction Points:
+1. **Duplicate block during multi-line code edit:** An initial replacement left duplicate lines in `app_state.dart`, but was immediately surfaced by `dart analyze` before deployment.
+
+### Process Improvements for Sprint 4:
+1. Continue running `dart analyze` before all production builds.
+2. Ensure payment transaction IDs (mock or sandbox) are displayed on the order tracking confirmation screen for customer receipts.
