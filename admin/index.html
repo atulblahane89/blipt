@@ -69,14 +69,14 @@
     }
 
     /* ========================================================
-       BLIPTO GLASSY SIDEBAR (Card Opens on Hover + Real-Time Page Connection)
+       BLIPTO GLASSY SIDEBAR (Perfect Rail Alignment & Fluid Card)
        ======================================================== */
     .glassy-sidebar {
       position: fixed;
       left: 18px;
       top: 18px;
       bottom: 18px;
-      width: 68px; /* Sleek compact capsule by default */
+      width: 68px; /* Compact rail by default */
       background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -86,29 +86,36 @@
       z-index: 1000;
       display: flex;
       flex-direction: column;
+      align-items: center; /* Exactly centers rail items horizontally */
       padding: 16px 12px;
       overflow-y: auto;
       overflow-x: hidden;
-      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease, box-shadow 0.3s ease;
+      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), padding 0.28s ease, box-shadow 0.28s ease;
       user-select: none;
     }
 
-    /* THE CARD OPENS UP ON HOVER (Or when pinned open) */
+    /* CARD OPENS ON HOVER (Or when pinned) */
     .glassy-sidebar:hover,
     body.sidebar-pinned .glassy-sidebar {
       width: 260px;
+      align-items: stretch;
       padding: 16px 14px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
     }
 
-    /* Header Row: Logo Button + Text + Aligned Toggle Button */
+    /* Top Header Row */
     .sidebar-header-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      width: 100%;
       height: 42px;
       margin-bottom: 20px;
       position: relative;
+    }
+    .glassy-sidebar:hover .sidebar-header-row,
+    body.sidebar-pinned .sidebar-header-row {
+      justify-content: space-between;
     }
 
     .brand-clickable-area {
@@ -117,15 +124,9 @@
       gap: 12px;
       cursor: pointer;
       border-radius: 12px;
-      padding: 2px;
+      padding: 0;
       min-width: 0;
       text-decoration: none;
-      margin: 0 auto;
-      transition: margin 0.3s ease;
-    }
-    .glassy-sidebar:hover .brand-clickable-area,
-    body.sidebar-pinned .brand-clickable-area {
-      margin: 0;
     }
     .brand-clickable-area:hover .brand-logo-pill {
       transform: scale(1.06);
@@ -149,18 +150,15 @@
     }
 
     .brand-meta {
+      display: none;
       overflow: hidden;
       white-space: nowrap;
-      opacity: 0;
-      max-width: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease, max-width 0.25s ease;
+      transition: opacity 0.2s ease;
     }
     .glassy-sidebar:hover .brand-meta,
     body.sidebar-pinned .brand-meta {
+      display: block;
       opacity: 1;
-      max-width: 140px;
-      pointer-events: auto;
     }
 
     .brand-meta h4 {
@@ -178,26 +176,23 @@
     }
 
     .sidebar-toggle-btn {
+      display: none;
       width: 34px;
       height: 34px;
       border-radius: 10px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.12);
       color: #FFFFFF;
-      display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       flex-shrink: 0;
-      opacity: 0;
-      pointer-events: none;
       margin-left: auto;
     }
     .glassy-sidebar:hover .sidebar-toggle-btn,
     body.sidebar-pinned .sidebar-toggle-btn {
-      opacity: 1;
-      pointer-events: auto;
+      display: flex;
     }
     .sidebar-toggle-btn:hover {
       background: rgba(0, 176, 116, 0.25);
@@ -211,33 +206,41 @@
       color: #00B074;
     }
 
-    /* Navigation Items List */
+    /* Navigation List */
     .sidebar-nav-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
       flex: 1;
     }
+    .glassy-sidebar:hover .sidebar-nav-list,
+    body.sidebar-pinned .sidebar-nav-list {
+      align-items: stretch;
+    }
 
+    /* Nav Item: Exact 44px square in compact mode! Full row when open! */
     .glass-nav-item {
       display: flex;
       align-items: center;
+      justify-content: center;
+      width: 44px;
       height: 44px;
       border-radius: 14px;
       color: rgba(255, 255, 255, 0.70);
       text-decoration: none;
-      font-size: 13.5px;
-      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       padding: 0;
-      justify-content: center;
       overflow: hidden;
+      flex-shrink: 0;
     }
     .glassy-sidebar:hover .glass-nav-item,
     body.sidebar-pinned .glass-nav-item {
-      padding: 0 12px;
+      width: 100%;
+      padding: 0 14px;
       justify-content: flex-start;
     }
 
@@ -248,8 +251,8 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-right: 0;
-      transition: margin-right 0.2s ease, transform 0.2s ease;
+      margin: 0;
+      transition: margin-right 0.2s ease;
     }
     .glassy-sidebar:hover .nav-icon,
     body.sidebar-pinned .nav-icon {
@@ -264,53 +267,45 @@
     }
 
     .nav-label {
+      display: none;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      opacity: 0;
-      max-width: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease, max-width 0.25s ease;
       font-size: 13.5px;
       font-weight: 600;
     }
     .glassy-sidebar:hover .nav-label,
     body.sidebar-pinned .nav-label {
-      opacity: 1;
-      max-width: 175px;
-      pointer-events: auto;
+      display: block;
     }
 
     .nav-badge-pill {
+      display: none;
       margin-left: auto;
       font-size: 10.5px;
       font-weight: 800;
       padding: 2px 7px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
       background: rgba(245, 158, 11, 0.25);
       color: #FBBF24;
       border: 1px solid rgba(245, 158, 11, 0.4);
-      opacity: 0;
-      transition: opacity 0.2s ease;
     }
     .glassy-sidebar:hover .nav-badge-pill,
     body.sidebar-pinned .nav-badge-pill {
-      opacity: 1;
+      display: inline-flex;
     }
 
-    .glass-nav-item:hover {
+    .glass-nav-item:hover:not(.active) {
       background: rgba(255, 255, 255, 0.12);
       color: #FFFFFF;
-      transform: translateX(2px);
     }
 
-    /* Active Nav Item: Solid White Pill with Blipto Green Accent */
+    /* Active Nav Item: Perfect centered 44px squircle in compact mode! Full bar in open mode! */
     .glass-nav-item.active {
       background: #FFFFFF !important;
       color: var(--charcoal-900) !important;
       font-weight: 700 !important;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
-      transform: translateX(0);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
     }
     .glass-nav-item.active .nav-icon svg {
       stroke: #00B074 !important;
@@ -319,37 +314,34 @@
       color: var(--charcoal-900) !important;
       font-weight: 700 !important;
     }
-    .glass-nav-item.active:hover {
-      background: #FFFFFF !important;
-      color: var(--charcoal-900) !important;
-    }
 
     /* Bottom Profile Row */
     .sidebar-footer-box {
       margin-top: auto;
       padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .glassy-sidebar:hover .sidebar-footer-box,
+    body.sidebar-pinned .sidebar-footer-box {
+      justify-content: flex-start;
     }
 
     .user-profile-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 4px;
+      padding: 2px;
       border-radius: 12px;
       cursor: default;
-      justify-content: center;
-      transition: justify-content 0.2s ease;
-    }
-    .glassy-sidebar:hover .user-profile-row,
-    body.sidebar-pinned .user-profile-row {
-      justify-content: flex-start;
     }
 
     .user-avatar-glass {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
       background: #F4ECE1;
       display: flex;
       align-items: center;
@@ -368,24 +360,19 @@
       right: -2px;
       width: 10px;
       height: 10px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
       background: #00B074;
       border: 2px solid #0F172A;
     }
 
     .user-meta-expanded {
+      display: none;
       overflow: hidden;
       white-space: nowrap;
-      opacity: 0;
-      max-width: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, max-width 0.2s ease;
     }
     .glassy-sidebar:hover .user-meta-expanded,
     body.sidebar-pinned .user-meta-expanded {
-      opacity: 1;
-      max-width: 140px;
-      pointer-events: auto;
+      display: block;
     }
     .user-meta-expanded h5 {
       font-size: 13px;
@@ -404,7 +391,7 @@
        MAIN APP WORKSPACE (Zero Overlap, Generous Margin)
        ======================================================== */
     .app-main {
-      margin-left: 295px; /* Generous 284px ensures zero overlap when card opens */
+      margin-left: 295px;
       flex: 1;
       padding: 24px 36px 60px 24px;
       max-width: 1480px;
