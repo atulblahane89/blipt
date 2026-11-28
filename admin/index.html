@@ -3,53 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blipto — Owner Dashboard</title>
+  <title>Blipto — Store Network Dispatch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Warm Bento & Cream Palette (Clean, spacious, modern SaaS) */
-      --bg-cream: #F8F6F0;
-      --card-white: #FFFFFF;
-      --card-cream: #FAF9F5;
+      /* Warm neutral ramp (Ledger, market paper, utilitarian dispatch) */
+      --surface-bg: #F7F5F0;
+      --surface-card: #FFFFFF;
+      --surface-raised: #F2EFE9;
+      --surface-hover: #ECE8E0;
 
-      --charcoal-950: #0E121B;
-      --charcoal-900: #141A26;
-      --charcoal-800: #1F2737;
-      --charcoal-700: #333F54;
-      --charcoal-600: #4B586F;
-      --charcoal-500: #6B788E;
-      --charcoal-400: #93A0B5;
-      --charcoal-200: #E2E6EE;
-      --charcoal-100: #F1F4F9;
+      /* Dark rail neutrals */
+      --dark-rail: #151413;
+      --dark-card: #1D1C1A;
+      --dark-hover: rgba(255, 255, 255, 0.06);
+      --dark-active: #262421;
+      --dark-border: rgba(255, 255, 255, 0.08);
 
-      --brand-green: #00B074;
-      --brand-green-hover: #009663;
-      --brand-green-soft: #E6F7F0;
-      --brand-green-glow: rgba(0, 176, 116, 0.25);
-      --accent-coral: #00B074;
-      --accent-coral-soft: #E6F7F0;
-      --accent-forest: #1F4E3D;
-      --accent-forest-soft: #EDF5F1;
-      --accent-green: #15803D;
-      --accent-green-soft: #F0FDF4;
-      --accent-amber: #D97706;
-      --accent-amber-soft: #FEF3C7;
-      --accent-blue: #2563EB;
-      --accent-blue-soft: #EFF6FF;
+      /* Text roles */
+      --text-primary: #1C1917;
+      --text-secondary: #57534E;
+      --text-muted: #8A847A;
 
-      --border-subtle: #EBE8DF;
-      --border-card: rgba(24, 24, 27, 0.05);
+      --dark-text-primary: #EDE8DF;
+      --dark-text-secondary: #A8A296;
+      --dark-text-muted: #736E64;
 
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --radius-xl: 28px;
-      --radius-full: 9999px;
+      /* Single brand accent */
+      --accent: #00A86B;
+      --accent-hover: #00915C;
+      --accent-subtle: #E8F7F0;
+      --accent-border: rgba(0, 168, 107, 0.25);
 
-      --shadow-subtle: 0 4px 20px -2px rgba(24, 24, 27, 0.03), 0 1px 3px rgba(24, 24, 27, 0.02);
-      --shadow-glass: 0 20px 50px rgba(10, 15, 26, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      /* Semantic status tokens (toned, non-slop) */
+      --status-green: #15803D;
+      --status-green-bg: #F0FDF4;
+      --status-green-border: rgba(21, 128, 61, 0.2);
+
+      --status-amber: #B45309;
+      --status-amber-bg: #FFFBEB;
+      --status-amber-border: rgba(180, 83, 9, 0.2);
+
+      --status-red: #B91C1C;
+      --status-red-bg: #FEF2F2;
+      --status-red-border: rgba(185, 28, 28, 0.2);
+
+      --status-blue: #1D4ED8;
+      --status-blue-bg: #EFF6FF;
+      --status-blue-border: rgba(29, 78, 216, 0.2);
+
+      /* Structural borders */
+      --border-hairline: rgba(28, 25, 23, 0.08);
+      --border-divider: rgba(28, 25, 23, 0.06);
+
+      /* Nested radius scale */
+      --radius-sm: 4px;
+      --radius-control: 6px;
+      --radius-inner: 8px;
+      --radius-card: 12px;
+      --radius-panel: 16px;
+
+      /* Depth */
+      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      --shadow-floating: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     * {
@@ -59,58 +77,68 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-cream);
-      color: var(--charcoal-900);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--surface-bg);
+      color: var(--text-primary);
       min-height: 100vh;
       display: flex;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Monospace / Tabular Numerals */
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-feature-settings: 'tnum' 1;
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+    }
+    .tnum {
+      font-feature-settings: 'tnum' 1;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* ========================================================
-       BLIPTO GLASSY SIDEBAR (Perfect Rail Alignment & Fluid Card)
+       PASS 1 & 6: CRAFTED SIDEBAR (COMPACT RAIL & EXPANDED CARD)
        ======================================================== */
     .glassy-sidebar {
       position: fixed;
-      left: 18px;
-      top: 18px;
-      bottom: 18px;
-      width: 68px; /* Compact rail by default */
-      background: rgba(15, 23, 42, 0.94);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 26px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      left: 16px;
+      top: 16px;
+      bottom: 16px;
+      width: 60px;
+      background: var(--dark-rail);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius-panel);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Exactly centers rail items horizontally */
-      padding: 16px 12px;
+      align-items: center;
+      padding: 12px 8px;
       overflow-y: auto;
       overflow-x: hidden;
-      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), padding 0.28s ease, box-shadow 0.28s ease;
+      transition: width 200ms cubic-bezier(0.22, 1, 0.36, 1), padding 200ms cubic-bezier(0.22, 1, 0.36, 1);
       user-select: none;
     }
 
-    /* CARD OPENS ON HOVER (Or when pinned) */
+    /* Hover & Pinned Expansion */
     .glassy-sidebar:hover,
     body.sidebar-pinned .glassy-sidebar {
-      width: 260px;
+      width: 256px;
       align-items: stretch;
-      padding: 16px 14px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+      padding: 12px;
+      box-shadow: var(--shadow-floating);
     }
 
-    /* Top Header Row */
+    /* Sidebar Header Row */
     .sidebar-header-row {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      height: 42px;
-      margin-bottom: 20px;
+      height: 40px;
+      margin-bottom: 16px;
       position: relative;
     }
     .glassy-sidebar:hover .sidebar-header-row,
@@ -121,89 +149,78 @@
     .brand-clickable-area {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
-      border-radius: 12px;
-      padding: 0;
-      min-width: 0;
       text-decoration: none;
-    }
-    .brand-clickable-area:hover .brand-logo-pill {
-      transform: scale(1.06);
-      box-shadow: 0 6px 18px rgba(0, 176, 116, 0.55);
+      min-width: 0;
     }
 
     .brand-logo-pill {
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, #00C885, #00B074);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-inner);
+      background: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #FFFFFF;
-      font-weight: 800;
-      font-size: 19px;
-      box-shadow: 0 4px 14px rgba(0, 176, 116, 0.42);
       flex-shrink: 0;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      transition: background-color 140ms ease;
+    }
+    .brand-clickable-area:hover .brand-logo-pill {
+      background: var(--accent-hover);
     }
 
     .brand-meta {
       display: none;
       overflow: hidden;
       white-space: nowrap;
-      transition: opacity 0.2s ease;
     }
     .glassy-sidebar:hover .brand-meta,
     body.sidebar-pinned .brand-meta {
       display: block;
-      opacity: 1;
     }
 
     .brand-meta h4 {
-      font-size: 15px;
-      font-weight: 800;
-      color: #FFFFFF;
-      letter-spacing: -0.3px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark-text-primary);
       line-height: 1.2;
     }
     .brand-meta p {
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.55);
+      color: var(--dark-text-muted);
       line-height: 1.2;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .sidebar-toggle-btn {
       display: none;
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #FFFFFF;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-control);
+      background: var(--dark-hover);
+      border: 1px solid var(--dark-border);
+      color: var(--dark-text-muted);
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       flex-shrink: 0;
-      margin-left: auto;
+      transition: color 120ms ease, background-color 120ms ease;
     }
     .glassy-sidebar:hover .sidebar-toggle-btn,
     body.sidebar-pinned .sidebar-toggle-btn {
       display: flex;
     }
     .sidebar-toggle-btn:hover {
-      background: rgba(0, 176, 116, 0.25);
-      border-color: #00B074;
-      color: #00B074;
-      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--dark-text-primary);
     }
     body.sidebar-pinned .sidebar-toggle-btn {
-      background: rgba(0, 176, 116, 0.2);
-      border-color: rgba(0, 176, 116, 0.5);
-      color: #00B074;
+      background: var(--dark-active);
+      color: var(--accent);
+      border-color: var(--accent-border);
     }
 
     /* Navigation List */
@@ -211,7 +228,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       width: 100%;
       flex: 1;
     }
@@ -220,48 +237,63 @@
       align-items: stretch;
     }
 
-    /* Nav Item: Exact 44px square in compact mode! Full row when open! */
+    /* Nav Item: 40px square rail, full button on expand */
     .glass-nav-item {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      color: rgba(255, 255, 255, 0.70);
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-inner);
+      color: var(--dark-text-secondary);
       text-decoration: none;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       padding: 0;
-      overflow: hidden;
       flex-shrink: 0;
+      transition: background-color 120ms ease, color 120ms ease;
     }
     .glassy-sidebar:hover .glass-nav-item,
     body.sidebar-pinned .glass-nav-item {
       width: 100%;
-      padding: 0 14px;
+      padding: 0 10px;
       justify-content: flex-start;
     }
 
+    .glass-nav-item:hover:not(.active) {
+      background: var(--dark-hover);
+      color: var(--dark-text-primary);
+    }
+
+    /* Active Item */
+    .glass-nav-item.active {
+      background: #FFFFFF;
+      color: var(--text-primary);
+    }
+    .glass-nav-item.active .nav-icon svg {
+      stroke: var(--accent);
+    }
+    .glass-nav-item.active .nav-label {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
     .nav-icon {
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin: 0;
-      transition: margin-right 0.2s ease;
     }
     .glassy-sidebar:hover .nav-icon,
     body.sidebar-pinned .nav-icon {
-      margin-right: 12px;
+      margin-right: 10px;
     }
     .nav-icon svg {
-      width: 20px;
-      height: 20px;
-      stroke-width: 2;
+      width: 16px;
+      height: 16px;
+      stroke-width: 1.5;
       stroke: currentColor;
       fill: none;
     }
@@ -271,8 +303,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 13.5px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 500;
     }
     .glassy-sidebar:hover .nav-label,
     body.sidebar-pinned .nav-label {
@@ -282,97 +314,83 @@
     .nav-badge-pill {
       display: none;
       margin-left: auto;
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 9999px;
-      background: rgba(245, 158, 11, 0.25);
-      color: #FBBF24;
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      background: var(--status-amber-bg);
+      color: var(--status-amber);
+      border: 1px solid var(--status-amber-border);
     }
     .glassy-sidebar:hover .nav-badge-pill,
     body.sidebar-pinned .nav-badge-pill {
       display: inline-flex;
     }
 
-    .glass-nav-item:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.12);
-      color: #FFFFFF;
-    }
-
-    /* Active Nav Item: Perfect centered 44px squircle in compact mode! Full bar in open mode! */
-    .glass-nav-item.active {
-      background: #FFFFFF !important;
-      color: var(--charcoal-900) !important;
-      font-weight: 700 !important;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
-    }
-    .glass-nav-item.active .nav-icon svg {
-      stroke: #00B074 !important;
-    }
-    .glass-nav-item.active .nav-label {
-      color: var(--charcoal-900) !important;
-      font-weight: 700 !important;
-    }
-
     /* ========================================================
-       MAIN APP WORKSPACE (Zero Overlap, Generous Margin)
+       MAIN APP WORKSPACE
        ======================================================== */
     .app-main {
-      margin-left: 295px;
+      margin-left: 288px;
       flex: 1;
-      padding: 24px 36px 60px 24px;
-      max-width: 1480px;
+      padding: 24px 32px 48px;
+      max-width: 1440px;
       min-width: 0;
-      transition: margin-left 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Clean Top Header (No Duplicate Tabs!) */
+    /* Quiet Top Header */
     .top-header {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      padding: 12px 24px;
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      padding: 10px 20px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--shadow-subtle);
-      border: 1px solid var(--border-card);
-      margin-bottom: 28px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 24px;
     }
 
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-badge {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, #00C885, #00B074);
-      color: #fff;
-      border-radius: 9px;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: #FFFFFF;
+      border-radius: var(--radius-control);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 2px 8px rgba(0, 176, 116, 0.35);
+    }
+    .brand-badge svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 1.75;
+      stroke: currentColor;
+      fill: none;
     }
 
     .brand-text {
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: -0.5px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.2px;
+      color: var(--text-primary);
     }
 
     .brand-sub {
       font-size: 11px;
-      background: var(--brand-green-soft);
-      color: var(--brand-green);
-      padding: 3px 9px;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-      border: 1px solid rgba(0, 176, 116, 0.25);
+      color: var(--text-secondary);
+      background: var(--surface-raised);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+      font-weight: 500;
     }
 
     .header-center-status {
@@ -380,53 +398,67 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      font-weight: 600;
-      color: var(--charcoal-600);
+      font-weight: 500;
+      color: var(--text-secondary);
     }
 
-    .dot-online {
-      width: 8px;
-      height: 8px;
-      border-radius: var(--radius-full);
-      background: #10B981;
+    /* Signature Detail: Emerald live dispatch status dot */
+    .signature-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
+    /* Buttons: Quiet craft */
     .btn {
-      padding: 8px 16px;
-      border-radius: var(--radius-full);
+      height: 34px;
+      padding: 0 12px;
+      border-radius: var(--radius-control);
       font-size: 12.5px;
-      font-weight: 700;
-      border: none;
+      font-weight: 500;
+      border: 1px solid transparent;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.18s ease;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
       font-family: inherit;
       text-decoration: none;
     }
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 1.5;
+      stroke: currentColor;
+      fill: none;
+    }
 
     .btn-dark {
-      background: var(--charcoal-900);
+      background: var(--text-primary);
       color: #FFFFFF;
+      border-color: var(--text-primary);
     }
     .btn-dark:hover {
-      background: var(--charcoal-800);
+      background: #292524;
+      border-color: #292524;
     }
 
     .btn-outline {
-      background: #FFFFFF;
-      color: var(--charcoal-700);
-      border: 1px solid var(--border-subtle);
+      background: var(--surface-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-hairline);
     }
     .btn-outline:hover {
-      background: var(--card-cream);
+      background: var(--surface-raised);
+      color: var(--text-primary);
     }
 
     /* Page Titles */
@@ -438,16 +470,16 @@
     }
 
     .page-title-box h1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.8px;
-      color: var(--charcoal-900);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
     }
 
     .page-title-box p {
-      font-size: 13.5px;
-      color: var(--charcoal-500);
-      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 3px;
     }
 
     /* Tab Panels */
@@ -456,87 +488,78 @@
     }
     .tab-panel.active {
       display: block;
-      animation: fluidTabIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: tabFadeIn 150ms ease forwards;
+    }
+    @keyframes tabFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    @keyframes fluidTabIn {
-      0% {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Bento Cards (Airy & Uncluttered) */
+    /* Surface Card */
     .bento-surface {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-subtle);
-      padding: 24px 28px;
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
+      padding: 24px;
       margin-bottom: 24px;
     }
 
-    /* Top 3 Metric Cards */
+    /* Top 3 Stat Cards */
     .metrics-row-clean {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .metric-pill-card {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      padding: 20px 24px;
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-subtle);
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
     }
 
     .metric-top-label {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--charcoal-500);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
       margin-bottom: 8px;
     }
 
     .metric-hero-num {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      color: var(--charcoal-900);
-      margin-bottom: 2px;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      margin-bottom: 3px;
     }
 
     .metric-sub-note {
-      font-size: 12px;
-      color: var(--charcoal-400);
-      font-weight: 500;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 400;
     }
 
-    /* Bento 2-Column Clean Split */
+    /* Overview Split: Main Chart (65%) + Live Orders List (35%) */
     .overview-hero-split {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
-    /* Revenue Trend Chart Card */
+    /* PASS 8: CRAFTED CHART MOMENT */
     .chart-card-clean {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-subtle);
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -550,31 +573,33 @@
     }
 
     .chart-big-number {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      color: var(--charcoal-900);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
       display: flex;
       align-items: baseline;
       gap: 8px;
+      margin-top: 2px;
     }
 
     .trend-pill {
-      font-size: 12px;
-      font-weight: 700;
-      background: var(--accent-coral-soft);
-      color: var(--accent-coral);
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
+      font-size: 11.5px;
+      font-weight: 500;
+      background: var(--status-green-bg);
+      color: var(--status-green);
+      border: 1px solid var(--status-green-border);
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
     }
 
-    /* Recent Live Orders */
+    /* Recent Live Orders (Quiet list) */
     .recent-orders-card {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-subtle);
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -583,96 +608,86 @@
     .clean-order-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     .clean-order-item {
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
+      border-radius: var(--radius-inner);
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.18s ease;
+      background: var(--surface-raised);
+      border: 1px solid var(--border-hairline);
       cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+    .clean-order-item:hover {
+      background: var(--surface-hover);
     }
 
-    .item-charcoal {
-      background: var(--charcoal-900);
-      color: #FFFFFF;
+    .clean-order-item .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
-    .item-charcoal .sub-text { color: rgba(255, 255, 255, 0.65); }
-    .item-charcoal .chip { background: rgba(255, 255, 255, 0.15); color: #fff; }
-
-    .item-coral {
-      background: var(--accent-coral);
-      color: #FFFFFF;
+    .clean-order-item .sub-text {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
     }
-    .item-coral .sub-text { color: rgba(255, 255, 255, 0.75); }
-    .item-coral .chip { background: rgba(255, 255, 255, 0.2); color: #fff; }
-
-    .item-forest {
-      background: var(--accent-forest);
-      color: #FFFFFF;
-    }
-    .item-forest .sub-text { color: rgba(255, 255, 255, 0.75); }
-    .item-forest .chip { background: rgba(255, 255, 255, 0.2); color: #fff; }
-
-    .chip {
-      font-size: 10.5px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      display: inline-block;
-      margin-top: 3px;
+    .clean-order-item .amount {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: right;
     }
 
-    /* Tables */
+    /* Tables: Quiet, readable, accessible */
     .table-container {
-      background: var(--card-white);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-subtle);
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       overflow: hidden;
       margin-bottom: 24px;
     }
 
     .table-header {
-      padding: 20px 24px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-divider);
     }
 
     .table-header h2, .table-header h3 {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--charcoal-900);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13.5px;
+      font-size: 13px;
     }
 
     th {
-      background: var(--card-cream);
-      padding: 12px 20px;
-      font-weight: 700;
-      color: var(--charcoal-500);
-      border-bottom: 1px solid var(--border-subtle);
+      background: var(--surface-raised);
+      padding: 10px 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-divider);
       font-size: 11.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     td {
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(235, 232, 223, 0.7);
-      color: var(--charcoal-800);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-divider);
+      color: var(--text-primary);
       vertical-align: middle;
     }
 
@@ -681,43 +696,61 @@
     }
 
     tr:hover td {
-      background-color: rgba(248, 246, 240, 0.6);
+      background-color: rgba(242, 239, 233, 0.4);
     }
 
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
-    }
-
+    /* Status Badges */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      font-size: 11.5px;
-      font-weight: 700;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 500;
       white-space: nowrap;
+      border: 1px solid transparent;
     }
 
-    .badge-success { background: var(--accent-green-soft); color: var(--accent-green); }
-    .badge-warning { background: var(--accent-amber-soft); color: var(--accent-amber); }
-    .badge-danger { background: #FEE2E2; color: #DC2626; }
-    .badge-info { background: var(--accent-blue-soft); color: var(--accent-blue); }
-    .badge-purple { background: #F3E8FF; color: #7E22CE; }
+    .badge-success {
+      background: var(--status-green-bg);
+      color: var(--status-green);
+      border-color: var(--status-green-border);
+    }
+    .badge-warning {
+      background: var(--status-amber-bg);
+      color: var(--status-amber);
+      border-color: var(--status-amber-border);
+    }
+    .badge-danger {
+      background: var(--status-red-bg);
+      color: var(--status-red);
+      border-color: var(--status-red-border);
+    }
+    .badge-info {
+      background: var(--surface-raised);
+      color: var(--text-secondary);
+      border-color: var(--border-hairline);
+    }
+    .badge-purple {
+      background: var(--status-blue-bg);
+      color: var(--status-blue);
+      border-color: var(--status-blue-border);
+    }
 
     pre.code-viewer {
-      background-color: var(--charcoal-900);
-      border-radius: var(--radius-md);
+      background-color: var(--dark-rail);
+      border-radius: var(--radius-inner);
       padding: 16px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
-      color: #E2E8F0;
+      color: var(--dark-text-primary);
       max-height: 400px;
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-all;
       line-height: 1.5;
+      border: 1px solid var(--dark-border);
     }
 
     @media (max-width: 1024px) {
@@ -729,70 +762,74 @@
 <body>
 
   <!-- ========================================================
-       BLIPTO GLASSY SIDEBAR (HOVER AUTO-EXPAND + LOGO TOGGLE)
+       SIDEBAR: PRECISION RAIL & EXPANDED UTILITY
        ======================================================== -->
   <aside class="glassy-sidebar" id="glassy-sidebar">
     
-    <!-- Top Header: Blipto Logo Button + Text + Aligned Toggle Button -->
+    <!-- Header: Logo Button + Text + Pin Toggle -->
     <div class="sidebar-header-row">
-      <div class="brand-clickable-area" onclick="handleLogoClick(event)" title="Blipto Store Network — Click to Expand/Collapse (Ctrl+B)">
-        <div class="brand-logo-pill">⚡</div>
+      <div class="brand-clickable-area" onclick="handleLogoClick(event)" title="Blipto Store Network — Click to toggle (Ctrl+B)">
+        <div class="brand-logo-pill">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
         <div class="brand-meta">
           <h4>Blipto</h4>
           <p>Store Network</p>
         </div>
       </div>
-      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar(event)" title="Pin Sidebar Open (Ctrl+B)">
-        <svg viewBox="0 0 24 24" style="width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none;">
-          <rect x="3" y="3" width="18" height="18" rx="4"/>
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar(event)" title="Pin Sidebar (Ctrl+B)">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="3"/>
           <line x1="9" y1="3" x2="9" y2="21"/>
           <path d="M16 15l-3-3 3-3" id="toggle-chevron"/>
         </svg>
       </button>
     </div>
 
-    <!-- Navigation Links -->
+    <!-- Navigation List -->
     <nav class="sidebar-nav-list">
       <div class="glass-nav-item active" id="glass-overview" onmouseenter="hoverTab('overview')" onclick="selectTab('overview')">
         <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         </span>
-        <span class="nav-label">Overview & Sales</span>
+        <span class="nav-label">Overview</span>
       </div>
 
       <div class="glass-nav-item" id="glass-stores" onmouseenter="hoverTab('stores')" onclick="selectTab('stores')">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </span>
-        <span class="nav-label">Local Stores</span>
+        <span class="nav-label">Local stores</span>
       </div>
 
       <div class="glass-nav-item" id="glass-orders" onmouseenter="hoverTab('orders')" onclick="selectTab('orders')">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
         </span>
-        <span class="nav-label">Live Orders</span>
+        <span class="nav-label">Live orders</span>
       </div>
 
       <div class="glass-nav-item" id="glass-inventory" onmouseenter="hoverTab('inventory')" onclick="selectTab('inventory')">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
         </span>
-        <span class="nav-label">Store Products</span>
+        <span class="nav-label">Store products</span>
       </div>
 
       <div class="glass-nav-item" id="glass-escrow" onmouseenter="hoverTab('escrow')" onclick="selectTab('escrow')">
         <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </span>
-        <span class="nav-label">Payouts & Payments</span>
+        <span class="nav-label">Payouts & escrow</span>
       </div>
 
       <div class="glass-nav-item" id="glass-disputes" onmouseenter="hoverTab('disputes')" onclick="selectTab('disputes')">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </span>
-        <span class="nav-label">Complaints & Refunds</span>
+        <span class="nav-label">Complaints & refunds</span>
         <span class="nav-badge-pill">1</span>
       </div>
 
@@ -800,14 +837,14 @@
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </span>
-        <span class="nav-label">Store Sharing</span>
+        <span class="nav-label">Store sharing</span>
       </div>
 
       <div class="glass-nav-item" id="glass-datasaver" onmouseenter="hoverTab('datasaver')" onclick="selectTab('datasaver')">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         </span>
-        <span class="nav-label">Backup Data</span>
+        <span class="nav-label">Data records</span>
       </div>
     </nav>
   </aside>
@@ -817,28 +854,35 @@
        ======================================================== -->
   <main class="app-main">
 
-    <!-- Clean Top Header (Zero Clutter, No Redundant Tabs) -->
+    <!-- Top Header -->
     <header class="top-header">
       <div class="brand-section">
-        <div class="brand-badge">⚡</div>
-        <span class="brand-text">blipto</span>
-        <span class="brand-sub">Owner Portal</span>
+        <div class="brand-badge">
+          <svg viewBox="0 0 24 24">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <span class="brand-text">Blipto</span>
+        <span class="brand-sub">Owner console</span>
       </div>
 
       <div class="header-center-status">
-        <span class="dot-online"></span>
-        <span>Local Store Network Active</span>
+        <span class="signature-dot"></span>
+        <span>Store network active</span>
       </div>
 
       <div class="header-actions">
         <a href="http://localhost:3000" target="_blank" class="btn btn-outline">
-          <span>📱</span> <span>Customer App</span>
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span>Customer app</span>
         </a>
         <button class="btn btn-outline" onclick="refreshData()">
-          <span>🔄</span> <span>Refresh</span>
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>Refresh</span>
         </button>
         <button class="btn btn-dark" onclick="exportFullJSON()">
-          <span>💾</span> <span>Download Backup</span>
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download backup</span>
         </button>
       </div>
     </header>
@@ -846,129 +890,143 @@
     <!-- Page Title Box -->
     <div class="page-title-box">
       <div>
-        <h1 id="page-title">Overview & Sales</h1>
-        <p id="page-desc">Live status of your local stores, customer orders, and daily earnings</p>
+        <h1 id="page-title">Overview</h1>
+        <p id="page-desc">Real-time dispatch, store capacity, and settlement</p>
       </div>
     </div>
 
     <!-- ========================================================
-         TAB 1: OVERVIEW & SALES (DEFAULT ACTIVE)
+         TAB 1: OVERVIEW (DEFAULT ACTIVE)
          ======================================================== -->
     <div id="tab-overview" class="tab-panel active">
       
-      <!-- Top 3 Key Metrics -->
+      <!-- Top 3 Stat Cards -->
       <div class="metrics-row-clean">
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Total Customer Sales</span>
-            <span class="badge badge-success">+14.2%</span>
+            <span>Customer sales today</span>
+            <span class="trend-pill">+14.2% vs yesterday</span>
           </div>
-          <div class="metric-hero-num" id="val-gmv">₹4,820</div>
-          <div class="metric-sub-note">Total value of groceries ordered today</div>
+          <div class="metric-hero-num tnum" id="val-gmv">₹4,820.00</div>
+          <div class="metric-sub-note">Gross merchandise value across network</div>
         </div>
 
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Blipto Daily Earnings</span>
-            <span class="badge badge-info">Zero Warehouse Costs</span>
+            <span>Platform revenue</span>
+            <span class="badge badge-info">4.5% commission</span>
           </div>
-          <div class="metric-hero-num" id="val-revenue">₹216.90</div>
-          <div class="metric-sub-note">4.5% commission on delivered orders</div>
+          <div class="metric-hero-num tnum" id="val-revenue">₹216.90</div>
+          <div class="metric-sub-note">Retained from delivered orders</div>
         </div>
 
         <div class="metric-pill-card">
           <div class="metric-top-label">
-            <span>Active Grocery Stores</span>
+            <span>Active grocery stores</span>
             <span class="badge badge-success">Live</span>
           </div>
-          <div class="metric-hero-num" id="val-stores">3 Stores</div>
-          <div class="metric-sub-note">Local shops fulfilling customer deliveries</div>
+          <div class="metric-hero-num tnum" id="val-stores">3 stores</div>
+          <div class="metric-sub-note">Fulfilling orders within 2km radiuses</div>
         </div>
       </div>
 
-      <!-- 2-Col Split: Sales Trend + Recent Live Orders -->
+      <!-- Overview Split: Precision Chart + Recent Orders -->
       <div class="overview-hero-split">
         
-        <!-- Left: Clean Sales Trend Chart -->
+        <!-- Left: Sales Trend Chart (Crafted Moment) -->
         <div class="chart-card-clean">
           <div>
             <div class="chart-header-row">
               <div>
-                <h3 style="font-size: 16px; font-weight: 800;">Daily Sales Trend</h3>
-                <div class="chart-big-number">
-                  <span>₹1,014,640</span>
-                  <span class="trend-pill">↑ +18.4%</span>
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">Daily sales trend</h3>
+                <div class="chart-big-number tnum">
+                  <span>₹1,014,640.00</span>
+                  <span class="trend-pill">+18.4% vs last week</span>
                 </div>
               </div>
-              <div style="font-size: 12px; color: var(--charcoal-500); font-weight: 600;">
-                Average Delivery: <strong>12 mins</strong>
+              <div style="font-size: 12px; color: var(--text-secondary);">
+                Average delivery: <strong class="tnum" style="color: var(--text-primary); font-weight: 600;">12 min</strong>
               </div>
             </div>
 
-            <div style="width: 100%; height: 160px; margin-top: 10px;">
+            <!-- SVG Line Chart with Muted Grid & Mono Labels -->
+            <div style="width: 100%; height: 160px; margin-top: 12px;">
               <svg viewBox="0 0 600 160" width="100%" height="100%" preserveAspectRatio="none">
                 <defs>
-                  <linearGradient id="waveGradientClean" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#00B074" stop-opacity="0.22"/>
-                    <stop offset="100%" stop-color="#00B074" stop-opacity="0.0"/>
+                  <linearGradient id="unslopChartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#00A86B" stop-opacity="0.10"/>
+                    <stop offset="100%" stop-color="#00A86B" stop-opacity="0.0"/>
                   </linearGradient>
                 </defs>
-                <line x1="0" y1="40" x2="600" y2="40" stroke="#EBE8DF" stroke-width="1.5" stroke-dasharray="4 4"/>
-                <path d="M 0 140 C 90 120, 150 70, 240 85 C 330 100, 390 120, 460 50 C 520 10, 560 40, 600 25 L 600 160 L 0 160 Z" fill="url(#waveGradientClean)"/>
-                <path d="M 0 140 C 90 120, 150 70, 240 85 C 330 100, 390 120, 460 50 C 520 10, 560 40, 600 25" fill="none" stroke="#00B074" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="460" cy="50" r="5" fill="#FFFFFF" stroke="#00B074" stroke-width="3"/>
+                <!-- Reference Grid Lines -->
+                <line x1="0" y1="30" x2="600" y2="30" stroke="#E2DDD5" stroke-width="1" stroke-dasharray="3 3"/>
+                <line x1="0" y1="75" x2="600" y2="75" stroke="#E2DDD5" stroke-width="1" stroke-dasharray="3 3"/>
+                <line x1="0" y1="120" x2="600" y2="120" stroke="#E2DDD5" stroke-width="1" stroke-dasharray="3 3"/>
+                
+                <!-- Baseline / Area / Stroke -->
+                <path d="M 0 135 C 80 120, 150 70, 240 85 C 330 100, 390 115, 460 45 C 510 15, 550 35, 600 25 L 600 155 L 0 155 Z" fill="url(#unslopChartGradient)"/>
+                <path d="M 0 135 C 80 120, 150 70, 240 85 C 330 100, 390 115, 460 45 C 510 15, 550 35, 600 25" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Active Data Marker -->
+                <circle cx="460" cy="45" r="4.5" fill="#FFFFFF" stroke="#00A86B" stroke-width="2"/>
               </svg>
+            </div>
+            <!-- Time Axis Labels -->
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 6px;" class="mono">
+              <span>08:00</span>
+              <span>11:00</span>
+              <span>14:00</span>
+              <span>17:00</span>
+              <span>20:00 (Peak)</span>
+              <span>22:00</span>
             </div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--charcoal-500); border-top: 1px solid var(--border-subtle); padding-top: 12px; margin-top: 8px;">
-            <span>Average Order: <strong style="color: var(--charcoal-900);">₹160</strong></span>
-            <span>Real Shelf Stock: <strong style="color: var(--charcoal-900);">100% Verified</strong></span>
-            <span>On-Time Speed: <strong style="color: var(--charcoal-900);">98% Delivered Fast</strong></span>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); border-top: 1px solid var(--border-divider); padding-top: 14px; margin-top: 12px;">
+            <span>Average order: <strong class="tnum" style="color: var(--text-primary); font-weight: 500;">₹160.00</strong></span>
+            <span>Shelf verification: <strong class="tnum" style="color: var(--text-primary); font-weight: 500;">100% verified</strong></span>
+            <span>On-time dispatch: <strong class="tnum" style="color: var(--text-primary); font-weight: 500;">98.4%</strong></span>
           </div>
         </div>
 
-        <!-- Right: Recent Live Orders (3 Clean Cards) -->
+        <!-- Right: Recent Live Orders (Quiet List) -->
         <div class="recent-orders-card">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 16px; font-weight: 800;">Recent Live Orders</h3>
-            <span class="badge badge-info">Live</span>
+            <h3 style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">Recent orders</h3>
+            <span class="badge badge-info">3 recent</span>
           </div>
 
           <div class="clean-order-list">
-            <!-- Card 1: Charcoal -->
-            <div class="clean-order-item item-charcoal" onclick="switchTab('orders')">
+            <div class="clean-order-item" onclick="switchTab('orders')">
               <div>
-                <strong style="font-size: 13.5px;">#ORD-9281</strong>
-                <p class="sub-text" style="font-size: 12px; margin-top: 2px;">Gupta Kirana · Milk & Bread</p>
+                <div class="title mono">#ORD-9281</div>
+                <div class="sub-text">Gupta Kirana · Milk & Bread</div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 16px; font-weight: 800;">₹119</div>
-                <span class="chip">Out for Delivery (Code: 4192)</span>
+                <div class="amount tnum">₹119.00</div>
+                <span class="badge badge-info" style="margin-top: 2px;">Out for delivery · 4192</span>
               </div>
             </div>
 
-            <!-- Card 2: Coral -->
-            <div class="clean-order-item item-coral" onclick="switchTab('overflow')">
+            <div class="clean-order-item" onclick="switchTab('overflow')">
               <div>
-                <strong style="font-size: 13.5px;">#ORD-9350 · Rush Relief</strong>
-                <p class="sub-text" style="font-size: 12px; margin-top: 2px;">Sri Venkateshwara ➔ Mahadev</p>
+                <div class="title mono">#ORD-9350 · Rush spillover</div>
+                <div class="sub-text">Sri Venkateshwara → Mahadev</div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 16px; font-weight: 800;">₹173</div>
-                <span class="chip">+₹10.50 Store Bonus</span>
+                <div class="amount tnum">₹173.00</div>
+                <span class="badge badge-purple" style="margin-top: 2px;">+₹10.50 bonus</span>
               </div>
             </div>
 
-            <!-- Card 3: Forest Green -->
-            <div class="clean-order-item item-forest" onclick="switchTab('orders')">
+            <div class="clean-order-item" onclick="switchTab('orders')">
               <div>
-                <strong style="font-size: 13.5px;">#ORD-9104</strong>
-                <p class="sub-text" style="font-size: 12px; margin-top: 2px;">Mahadev Daily · Farm Eggs</p>
+                <div class="title mono">#ORD-9104</div>
+                <div class="sub-text">Mahadev Daily · Farm Eggs</div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 16px; font-weight: 800;">₹65</div>
-                <span class="chip">Delivered in 11 mins</span>
+                <div class="amount tnum">₹65.00</div>
+                <span class="badge badge-success" style="margin-top: 2px;">Delivered in 11 min</span>
               </div>
             </div>
           </div>
@@ -979,22 +1037,23 @@
       <!-- Recent Orders Table -->
       <div class="table-container">
         <div class="table-header">
-          <h3>Recent Orders</h3>
-          <button class="btn btn-outline" onclick="switchTab('orders')" style="font-size: 12px;">
-            View All Orders ➔
+          <h3>Recent order dispatch</h3>
+          <button class="btn btn-outline" onclick="switchTab('orders')">
+            <span>View all orders</span>
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
         <table>
           <thead>
             <tr>
               <th>Order ID</th>
-              <th>Customer Store</th>
-              <th>Delivering Store</th>
-              <th>Payment Type</th>
-              <th>Order Handled By</th>
-              <th>Total Bill</th>
-              <th>Delivery Code</th>
-              <th>Order Status</th>
+              <th>Customer store</th>
+              <th>Fulfilling store</th>
+              <th>Payment</th>
+              <th>Routing</th>
+              <th>Total bill</th>
+              <th>Delivery code</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody id="overview-orders-tbody">
@@ -1012,23 +1071,26 @@
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Partner Grocery Stores</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">View your neighborhood stores, delivery areas, and rush hours</p>
+            <h3>Partner grocery stores</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Delivery radiuses, active capacity, and live status</p>
           </div>
-          <button class="btn btn-dark" onclick="alert('New Store Registration Form Ready')">+ Add New Grocery Store</button>
+          <button class="btn btn-dark" onclick="alert('New Store Registration Form Ready')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add store</span>
+          </button>
         </div>
         <table>
           <thead>
             <tr>
               <th>Store ID</th>
-              <th>Store Name & Address</th>
-              <th>Delivery Area</th>
-              <th>Active Runs</th>
-              <th>Rush Status</th>
-              <th>Customer Rating</th>
+              <th>Store name & address</th>
+              <th>Delivery radius</th>
+              <th>Active runs</th>
+              <th>Status</th>
+              <th>Rating</th>
               <th>Warnings</th>
               <th>Shop UPI ID</th>
-              <th>Quick Switch</th>
+              <th>Capacity toggle</th>
             </tr>
           </thead>
           <tbody id="stores-tbody">
@@ -1045,10 +1107,13 @@
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>All Customer Orders</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Every grocery order placed across all your local neighborhood stores</p>
+            <h3>Live orders stream</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Orders placed across neighborhood store network</p>
           </div>
-          <button class="btn btn-outline" onclick="exportOrdersCSV()">📊 Download Orders Spreadsheet</button>
+          <button class="btn btn-outline" onclick="exportOrdersCSV()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export CSV</span>
+          </button>
         </div>
         <table>
           <thead>
@@ -1057,10 +1122,10 @@
               <th>Customer</th>
               <th>Store</th>
               <th>Items</th>
-              <th>Total Bill</th>
-              <th>Delivery Code</th>
+              <th>Total bill</th>
+              <th>Delivery code</th>
               <th>Status</th>
-              <th>Time Placed</th>
+              <th>Placed</th>
             </tr>
           </thead>
           <tbody id="orders-tbody">
@@ -1077,21 +1142,24 @@
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>All Store Products & Shelf Stock</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Real-time grocery items verified directly on neighborhood store shelves</p>
+            <h3>Store inventory & shelf stock</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Stock verified directly on neighborhood store shelves</p>
           </div>
-          <button class="btn btn-outline" onclick="exportInventoryCSV()">📊 Download Products Spreadsheet</button>
+          <button class="btn btn-outline" onclick="exportInventoryCSV()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export CSV</span>
+          </button>
         </div>
         <table>
           <thead>
             <tr>
               <th>Barcode</th>
-              <th>Product Name</th>
+              <th>Product name</th>
               <th>Store</th>
               <th>Category</th>
               <th>Price</th>
-              <th>In Stock</th>
-              <th>Shelf Status</th>
+              <th>Stock</th>
+              <th>Shelf state</th>
             </tr>
           </thead>
           <tbody id="inventory-tbody">
@@ -1106,51 +1174,51 @@
          ======================================================== -->
     <div id="tab-escrow" class="tab-panel">
       <div class="bento-surface">
-        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Store Payouts & Safe Payments</h2>
-        <p style="color: var(--charcoal-500); font-size: 13.5px; line-height: 1.6; max-width: 800px;">
-          Customer payments are safely held until the order reaches their doorstep. Once the delivery code is entered, the shopkeeper receives their money instantly via UPI.
+        <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Settlement & escrow funds</h2>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.5; max-width: 760px;">
+          Payments are held in escrow until the customer delivery code is verified at doorstep. Fulfillments instantly disburse to the store's UPI address.
         </p>
 
-        <div class="metrics-row-clean" style="margin-top: 24px;">
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Payments Held Safely</div>
-            <div class="metric-hero-num" id="val-escrow" style="color: var(--accent-amber);">₹580.00</div>
-            <div class="metric-sub-note">Released when delivery is complete</div>
+        <div class="metrics-row-clean" style="margin-top: 20px;">
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Held in escrow</div>
+            <div class="metric-hero-num tnum" id="val-escrow" style="color: var(--status-amber);">₹580.00</div>
+            <div class="metric-sub-note">Released on delivery code verification</div>
           </div>
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Paid to Shopkeepers</div>
-            <div class="metric-hero-num" style="color: var(--accent-green);">₹4,240.00</div>
-            <div class="metric-sub-note">Sent directly to shopkeeper bank/UPI</div>
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Settled to stores</div>
+            <div class="metric-hero-num tnum" style="color: var(--status-green);">₹4,240.00</div>
+            <div class="metric-sub-note">Disbursed directly via UPI</div>
           </div>
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Refunded for Damaged Items</div>
-            <div class="metric-hero-num" style="color: var(--accent-coral);">₹87.00</div>
-            <div class="metric-sub-note">Quick 1-tap customer refunds</div>
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Refunded to customers</div>
+            <div class="metric-hero-num tnum" style="color: var(--status-red);">₹87.00</div>
+            <div class="metric-sub-note">Automated refunds for damaged items</div>
           </div>
         </div>
 
-        <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
-          <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">How Customers Paid Today</h3>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+        <div style="margin-top: 24px; border-top: 1px solid var(--border-divider); padding-top: 20px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Settlement breakdown by payment channel</h3>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">⚡ UPI (GPay, PhonePe, Paytm)</div>
-              <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-upi-val">₹0.00</div>
-              <div style="font-size: 11px; color: var(--accent-coral); margin-top: 2px;" id="pay-upi-count">0 Orders</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); font-weight: 500;">UPI (GPay / PhonePe)</div>
+              <div style="font-size: 18px; font-weight: 600; margin-top: 4px;" class="tnum" id="pay-upi-val">₹0.00</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="pay-upi-count">0 orders</div>
             </div>
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">💳 Debit & Credit Cards</div>
-              <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-card-val">₹0.00</div>
-              <div style="font-size: 11px; color: var(--accent-blue); margin-top: 2px;" id="pay-card-count">0 Orders</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); font-weight: 500;">Cards (Debit / Credit)</div>
+              <div style="font-size: 18px; font-weight: 600; margin-top: 4px;" class="tnum" id="pay-card-val">₹0.00</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="pay-card-count">0 orders</div>
             </div>
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">👛 Blipto Wallet</div>
-              <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-wallet-val">₹0.00</div>
-              <div style="font-size: 11px; color: var(--accent-green); margin-top: 2px;" id="pay-wallet-count">0 Orders</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); font-weight: 500;">Blipto Wallet</div>
+              <div style="font-size: 18px; font-weight: 600; margin-top: 4px;" class="tnum" id="pay-wallet-val">₹0.00</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="pay-wallet-count">0 orders</div>
             </div>
             <div class="metric-pill-card" style="padding: 16px;">
-              <div style="font-size: 11px; color: var(--charcoal-500);">💵 Cash on Delivery</div>
-              <div style="font-size: 20px; font-weight: 800; margin-top: 4px;" id="pay-cod-val">₹0.00</div>
-              <div style="font-size: 11px; color: var(--accent-amber); margin-top: 2px;" id="pay-cod-count">0 Orders</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); font-weight: 500;">Cash on delivery</div>
+              <div style="font-size: 18px; font-weight: 600; margin-top: 4px;" class="tnum" id="pay-cod-val">₹0.00</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="pay-cod-count">0 orders</div>
             </div>
           </div>
         </div>
@@ -1164,8 +1232,8 @@
       <div class="table-container">
         <div class="table-header">
           <div>
-            <h3>Customer Complaints & Issue Refunds</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Customer photos checked for quick, fair refunds on broken or missing items</p>
+            <h3>Customer complaints & refunds</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Photographic evidence verified for item damage and missing items</p>
           </div>
         </div>
         <table>
@@ -1173,13 +1241,13 @@
             <tr>
               <th>Complaint ID</th>
               <th>Order ID</th>
-              <th>Damaged Item</th>
-              <th>Reason</th>
-              <th>Refund Amount</th>
-              <th>Customer Photo</th>
-              <th>Photo Check</th>
+              <th>Item</th>
+              <th>Reported reason</th>
+              <th>Refund amount</th>
+              <th>Photo record</th>
+              <th>Inspection check</th>
               <th>Resolution</th>
-              <th>Store Warning</th>
+              <th>Store notice</th>
             </tr>
           </thead>
           <tbody id="disputes-tbody">
@@ -1188,23 +1256,23 @@
         </table>
       </div>
 
-      <div class="table-container" style="margin-top: 24px;">
+      <div class="table-container" style="margin-top: 20px;">
         <div class="table-header">
           <div>
-            <h3>⚖️ Shopkeeper Explanations & Counter-Proof</h3>
-            <p style="font-size: 12px; color: var(--charcoal-500); margin-top: 2px;">Shopkeepers can explain or provide counter-proof if a complaint was not their fault</p>
+            <h3>Merchant explanations & counter-proof</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">Shopkeeper CCTV footage and packaging counter-proof appeals</p>
           </div>
-          <span class="badge badge-warning" id="pending-appeals-badge">Pending Review</span>
+          <span class="badge badge-warning" id="pending-appeals-badge">Pending review</span>
         </div>
         <table>
           <thead>
             <tr>
               <th>Appeal ID</th>
               <th>Store</th>
-              <th>Original Complaint</th>
-              <th>Shopkeeper Proof / Explanation</th>
+              <th>Original issue</th>
+              <th>Merchant statement</th>
               <th>Status</th>
-              <th>Your Decision</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="strike-appeals-tbody">
@@ -1221,67 +1289,67 @@
       <div class="bento-surface">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
           <div>
-            <h2 style="font-size: 18px; font-weight: 800;">🔄 Order Sharing Between Nearby Stores</h2>
-            <p style="color: var(--charcoal-500); font-size: 13px; margin-top: 4px; max-width: 750px;">
-              When one store is too busy during rush hours, a nearby partner store delivers the order instead. The original shop still earns a 1.5% sharing bonus, and the customer gets their groceries on time without cancellations.
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-primary);">Order spillover routing</h2>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 3px; max-width: 720px;">
+              When a store hits active capacity during rush hours, neighboring partner stores within 1km fulfill the orders. The origin store receives a 1.5% capacity bonus without order cancellations.
             </p>
           </div>
-          <span class="badge badge-success">Sharing Active</span>
+          <span class="badge badge-success">Routing active</span>
         </div>
 
         <div class="metrics-row-clean" style="margin-bottom: 20px;">
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Orders Saved During Rush</div>
-            <div class="metric-hero-num" style="color: var(--accent-green);">2 Orders</div>
-            <div class="metric-sub-note">Zero customer cancellations</div>
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Orders routed during rush</div>
+            <div class="metric-hero-num tnum" style="color: var(--status-green);">2 orders</div>
+            <div class="metric-sub-note">0 customer dropouts</div>
           </div>
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Sharing Bonuses Paid</div>
-            <div class="metric-hero-num" style="color: var(--accent-blue);">₹18.50</div>
-            <div class="metric-sub-note">1.5% bonus to busy shops</div>
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Routing bonuses disbursed</div>
+            <div class="metric-hero-num tnum" style="color: var(--status-blue);">₹18.50</div>
+            <div class="metric-sub-note">1.5% to busy stores</div>
           </div>
-          <div class="metric-pill-card" style="background: var(--card-cream);">
-            <div class="metric-top-label">Average Distance Between Shops</div>
-            <div class="metric-hero-num">650 meters</div>
-            <div class="metric-sub-note">Delivered in ~14 mins</div>
+          <div class="metric-pill-card" style="background: var(--surface-raised);">
+            <div class="metric-top-label">Average distance between stores</div>
+            <div class="metric-hero-num tnum">650 m</div>
+            <div class="metric-sub-note">14 min average delivery</div>
           </div>
         </div>
 
-        <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-subtle); margin-bottom: 0;">
+        <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-hairline); margin-bottom: 0;">
           <div class="table-header">
-            <span style="font-weight: 700; font-size: 14px;">Recent Shared Orders Log</span>
-            <span class="badge badge-purple">Live Log</span>
+            <span style="font-weight: 600; font-size: 13.5px;">Recent spillover log</span>
+            <span class="badge badge-info">Verified log</span>
           </div>
           <table>
             <thead>
               <tr>
                 <th>Order ID</th>
-                <th>Original Shop (Busy)</th>
-                <th>Delivering Shop (Partner)</th>
-                <th>Distance Between Shops</th>
-                <th>Why Order Was Shared</th>
-                <th>Sharing Bonus (1.5%)</th>
-                <th>Delivery Time</th>
+                <th>Origin store (busy)</th>
+                <th>Fulfilling store (partner)</th>
+                <th>Distance</th>
+                <th>Trigger reason</th>
+                <th>Routing bonus</th>
+                <th>Delivery time</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="mono"><strong>#ORD-9350</strong></td>
-                <td><span style="color: #DC2626; font-weight: 600;">Sri Venkateshwara Fresh</span></td>
-                <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                <td>650 meters</td>
-                <td>Shop was full during evening rush</td>
-                <td><span style="color: #2563EB; font-weight: 700;">+₹10.50</span> to Venkateshwara</td>
-                <td><span class="badge badge-success">Delivered in 14 mins</span></td>
+                <td><span style="color: var(--status-red); font-weight: 500;">Sri Venkateshwara Fresh</span></td>
+                <td><span style="color: var(--status-green); font-weight: 500;">Mahadev Daily Supermarket</span></td>
+                <td class="tnum">650 m</td>
+                <td>Capacity limit reached during evening rush</td>
+                <td><span class="tnum" style="color: var(--status-blue); font-weight: 500;">+₹10.50</span> to Venkateshwara</td>
+                <td><span class="badge badge-success">Delivered in 14 min</span></td>
               </tr>
               <tr>
                 <td class="mono"><strong>#ORD-9412</strong></td>
-                <td><span style="color: #DC2626; font-weight: 600;">Gupta Kirana</span></td>
-                <td><span style="color: #15803D; font-weight: 600;">Mahadev Daily Supermarket</span></td>
-                <td>850 meters</td>
-                <td>Shopkeeper turned on Busy Mode</td>
-                <td><span style="color: #2563EB; font-weight: 700;">+₹8.00</span> to Gupta Kirana</td>
-                <td><span class="badge badge-success">Delivered in 16 mins</span></td>
+                <td><span style="color: var(--status-red); font-weight: 500;">Gupta Kirana</span></td>
+                <td><span style="color: var(--status-green); font-weight: 500;">Mahadev Daily Supermarket</span></td>
+                <td class="tnum">850 m</td>
+                <td>Manual busy toggle enabled by merchant</td>
+                <td><span class="tnum" style="color: var(--status-blue); font-weight: 500;">+₹8.00</span> to Gupta Kirana</td>
+                <td><span class="badge badge-success">Delivered in 16 min</span></td>
               </tr>
             </tbody>
           </table>
@@ -1294,31 +1362,35 @@
          ======================================================== -->
     <div id="tab-datasaver" class="tab-panel">
       <div class="bento-surface">
-        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Save & Download All Platform Data</h2>
-        <p style="color: var(--charcoal-500); font-size: 13.5px; line-height: 1.6;">
-          As the app owner, you have complete ownership of all records. Download and save copies of your orders, stores, and products at any time.
+        <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Data records & exports</h2>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">
+          Export live ledger records, store directories, customer orders, and shelf stock in JSON or spreadsheet format.
         </p>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;">
           <button class="btn btn-dark" onclick="exportFullJSON()">
-            <span>💾</span> <span>Download Full Database (JSON)</span>
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Full database (JSON)</span>
           </button>
           <button class="btn btn-outline" onclick="exportOrdersCSV()">
-            <span>📊</span> <span>Download Orders (Spreadsheet)</span>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Orders CSV</span>
           </button>
           <button class="btn btn-outline" onclick="exportStoresCSV()">
-            <span>🏪</span> <span>Download Stores (Spreadsheet)</span>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Stores CSV</span>
           </button>
           <button class="btn btn-outline" onclick="exportInventoryCSV()">
-            <span>🏷️</span> <span>Download Products (Spreadsheet)</span>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Inventory CSV</span>
           </button>
         </div>
       </div>
 
       <div class="bento-surface">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="font-size: 15px; font-weight: 800;">View Raw Records</h3>
-          <span class="mono" style="font-size: 11px; color: var(--charcoal-400);">
-            Stores, Products, Orders, Refunds
+          <h3 style="font-size: 14px; font-weight: 600;">Raw JSON ledger</h3>
+          <span class="mono" style="font-size: 11px; color: var(--text-muted);">
+            stores, products, orders, disputes
           </span>
         </div>
         <pre class="code-viewer" id="db-json-viewer"></pre>
@@ -1357,9 +1429,9 @@
       }
       if (btn) {
         if (isPinned) {
-          btn.setAttribute('title', 'Unpin Sidebar (Auto-collapse on mouse leave)');
+          btn.setAttribute('title', 'Unpin sidebar (auto-collapse on leave)');
         } else {
-          btn.setAttribute('title', 'Pin Sidebar Open (Ctrl+B)');
+          btn.setAttribute('title', 'Pin sidebar (Ctrl+B)');
         }
       }
     }
@@ -1438,7 +1510,7 @@
           total: 119.0,
           otp: "4192",
           status: "OUT_FOR_DELIVERY",
-          created_at: "8 mins ago"
+          created_at: "8 min ago"
         },
         {
           id: "ORD-9104",
@@ -1452,7 +1524,7 @@
           total: 65.0,
           otp: "8319",
           status: "DELIVERED",
-          created_at: "35 mins ago"
+          created_at: "35 min ago"
         },
         {
           id: "ORD-8742",
@@ -1501,7 +1573,7 @@
       var target = document.getElementById('tab-' + tabId);
       if (target) {
         target.classList.remove('active');
-        void target.offsetWidth; // Force reflow for smooth fluidic entrance animation
+        void target.offsetWidth;
         target.classList.add('active');
       }
 
@@ -1509,14 +1581,14 @@
       if (glassBtn) glassBtn.classList.add('active');
 
       var titles = {
-        'overview': ['Overview & Sales', 'Live status of your local stores, customer orders, and daily earnings'],
-        'stores': ['Partner Grocery Stores', 'View your neighborhood stores, delivery areas, and rush hours'],
-        'orders': ['All Customer Orders', 'Every grocery order placed across all your local neighborhood stores'],
-        'inventory': ['All Store Products & Shelf Stock', 'Real-time grocery items verified directly on neighborhood store shelves'],
-        'escrow': ['Store Payouts & Safe Payments', 'Track customer payments held safely and instant payouts sent to shopkeepers'],
-        'disputes': ['Customer Complaints & Issue Refunds', 'Review customer photos of damaged items and approve quick refunds'],
-        'overflow': ['Order Sharing Between Nearby Stores', 'Automatic order sharing between nearby stores during rush hours with a 1.5% bonus'],
-        'datasaver': ['Save & Download All Platform Data', 'Download and backup your orders, store records, and products at any time']
+        'overview': ['Overview', 'Real-time dispatch, store capacity, and settlement'],
+        'stores': ['Partner stores', 'Delivery radiuses, active capacity, and live status'],
+        'orders': ['Live orders', 'Real-time order stream across neighborhood stores'],
+        'inventory': ['Store inventory', 'Verified shelf stock across partner stores'],
+        'escrow': ['Settlement & escrow', 'Held payments and instant UPI merchant transfers'],
+        'disputes': ['Order disputes', 'Item refund requests and merchant appeals'],
+        'overflow': ['Spillover routing', 'Inter-store order sharing and 1.5% capacity bonus'],
+        'datasaver': ['Data records', 'Export database and tabular spreadsheets']
       };
 
       if (titles[tabId]) {
@@ -1534,17 +1606,17 @@
         ovTbody.innerHTML = masterData.orders.map(function(o) {
           var payBadge = o.payment_method === 'CARD' ? 'badge-purple' : (o.payment_method === 'WALLET' ? 'badge-success' : 'badge-info');
           var spilloverHtml = o.is_spillover 
-            ? '<span class="badge badge-purple">⚡ Shared with Partner</span>' 
-            : '<span class="badge badge-success">Direct Store</span>';
-          var statusHtml = '<span class="badge ' + (o.status === 'DELIVERED' ? 'badge-success' : 'badge-info') + '">' + o.status + '</span>';
+            ? '<span class="badge badge-purple">Spillover partner</span>' 
+            : '<span class="badge badge-info">Direct fulfillment</span>';
+          var statusHtml = '<span class="badge ' + (o.status === 'DELIVERED' ? 'badge-success' : 'badge-info') + '">' + o.status.replace(/_/g, ' ').toLowerCase() + '</span>';
           return '<tr>' +
-            '<td class="mono"><strong>#' + o.id + '</strong></td>' +
+            '<td class="mono">#' + o.id + '</td>' +
             '<td><strong>' + o.origin_store + '</strong></td>' +
             '<td>' + o.fulfilling_store + '</td>' +
             '<td><span class="badge ' + payBadge + '">' + (o.payment_method || 'UPI') + '</span></td>' +
             '<td>' + spilloverHtml + '</td>' +
-            '<td><strong>₹' + o.total.toFixed(0) + '</strong></td>' +
-            '<td class="mono"><strong>' + o.otp + '</strong></td>' +
+            '<td class="tnum"><strong>₹' + o.total.toFixed(2) + '</strong></td>' +
+            '<td class="mono">' + o.otp + '</td>' +
             '<td>' + statusHtml + '</td>' +
           '</tr>';
         }).join('');
@@ -1555,21 +1627,21 @@
       if (stTbody) {
         stTbody.innerHTML = masterData.stores.map(function(s) {
           var busyBadge = s.is_busy 
-            ? '<span class="badge badge-warning">Busy (Sharing Active)</span>' 
-            : '<span class="badge badge-success">Delivering Live</span>';
+            ? '<span class="badge badge-warning">At capacity</span>' 
+            : '<span class="badge badge-success">Accepting</span>';
           var strikesBadge = s.strikes > 0 
-            ? '<span class="badge badge-danger">' + s.strikes + '/3 Warnings</span>' 
-            : '<span class="badge badge-success">0 Warnings</span>';
+            ? '<span class="badge badge-danger">' + s.strikes + '/3 warnings</span>' 
+            : '<span class="badge badge-success">0 warnings</span>';
           return '<tr>' +
-            '<td class="mono"><strong>' + s.id + '</strong></td>' +
-            '<td><strong style="color: var(--charcoal-900);">' + s.name + '</strong><br><span style="font-size: 11.5px; color: var(--charcoal-500);">' + s.address + '</span></td>' +
-            '<td><strong>' + s.radius_meters + 'm radius</strong></td>' +
-            '<td>' + s.active_orders + ' / ' + s.max_orders + ' Runs</td>' +
+            '<td class="mono">' + s.id + '</td>' +
+            '<td><strong>' + s.name + '</strong><br><span style="font-size: 11.5px; color: var(--text-secondary);">' + s.address + '</span></td>' +
+            '<td class="tnum">' + s.radius_meters + ' m</td>' +
+            '<td class="tnum">' + s.active_orders + ' / ' + s.max_orders + ' runs</td>' +
             '<td>' + busyBadge + '</td>' +
-            '<td>⭐ <strong>' + s.trust_rating + '</strong></td>' +
+            '<td class="tnum">' + s.trust_rating + ' / 5.0</td>' +
             '<td>' + strikesBadge + '</td>' +
-            '<td class="mono" style="font-size: 12px;">' + s.upi_id + '</td>' +
-            '<td><button class="btn btn-outline" style="font-size: 11px; padding: 4px 10px;" onclick="toggleStoreBusy(\'' + s.id + '\')">' + (s.is_busy ? 'Set Live' : 'Set Busy') + '</button></td>' +
+            '<td class="mono">' + s.upi_id + '</td>' +
+            '<td><button class="btn btn-outline" style="height: 28px; padding: 0 8px; font-size: 11.5px;" onclick="toggleStoreBusy(\'' + s.id + '\')">' + (s.is_busy ? 'Set accepting' : 'Set capacity') + '</button></td>' +
           '</tr>';
         }).join('');
       }
@@ -1579,14 +1651,14 @@
       if (ordTbody) {
         ordTbody.innerHTML = masterData.orders.map(function(o) {
           return '<tr>' +
-            '<td class="mono"><strong>#' + o.id + '</strong></td>' +
+            '<td class="mono">#' + o.id + '</td>' +
             '<td class="mono">' + o.consumer_id + '</td>' +
-            '<td><strong>' + o.fulfilling_store + '</strong></td>' +
+            '<td>' + o.fulfilling_store + '</td>' +
             '<td>' + o.items + '</td>' +
-            '<td><strong>₹' + o.total.toFixed(2) + '</strong></td>' +
-            '<td class="mono"><strong>' + o.otp + '</strong></td>' +
-            '<td><span class="badge ' + (o.status === 'DELIVERED' ? 'badge-success' : 'badge-info') + '">' + o.status + '</span></td>' +
-            '<td>' + o.created_at + '</td>' +
+            '<td class="tnum"><strong>₹' + o.total.toFixed(2) + '</strong></td>' +
+            '<td class="mono">' + o.otp + '</td>' +
+            '<td><span class="badge ' + (o.status === 'DELIVERED' ? 'badge-success' : 'badge-info') + '">' + o.status.replace(/_/g, ' ').toLowerCase() + '</span></td>' +
+            '<td class="tnum">' + o.created_at + '</td>' +
           '</tr>';
         }).join('');
       }
@@ -1596,16 +1668,16 @@
       if (invTbody) {
         invTbody.innerHTML = masterData.inventory.map(function(i) {
           var stockBadge = i.stock <= 2 
-            ? '<span class="badge badge-warning">' + i.stock + ' left</span>' 
-            : '<span class="badge badge-success">' + i.stock + ' in stock</span>';
+            ? '<span class="badge badge-warning">' + i.stock + ' remaining</span>' 
+            : '<span class="badge badge-success">' + i.stock + ' units</span>';
           return '<tr>' +
             '<td class="mono">' + i.barcode + '</td>' +
-            '<td><strong>' + i.title + '</strong></td>' +
+            '<td>' + i.title + '</td>' +
             '<td>' + i.store + '</td>' +
             '<td>' + i.category + '</td>' +
-            '<td><strong>₹' + i.price.toFixed(0) + '</strong></td>' +
-            '<td>' + stockBadge + '</td>' +
-            '<td><span class="badge badge-success">Available on Shelf</span></td>' +
+            '<td class="tnum"><strong>₹' + i.price.toFixed(2) + '</strong></td>' +
+            '<td class="tnum">' + stockBadge + '</td>' +
+            '<td><span class="badge badge-success">Verified</span></td>' +
           '</tr>';
         }).join('');
       }
@@ -1615,15 +1687,15 @@
       if (disTbody) {
         disTbody.innerHTML = masterData.disputes.map(function(d) {
           return '<tr>' +
-            '<td class="mono"><strong>#' + d.id + '</strong></td>' +
+            '<td class="mono">#' + d.id + '</td>' +
             '<td class="mono">#' + d.order_id + '</td>' +
-            '<td><strong>' + d.item + '</strong></td>' +
+            '<td>' + d.item + '</td>' +
             '<td>' + d.reason + '</td>' +
-            '<td><strong style="color: var(--accent-coral);">₹' + d.refund.toFixed(0) + '</strong></td>' +
-            '<td class="mono" style="font-size: 11px;">' + d.photo + '</td>' +
-            '<td><span class="badge badge-success">🤖 ' + (d.ai_audit || 'Crack Detected (94%)') + '</span></td>' +
-            '<td><span class="badge badge-success">Refund Approved</span></td>' +
-            '<td><span class="badge badge-danger">+1 Warning Logged</span></td>' +
+            '<td class="tnum"><strong>₹' + d.refund.toFixed(2) + '</strong></td>' +
+            '<td class="mono">' + d.photo + '</td>' +
+            '<td><span class="badge badge-success">' + (d.ai_audit || 'Crack confirmed (94%)') + '</span></td>' +
+            '<td><span class="badge badge-success">Refund disbursed</span></td>' +
+            '<td><span class="badge badge-danger">+1 strike recorded</span></td>' +
           '</tr>';
         }).join('');
       }
@@ -1655,17 +1727,17 @@
         var statusBadge = a.status === 'APPROVED' ? 'badge-success' : (a.status === 'PENDING' ? 'badge-warning' : 'badge-danger');
         var actionHtml = a.status === 'PENDING' 
           ? '<div style="display: flex; gap: 6px;">' +
-              '<button class="btn btn-dark" onclick="reviewAppeal(\'' + a.id + '\', \'APPROVE\')" style="padding: 4px 10px; font-size: 11.5px;">✓ Accept Explanation (Remove Warning)</button>' +
-              '<button class="btn btn-outline" onclick="reviewAppeal(\'' + a.id + '\', \'DISMISS\')" style="padding: 4px 10px; font-size: 11.5px;">✕ Dismiss</button>' +
+              '<button class="btn btn-dark" onclick="reviewAppeal(\'' + a.id + '\', \'APPROVE\')" style="height: 28px; padding: 0 8px; font-size: 11.5px;">Accept explanation</button>' +
+              '<button class="btn btn-outline" onclick="reviewAppeal(\'' + a.id + '\', \'DISMISS\')" style="height: 28px; padding: 0 8px; font-size: 11.5px;">Dismiss</button>' +
             '</div>'
-          : '<span style="font-size: 11.5px; color: var(--charcoal-500);">' + (a.status === 'APPROVED' ? 'Warning Removed' : 'Explanation Dismissed') + '</span>';
+          : '<span style="font-size: 11.5px; color: var(--text-muted);">' + (a.status === 'APPROVED' ? 'Warning removed' : 'Dismissed') + '</span>';
 
         return '<tr>' +
-          '<td class="mono"><strong>#' + a.id + '</strong></td>' +
-          '<td><strong>' + a.store_id + '</strong></td>' +
+          '<td class="mono">#' + a.id + '</td>' +
+          '<td class="mono">' + a.store_id + '</td>' +
           '<td>' + a.reason + '</td>' +
-          '<td><span style="color: var(--charcoal-900); font-size: 12.5px;">' + a.proof_note + '</span></td>' +
-          '<td><span class="badge ' + statusBadge + '">' + a.status + '</span></td>' +
+          '<td><span style="color: var(--text-primary); font-size: 12.5px;">' + a.proof_note + '</span></td>' +
+          '<td><span class="badge ' + statusBadge + '">' + a.status.toLowerCase() + '</span></td>' +
           '<td>' + actionHtml + '</td>' +
         '</tr>';
       }).join('');
@@ -1682,7 +1754,6 @@
           var item = strikeAppealsList.find(function(x) { return x.id === appealId; });
           if (item) item.status = action === 'APPROVE' ? 'APPROVED' : 'DISMISSED';
           renderStrikeAppeals();
-          alert('✅ Appeal #' + appealId + ' has been ' + (action === 'APPROVE' ? 'Approved (Warning removed)' : 'Dismissed') + '!');
         }
       } catch (err) {
         var itemFallback = strikeAppealsList.find(function(x) { return x.id === appealId; });
@@ -1768,7 +1839,6 @@
           var escEl = document.getElementById('val-escrow');
           var stoEl = document.getElementById('val-stores');
 
-          // Always ensure GMV displays a realistic value rather than ₹0.00
           var gmvValue = (overview.platform_gmv && overview.platform_gmv > 0)
             ? overview.platform_gmv 
             : masterData.orders.reduce(function(acc, o) { return acc + o.total; }, 0);
@@ -1780,7 +1850,7 @@
           if (gmvEl) gmvEl.textContent = '₹' + gmvValue.toFixed(2);
           if (revEl) revEl.textContent = '₹' + revValue.toFixed(2);
           if (escEl) escEl.textContent = '₹' + (overview.escrow_locked_funds || 580.00).toFixed(2);
-          if (stoEl) stoEl.textContent = (overview.active_stores_count || 3) + ' Stores';
+          if (stoEl) stoEl.textContent = (overview.active_stores_count || 3) + ' stores';
 
           if (overview.payment_volume && overview.payment_counts) {
             var upiVal = document.getElementById('pay-upi-val');
@@ -1792,14 +1862,14 @@
             var codVal = document.getElementById('pay-cod-val');
             var codCnt = document.getElementById('pay-cod-count');
 
-            if (upiVal) upiVal.textContent = '₹' + (overview.payment_volume.UPI || 3420).toFixed(0);
-            if (upiCnt) upiCnt.textContent = (overview.payment_counts.UPI || 2) + ' Orders';
-            if (crdVal) crdVal.textContent = '₹' + (overview.payment_volume.CARD || 850).toFixed(0);
-            if (crdCnt) crdCnt.textContent = (overview.payment_counts.CARD || 1) + ' Orders';
-            if (walVal) walVal.textContent = '₹' + (overview.payment_volume.WALLET || 380).toFixed(0);
-            if (walCnt) walCnt.textContent = (overview.payment_counts.WALLET || 1) + ' Orders';
-            if (codVal) codVal.textContent = '₹' + (overview.payment_volume.COD || 170).toFixed(0);
-            if (codCnt) codCnt.textContent = (overview.payment_counts.COD || 1) + ' Orders';
+            if (upiVal) upiVal.textContent = '₹' + (overview.payment_volume.UPI || 3420).toFixed(2);
+            if (upiCnt) upiCnt.textContent = (overview.payment_counts.UPI || 2) + ' orders';
+            if (crdVal) crdVal.textContent = '₹' + (overview.payment_volume.CARD || 850).toFixed(2);
+            if (crdCnt) crdCnt.textContent = (overview.payment_counts.CARD || 1) + ' orders';
+            if (walVal) walVal.textContent = '₹' + (overview.payment_volume.WALLET || 380).toFixed(2);
+            if (walCnt) walCnt.textContent = (overview.payment_counts.WALLET || 1) + ' orders';
+            if (codVal) codVal.textContent = '₹' + (overview.payment_volume.COD || 170).toFixed(2);
+            if (codCnt) codCnt.textContent = (overview.payment_counts.COD || 1) + ' orders';
           }
 
           if (exportData.stores && exportData.stores.length > 0) {
@@ -1830,7 +1900,7 @@
                 origin_store: o.store_id,
                 fulfilling_store: o.fulfilling_store_id,
                 is_spillover: o.is_spillover,
-                items: "Fulfillment Batch",
+                items: "Fulfillment batch",
                 subtotal: o.subtotal,
                 delivery_fee: o.delivery_fee,
                 total: o.total_amount,
@@ -1852,10 +1922,9 @@
     async function refreshData() {
       await syncFromBackend();
       renderAll();
-      alert("✅ Data refreshed from live stores!");
     }
 
-    // Default to the first option (Overview) cleanly
+    // Default to Overview cleanly
     switchTab('overview');
     renderAll();
     syncFromBackend();
